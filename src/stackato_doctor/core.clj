@@ -2,7 +2,8 @@
   (:use [clojure.contrib.duck-streams :only (read-lines)]
         [clojure.contrib.json :only (read-json)]
         [clojure.contrib.cond :only (cond-let)]
-        [clj-time.core :only (date-time)]))
+        [clj-time.core :only (date-time)]
+        [clj-time.format :only (unparse formatter)]))
 
 (defn parse-log-datetime
   [dt]
@@ -22,9 +23,10 @@
         record  (assoc record :when (parse-log-datetime (:when record)))]
     (loop [[typ & types]
            [(fn [record]
-              (if-let [m (re-find #"^Grabbed container (\w+).+$"
-                                  (:message record ""))]
-                {:type :grabbed-container}))
+              ;; Earliest point in time when we know the container id
+              (if-let [m (next (re-find #"^Grabbed container (\w+).+$"
+                                        (:message record "")))]
+                {:type :grabbed-container :container (first m)}))
 
             ;; End of container creation
             (fn [record]
@@ -58,7 +60,10 @@
         events             (events-timeline records)]
     (println "Read records: " (count records))
     (println "Special events: ")
-    (map #(println (:when %) (:type %)) events)))
+    (doseq [evt events]
+      (let [evt-to-display  (dissoc evt :type :message :foo :json :level :component :when)
+            time-to-display (unparse (formatter "MM-dd/hh:mm") (:time evt))]
+        (println (format "%s %.15s -- %s" time-to-display (:type evt) evt-to-display)))))) 
     
 
 (defn play
