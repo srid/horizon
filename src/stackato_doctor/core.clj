@@ -8,11 +8,12 @@
 (defn parse-log-datetime
   [dt]
   (if dt
-    (apply date-time
-           (map #(Integer/parseInt %)
-                (next
-                 (re-matches
-                  #"\[(\d+)\-(\d+)\-(\d+) (\d+)\:(\d+)\:(\d+)\]" dt))))))
+    (let [matches (next
+                   (re-matches
+                    #"\[(\d+)\-(\d+)\-(\d+) (\d+)\:(\d+)\:(\d+)\]" dt))
+          args    (map #(Integer/parseInt %) matches)]
+      (do
+        (apply date-time args)))))
 
 (defn parse-log-line
   "Returns a map for a line in the log."
@@ -67,7 +68,7 @@
     (println "Special events: ")
     (doseq [evt events]
       (let [evt-to-display  (dissoc evt :type :message :foo :json :level :component :when)
-            time-to-display (unparse (formatter "MM-dd/hh:mm") (:time evt))]
+            time-to-display (unparse (formatter "MM-dd/hh:mm:ss") (:when evt))]
         (println (format "%s %.15s -- %s" time-to-display (:type evt) evt-to-display)))))) 
     
 
