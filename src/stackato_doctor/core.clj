@@ -30,16 +30,21 @@
 
             ;; End of container creation
             (fn [record]
-              (if-let [m (re-find #"^Instance.+is ready for connections, notifying system of status$"
-                                  (:message record ""))]
-                {:type :instance-ready-for-connections}))
+              (if-let [m (next (re-find #"^Instance \(name=(\w+).+instance=(\w+).+is ready for connections, notifying system of status$"
+                                        (:message record "")))]
+                {:type :instance-ready-for-connections
+                 :appname (nth m 0)
+                 :container (nth m 1)}))
 
             ;; Beginning of container creation
             (fn [record]
               (if-let [[_ jsonm] (re-find #"^DEA received start message\: (.+)$"
                                           (:message record ""))]
-                {:type :received-start-message
-                 :json (read-json jsonm)}))]]
+                (let [j (read-json jsonm)]
+                  {:type :received-start-message
+                   :json j
+                   :users (:users j)
+                   :appname (:name j)})))]]
       (if-not typ
         (assoc record :type nil) ;; unknown record
         (if-let [attr (typ record)]
