@@ -1,0 +1,10 @@
+#!/bin/sh
+# Print the hostnames of running DEAs
+export JAVA_HOME=/System/Library/Frameworks/JavaVM.framework/Home 
+export EC2_HOME=~/Downloads/ec2-api-tools-1.4.4.2
+export EC2_CERT=`ls ~/.ec2/cert-*.pem`
+export EC2_PRIVATE_KEY=`ls ~/.ec2/pk-*.pem`
+
+export DEA_AMI_ID=`ssh -i ~/.ec2/sandbox.pem ubuntu@sandbox.activestate.com cat /home/stackato/.sandbox_config  | grep ami\: | cut -d" " -f 2 | cut -d'"' -f2`
+
+$EC2_HOME/bin/ec2-describe-instances | grep $DEA_AMI_ID | grep running | cut -f 4

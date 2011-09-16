@@ -25,7 +25,7 @@
     (loop [[typ & types]
            [(fn [record]
               ;; Earliest point in time when we know the container id
-              (if-let [m (next (re-find #"^Grabbed container dir \w+ for instance (\w+).+$"
+              (if-let [m (next (re-find #"^Grabbed container dir .+ for instance (\w+)$"
                                         (:message record "")))]
                 {:type :grabbed-container :container (first m)}))
 
