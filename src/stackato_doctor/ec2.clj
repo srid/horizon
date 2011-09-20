@@ -11,12 +11,6 @@
   [cmd]
   ((sh cmd :return-map true) :out))
 
-(defn dea-hostnames
-  "Return the hostname of running DEA"
-  []
-  (println "Running print-running-deas ...")
-  (split-lines (run "scripts/print-running-deas")))
-
 (defn- sh-line-seq
   [cmd]
   (->> (.exec (Runtime/getRuntime) cmd)
@@ -42,12 +36,18 @@
   (send incoming-log push-log source (rest lines))
   (conj logs [source (first lines)]))
 
+(def *recently-popped* (ref nil))
 (defn pop-log
   "Pop the oldest entry from the log; return nil if none available"
   []
   (when-not (empty? @incoming-log)
+    ;; wait till last update of incoming-log is done
+    (while (and (not (nil? @*recently-popped*))
+                (= @*recently-popped* (peek @incoming-log)))
+      (Thread/sleep 100))
     (let [peeked (peek @incoming-log)]
       (send incoming-log pop)
+      (dosync (alter *recently-popped* (fn [_] peeked)))
       peeked)))
 
 (defn register-log-source
@@ -59,7 +59,7 @@ immediately."
 (defn update-running-deas
   "Update the running-deas agent with new set of deas from AWS"
   [curr]
-  (let [hosts (dea-hostnames)]
+  (let [hosts (split-lines (run "scripts/print-running-deas"))]
     (loop [newhosts (remove curr hosts)
            nxt      curr]
       (if (empty? newhosts)
@@ -79,12 +79,14 @@ immediately."
   (println "finding initial list of running deas")
   (send running-deas update-running-deas)
   (loop []
-    (println (format "%d log entries; %d dea's: %s" (count @incoming-log) (count @running-deas) @running-deas))
+    (println ".")
+    (println (format "%d log entries; from %d dea's" (count @incoming-log) (count @running-deas)))
     (when (> (count @incoming-log) 0)
-      (let [[src lg] (pop-log)]
+      (doseq [[src log] @incoming-log]
         (println (format "  %s" src))
-        (println (format "  %s" lg))))
-    ;; (send-off running-deas update-running-deas)
+        (println (format "  %s" log))))
+
+    ;; (send running-deas update-running-deas)
     (Thread/sleep 4000)
     (recur)))
   
