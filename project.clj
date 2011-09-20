@@ -6,4 +6,10 @@
                  [incanter "1.2.2"]
                  [clj-time "0.3.0"]
                  [clansi "1.0.0"]
-                 [lamina "0.3.1"]])
+                 [lamina "0.3.1"]
+                 [compojure "0.6.4"]
+                 [enlive "1.0.0"]
+                 [ring "0.3.11"]]
+  :dev-dependencies [[lein-ring "0.4.5"]]
+  :ring {:handler stackato-doctor.web/app-handler
+         :init stackato-doctor.core/initialize})
