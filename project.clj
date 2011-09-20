@@ -5,4 +5,4 @@
                  [org.clojure/tools.logging "0.2.0"]
                  [incanter "1.2.2"]
                  [clj-time "0.3.0"]
-                 [org.apache.commons/commons-exec "1.0"]])
+                 [lamina "0.3.1"]])
