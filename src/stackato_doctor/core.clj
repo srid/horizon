@@ -6,83 +6,69 @@
         [clj-time.format :only (unparse formatter)])
   (:require [stackato-doctor.logmerge :as logmerge]))
 
-(defn parse-log-datetime
-  [dt]
-  (if dt
-    (let [matches (next
-                   (re-matches
-                    #"\[(\d+)\-(\d+)\-(\d+) (\d+)\:(\d+)\:(\d+)\]" dt))
-          args    (map #(Integer/parseInt %) matches)]
-      (do
-        (apply date-time args)))))
 
-(defn parse-log-line
-  "Returns a map for a line in the log."
+(defn parse-log-datetime
+  "Parse datetime format of CF logging"
+  [time]
+  (if time
+    (apply date-time
+           (->> time
+                (re-matches #"\[(\d+)\-(\d+)\-(\d+) (\d+)\:(\d+)\:(\d+)\]")
+                next
+                (map #(Integer/parseInt %))))))
+
+(def ^{:private true} log-record-types
+  {;; Beginning of DEA app start
+   :received-start-message
+   [#"^DEA received start message\: (.+)$"
+    (fn [[json-data]]
+      (let [j (read-json json-data)]
+        {:json j, :users (:users j), :appname (:name j)}))]
+
+   ;; Earlier know time of container ID
+   :grabbed-container
+   [#"^Grabbed container dir .+ for instance (\w+)$"
+    [:container]],
+
+   ;; App is now ready for connections
+   :instance-ready-for-connections
+   [#"^Instance \(name=(\w+).+instance=(\w+).+is ready for connections, notifying system of status$"
+   [:appname :container]],
+   })
+
+(defn- match-record-type
+  "Match the given record to one of defined types and return its extra metadata."
+  [record]
+  (loop [[[key [pattern meta]] & more :as coll] (seq log-record-types)]
+    (when-not (empty? coll)
+      (if-let [groups (next (re-find pattern (:message record "")))]
+        (merge {:type key} (if (coll? meta) (zipmap meta groups) (meta groups)))
+        (recur more)))))
+  
+(defn parse-log-record
+  "Parse a Cf log record. Return a map."
   [line]
   (let [pattern #"(\[.+\]) ([^\s]+) \- (\w+ \w+ \w+)\s+(\w+) \-\- (.+)"
-        keys    [:when :component :foo :level :message]
+        keys    [:when :component :identifier :level :message]
         record  (zipmap keys (next (re-matches pattern line)))
-        record  (assoc record :when (parse-log-datetime (:when record)))]
-    (loop [[typ & types]
-           [(fn [record]
-              ;; Earliest point in time when we know the container id
-              (if-let [m (next (re-find #"^Grabbed container dir .+ for instance (\w+)$"
-                                        (:message record "")))]
-                {:type :grabbed-container :container (first m)}))
-
-            ;; End of container creation
-            (fn [record]
-              (if-let [m (next (re-find #"^Instance \(name=(\w+).+instance=(\w+).+is ready for connections, notifying system of status$"
-                                        (:message record "")))]
-                {:type :instance-ready-for-connections
-                 :appname (nth m 0)
-                 :container (nth m 1)}))
-
-            ;; Beginning of container creation
-            (fn [record]
-              (if-let [[_ jsonm] (re-find #"^DEA received start message\: (.+)$"
-                                          (:message record ""))]
-                (let [j (read-json jsonm)]
-                  {:type :received-start-message
-                   :json j
-                   :users (:users j)
-                   :appname (:name j)})))]]
-      (if-not typ
-        (assoc record :type nil) ;; unknown record
-        (if-let [attr (typ record)]
-          (merge record attr)
-          (recur types))))))
-
-(defn read-dea-records
-  []
-  (map parse-log-line (read-lines "data/dea.log")))
+        record  (assoc record :type nil :when (parse-log-datetime (:when record)))]
+    (merge record (match-record-type record))))
 
 (defn events-timeline
+  "Return special log records"
   [records]
   (filter #(not (nil? (:type %))) records))
-
-(defn process
-  []
-  (let [records            (read-dea-records)
-        events             (events-timeline records)]
-    (println "Read records: " (count records))
-    (println "Special events: ")
-    (doseq [evt events]
-      (let [evt-to-display  (dissoc evt :type :message :foo :json :level :component :when)
-            time-to-display (unparse (formatter "MM-dd/hh:mm:ss") (:when evt))]
-        (println (format "%s %.15s -- %s" time-to-display (:type evt) evt-to-display)))))) 
-    
 
 (defn play
   []
   (let [line "[2011-09-15 11:28:58] dea - 1259 05ed 7573   INFO -- Max Memory set to 4.0G"]
-    (println (parse-log-line line))))
+    (println (parse-log-record line))))
 
 (defn -main
   []
   (logmerge/initialize)
   (loop [[host record] (logmerge/next-log-record)]
-    (let [record          (parse-log-line record)
+    (let [record          (parse-log-record record)
           evt-to-display  (dissoc record :type :message :foo :json :level :component :when)
           time-to-display (unparse (formatter "MM-dd/hh:mm:ss") (:when record))]
       (println (format "[%.15s] %s %.15s -- %s"
