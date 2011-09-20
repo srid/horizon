@@ -3,7 +3,8 @@
         [clojure.contrib.json :only (read-json)]
         [clojure.contrib.cond :only (cond-let)]
         [clj-time.core :only (date-time)]
-        [clj-time.format :only (unparse formatter)])
+        [clj-time.format :only (unparse formatter)]
+        [clansi])
   (:require [stackato-doctor.logmerge :as logmerge]))
 
 
@@ -54,6 +55,17 @@
         record  (assoc record :type nil :when (parse-log-datetime (:when record)))]
     (merge record (match-record-type record))))
 
+(defn print-log-record
+  "Print the log-record to terminal"
+  [record host]
+  (let [record1         (dissoc record :type :message :foo :json :level :component :when)
+        time-to-display (unparse (formatter "MM-dd/hh:mm:ss") (:when record))]
+    (println (format "[%.15s] %s %s -- %s"
+                     host
+                     (style time-to-display :underline)
+                     (style (:type record) :green)
+                     (if (nil? (:type record)) (:message record) record1)))))
+
 (defn events-timeline
   "Return special log records"
   [records]
@@ -68,12 +80,5 @@
   []
   (logmerge/initialize)
   (loop [[host record] (logmerge/next-log-record)]
-    (let [record          (parse-log-record record)
-          evt-to-display  (dissoc record :type :message :foo :json :level :component :when)
-          time-to-display (unparse (formatter "MM-dd/hh:mm:ss") (:when record))]
-      (println (format "[%.15s] %s %.15s -- %s"
-                       host
-                       time-to-display
-                       (:type record)
-                       (if (nil? (:type record)) (:message record) evt-to-display))))
+    (-> record parse-log-record (print-log-record host))
     (recur (logmerge/next-log-record))))
