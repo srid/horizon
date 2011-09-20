@@ -3,7 +3,8 @@
         [clojure.contrib.json :only (read-json)]
         [clojure.contrib.cond :only (cond-let)]
         [clj-time.core :only (date-time)]
-        [clj-time.format :only (unparse formatter)]))
+        [clj-time.format :only (unparse formatter)])
+  (:require [stackato-doctor.logmerge :as logmerge]))
 
 (defn parse-log-datetime
   [dt]
@@ -76,3 +77,17 @@
   []
   (let [line "[2011-09-15 11:28:58] dea - 1259 05ed 7573   INFO -- Max Memory set to 4.0G"]
     (println (parse-log-line line))))
+
+(defn -main
+  []
+  (logmerge/initialize)
+  (loop [[host record] (logmerge/next-log-record)]
+    (let [record          (parse-log-line record)
+          evt-to-display  (dissoc record :type :message :foo :json :level :component :when)
+          time-to-display (unparse (formatter "MM-dd/hh:mm:ss") (:when record))]
+      (println (format "[%.15s] %s %.15s -- %s"
+                       host
+                       time-to-display
+                       (:type record)
+                       (if (nil? (:type record)) (:message record) evt-to-display))))
+    (recur (logmerge/next-log-record))))
