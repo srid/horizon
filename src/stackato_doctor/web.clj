@@ -3,14 +3,16 @@
         ring.middleware.stacktrace
         [hiccup.middleware :only (wrap-base-url)])
   (:require [compojure.route :as route]
-            [compojure.response :as response]))
+            [compojure.handler :as handler]
+            [compojure.response :as response]
+            [stackato-doctor.event :as event]))
 
 (defroutes app-routes
-  (GET "/" []  "This is a test response!")
+  (GET "/" []  (str @event/*current-events*))
   (route/resources "/")
   (route/not-found "Page not found"))
 
 (def app-handler
-  (-> app-routes
+  (-> (handler/site app-routes)
       wrap-stacktrace
       wrap-base-url))

@@ -53,7 +53,7 @@
 (defn initialize
   "Initialize log processing from EC2"
   []
-  (println "Initializing log processing")
+  (println "sink: initializing log processing")
   (send running-deas update-running-deas))
 
 ;; FIXME - this doesn't really cancel the futures
