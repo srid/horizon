@@ -11,7 +11,6 @@
   (when (:type record)
     (swap! *current-events* (partial cons record))))
 
-
 ;; TODO - write shutdown; store (future ...) val? how?
 (defn initialize
   "Initialize processing of records from sink"

@@ -1,0 +1,35 @@
+body { 
+  font-family: 'PT Sans Caption', sans-serif;
+}
+
+article a {
+  text-decoration: none;
+}
+article a:hover {
+  border-bottom: 2px solid;
+}
+
+header {
+  margin-bottom: 30px;
+}
+header h1 { 
+  border-bottom: 3px solid brown;
+}
+
+article {
+  margin-bottom: 0.3em;
+}
+article span.meta {
+  font-size: 75%;
+}
+footer {
+  text-align: left;
+  border-top: 3px solid gray;
+  margin-top: 30px;
+  color: #666666;
+  background-color: #1F1F1F;
+  padding: 5px;
+}
+footer a, footer a:visited, footer a:active {
+  color: #666666;
+}
