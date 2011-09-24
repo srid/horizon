@@ -19,7 +19,8 @@
     (println "event: initializing record processing")
     (loop [[host record] (sink/next-log-record)]
       (let [record (record/parse-log-record record)]
-        (record/print-log-record record host) ;; for debug
+        (when (:type record)
+          (record/print-log-record record host)) ;; for debug
         (add record))
       (recur (sink/next-log-record)))))
   

@@ -5,7 +5,7 @@ Monitoring for Stackato sandbox through log analysis.
 ## Usage
 
     $ lein deps
-    $ lein run  # `lein ring server` for web UI
+    $ lein run  # also starts the web UI
 
 ## Architecture
 
