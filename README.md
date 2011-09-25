@@ -11,6 +11,11 @@ Monitoring for Stackato sandbox through log analysis.
 
 TODO
 
+## Research
+
+* Lamina and Aleph
+* Beanstalk fork (based on Lamina and Aleph) - https://github.com/sunng87/clojalk
+
 ## License
 
 Copyright (C) 2011 ActiveState
