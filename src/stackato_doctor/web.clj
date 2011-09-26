@@ -10,7 +10,24 @@
   (:require [compojure.route :as route]
             [compojure.handler :as handler]
             [compojure.response :as response]
-            [stackato-doctor.event :as event]))
+            [stackato-doctor.event :as event]
+            [stackato-doctor.record :as record]))
+
+(defn app-html [record]
+  (let [url (first (:uris (:json record)))
+        url (if url (str "http://" url))]
+    [:b [:a {:href url :target "_blank"} (:appname record)]]))
+
+(defn record-html [record]
+  [:li
+   [:b (record/format-log-datetime record)] " "
+   (condp = (:type record)
+     :instance-ready-for-connections
+     [:span "DEA has deployed: " (app-html record)]
+     :received-start-message
+     [:span "DEA is deploying: " (app-html record) " by " (first (:users record)) " ...."]
+     (str "unknown record type " (:type record)))
+   [:small [:pre (str record)]]])
 
 (defn main-page [events]
   (html5
@@ -21,15 +38,16 @@
     (include-css "http://fonts.googleapis.com/css?family=PT+Sans+Caption")]
    [:body
     [:h1 "Stackato Doctor"]
+    [:ul {:id "events"}
     (for [evt events]
-      [:li [:b (str (:when evt))] (str evt)])]))
+      (record-html evt))]]))
 
+;; test
 (defn stream-something [ch]
   (future
     (dotimes [i 100]
       (enqueue ch (str i "\n")))
     (close ch)))
-
 (defn aleph-handler [request]
   (println "In handler")
   (let [stream (channel)]

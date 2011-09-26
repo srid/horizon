@@ -2,6 +2,11 @@ body {
   font-family: 'PT Sans Caption', sans-serif;
 }
 
+ul#events li {
+  list-style-type: none;
+  padding: 1em;
+}
+
 article a {
   text-decoration: none;
 }
@@ -33,3 +38,4 @@ footer {
 footer a, footer a:visited, footer a:active {
   color: #666666;
 }
+

@@ -53,11 +53,14 @@
         record  (assoc record :type nil :when (parse-log-datetime (:when record)))]
     (merge record (match-record-type record))))
 
+(defn format-log-datetime [record]
+  (unparse (formatter "MM-dd/hh:mm:ss") (:when record)))
+
 (defn print-log-record
   "Print the log-record to terminal"
   [record host]
   (let [record1         (dissoc record :type :message :foo :json :level :component :when)
-        time-to-display (unparse (formatter "MM-dd/hh:mm:ss") (:when record))]
+        time-to-display (format-log-datetime record)]
     (println (format "[%.15s] %s %s -- %s"
                      host
                      (style time-to-display :underline)
