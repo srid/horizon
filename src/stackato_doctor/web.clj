@@ -56,7 +56,6 @@
      :headers {"content-type" "text/plain"}
      :body stream}))
 
-
 (defroutes app-routes
   (GET "/" []  (main-page (seq @event/*current-events*)))
   (GET "/events" [] aleph-handler)
@@ -70,10 +69,10 @@
   (if @server
     (println "Warning: already initialized")
     (do
-      (println "Starting http://localhost:9002/")
+      (println "Starting http://localhost:9000/")
       (swap! server (fn [_] (start-http-server
                              (wrap-ring-handler app-routes)
-                             {:port 9002}))))))
+                             {:port 9000}))))))
 
 (defn shutdown []
   (when @server
@@ -82,9 +81,11 @@
       (@server)
       (swap! server (fn [_] nil)))))
 
-(comment
-  (stackato-doctor.web/shutdown) (use :reload-all 'stackato-doctor.web) (stackato-doctor.web/initialize)
-  )
+(defn reinitialize []
+  "Run this on the REPL to reload web.clj and restart the web server"
+  (stackato-doctor.web/shutdown)
+  (use :reload-all 'stackato-doctor.web)
+  (stackato-doctor.web/initialize))
 
 (defn -main []
   (initialize))
