@@ -16,7 +16,7 @@
   (html5
    [:head
     [:title "Stackato Doctor"]
-    (include-css "/css/lesdsframework.css")
+    (include-css "/css/lessframework.css")
     (include-css "/css/style.css")
     (include-css "http://fonts.googleapis.com/css?family=PT+Sans+Caption")]
    [:body
