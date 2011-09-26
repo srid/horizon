@@ -12,4 +12,4 @@
                  [enlive "1.0.0"]
                  [ring "0.3.11"]]
   :dev-dependencies [[lein-ring "0.4.5"]]
-  :main stackato-doctor.web)
+  :main stackato-doctor.core)

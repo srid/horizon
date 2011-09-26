@@ -12,7 +12,7 @@
             [compojure.response :as response]
             [stackato-doctor.event :as event]))
 
-(defn main-page [content]
+(defn main-page [events]
   (html5
    [:head
     [:title "Stackato Doctor"]
@@ -21,7 +21,8 @@
     (include-css "http://fonts.googleapis.com/css?family=PT+Sans+Caption")]
    [:body
     [:h1 "Stackato Doctor"]
-    [:pre content]]))
+    (for [evt events]
+      [:li [:b (str (:when evt))] (str evt)])]))
 
 (defn stream-something [ch]
   (future
@@ -39,12 +40,33 @@
 
 
 (defroutes app-routes
-  (GET "/" []  (do (println "some") (main-page (str @event/*current-events*))))
-  (GET "/events" [] (do (println "streaming") aleph-handler))
+  (GET "/" []  (main-page (seq @event/*current-events*)))
+  (GET "/events" [] aleph-handler)
   
   (route/resources "/")
   (route/not-found "Page not found"))
 
+(def server (atom nil))
+
+(defn initialize []
+  (if @server
+    (println "Warning: already initialized")
+    (do
+      (println "Starting http://localhost:9002/")
+      (swap! server (fn [_] (start-http-server
+                             (wrap-ring-handler app-routes)
+                             {:port 9002}))))))
+
+(defn shutdown []
+  (when @server
+    (do
+      (println "Shutting down web server")
+      (@server)
+      (swap! server (fn [_] nil)))))
+
+(comment
+  (stackato-doctor.web/shutdown) (use :reload-all 'stackato-doctor.web) (stackato-doctor.web/initialize)
+  )
+
 (defn -main []
-  (println "Starting http://localhost:8080/")
-  (start-http-server (wrap-ring-handler app-routes) {:port 8080}))
+  (initialize))
