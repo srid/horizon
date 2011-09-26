@@ -18,7 +18,7 @@
         url (if url (str "http://" url))]
     [:b [:a {:href url :target "_blank"} (:appname record)]]))
 
-(defn record-html [record]
+(defn record-html [[host record]]
   [:li
    [:b (record/format-log-datetime record)] " "
    (condp = (:type record)
@@ -40,25 +40,16 @@
     [:h1 "Stackato Doctor"]
     [:ul {:id "events"}
     (for [evt events]
-      (record-html evt))]]))
+      (record-html [nil evt]))]]))
 
-;; test
-(defn stream-something [ch]
-  (future
-    (dotimes [i 100]
-      (enqueue ch (str i "\n")))
-    (close ch)))
-(defn aleph-handler [request]
-  (println "In handler")
-  (let [stream (channel)]
-    (stream-something stream)
-    {:status 200
-     :headers {"content-type" "text/plain"}
-     :body stream}))
+(defn event-queue-handler [request]
+  {:status 200
+   :headers {"content-type" "text/html"}
+   :body (map* #(html (record-html %)) event/event-queue)})
 
 (defroutes app-routes
   (GET "/" []  (main-page (seq @event/*current-events*)))
-  (GET "/events" [] aleph-handler)
+  (GET "/events" [] event-queue-handler)
   
   (route/resources "/")
   (route/not-found "Page not found"))
