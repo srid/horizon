@@ -4,7 +4,7 @@
                  [org.clojure/tools.logging "0.2.0"]
                  [org.clojure/data.json "0.1.1"]
                  [org.clojure/java.jdbc "0.0.6"]
-                 [clojureql "1.0.0"]
+                 [clojureql "1.1.0-SNAPSHOT"]
                  [org.xerial/sqlite-jdbc "3.7.2"]
                  [clj-time "0.3.0"]
                  [clansi "1.0.0"]
@@ -15,5 +15,6 @@
                  [enlive "1.0.0"]
                  [ring "0.3.11"]]
   :repositories {"jiksnu-snapshots" "http://build.jiksnu.com/repository/snapshots"}
-  :exclusions [clojure-contrib clojure.contrib clojure.contrib.sql]
+  :exclusions [org.clojure/contrib
+               org.clojure/clojure-contrib]
   :main stackato-dashboard.core)
