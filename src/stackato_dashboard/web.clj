@@ -35,7 +35,8 @@
     [:title "Stackato Doctor"]
     (include-css "/css/lessframework.css")
     (include-css "/css/style.css")
-    (include-css "http://fonts.googleapis.com/css?family=PT+Sans+Caption")]
+    (include-css "http://fonts.googleapis.com/css?family=PT+Sans+Caption")
+    (include-js "/cljs/bootstrap.js")]
    [:body
     [:h1 "Stackato Doctor"]
     [:ul {:id "events"}
