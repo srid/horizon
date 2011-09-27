@@ -1,6 +1,6 @@
 (ns stackato-dashboard.db
   (:require [clojureql.core :as cql]
-            [clojure.contrib.sql :as sql]))
+            [java.jdbc :as sql]))
 
 (def db {:classname "org.sqlite.JDBC"
          :subprotocol "sqlite"

@@ -4,14 +4,14 @@
             [stackato-dashboard.sink :as sink]))
 
 ;; Events for last N minutes -- must deprecate
-(def *current-events* (atom []))
+(def ^{:private false} current-events (atom []))
 (defn add
   "Add a log record to events"
   [record]
   (when (:type record)
-    (swap! *current-events* (partial cons record))))
+    (swap! current-events (partial cons record))))
 
-(def event-queue (lm/channel))
+(def ^{:private false} event-queue (lm/channel))
 
 ;; TODO - write shutdown; store (future ...) val? how?
 (defn initialize

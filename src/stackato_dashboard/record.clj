@@ -1,7 +1,5 @@
 (ns stackato-dashboard.record
-  (:use [clojure.contrib.duck-streams :only (read-lines)]
-        [clojure.contrib.json :only (read-json)]
-        [clojure.contrib.cond :only (cond-let)]
+  (:use [clojure.data.json :only (read-json)]
         [clj-time.core :only (date-time)]
         [clj-time.format :only (unparse formatter)]
         [clansi]))

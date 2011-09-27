@@ -48,7 +48,7 @@
    :body (map* #(html (record-html %)) event/event-queue)})
 
 (defroutes app-routes
-  (GET "/" []  (main-page (seq @event/*current-events*)))
+  (GET "/" []  (main-page (seq @event/current-events)))
   (GET "/events" [] event-queue-handler)
   
   (route/resources "/")
