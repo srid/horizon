@@ -1,5 +1,5 @@
-(ns stackato-doctor.test.core
-  (:use [stackato-doctor.core])
+(ns stackato-dashboard.test.core
+  (:use [stackato-dashboard.core])
   (:use [clojure.test]))
 
 (deftest replace-me ;; FIXME: write

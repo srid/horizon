@@ -1,5 +1,5 @@
-(defproject stackato-doctor "1.0.0-SNAPSHOT"
-  :description "Analyse Stackato log files"
+(defproject stackato-dashboard "1.0.0-SNAPSHOT"
+  :description "Stackato dashboard"
   :dependencies [[org.clojure/clojure "1.2.1"]
                  [org.clojure/clojure-contrib "1.2.0"]
                  [org.clojure/tools.logging "0.2.0"]
@@ -11,5 +11,4 @@
                  [compojure "0.6.4"]
                  [enlive "1.0.0"]
                  [ring "0.3.11"]]
-  :dev-dependencies [[lein-ring "0.4.5"]]
-  :main stackato-doctor.core)
+  :main stackato-dashboard.core)

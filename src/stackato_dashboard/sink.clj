@@ -1,4 +1,4 @@
-(ns stackato-doctor.sink
+(ns stackato-dashboard.sink
   (use [clojure.contrib.shell-out :only (sh)]
        [clojure.contrib.string :only (split-lines)]
        [lamina.core :as lm]))

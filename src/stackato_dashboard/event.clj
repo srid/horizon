@@ -1,7 +1,7 @@
-(ns stackato-doctor.event
+(ns stackato-dashboard.event
   (:use [lamina.core :as lm])
-  (:require [stackato-doctor.record :as record]
-            [stackato-doctor.sink :as sink]))
+  (:require [stackato-dashboard.record :as record]
+            [stackato-dashboard.sink :as sink]))
 
 ;; Events for last N minutes -- must deprecate
 (def *current-events* (atom []))

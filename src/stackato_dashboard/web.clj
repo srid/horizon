@@ -1,4 +1,4 @@
-(ns stackato-doctor.web
+(ns stackato-dashboard.web
   (:use compojure.core
         ring.middleware.stacktrace
         [ring.util.response :only [response]]
@@ -10,8 +10,8 @@
   (:require [compojure.route :as route]
             [compojure.handler :as handler]
             [compojure.response :as response]
-            [stackato-doctor.event :as event]
-            [stackato-doctor.record :as record]))
+            [stackato-dashboard.event :as event]
+            [stackato-dashboard.record :as record]))
 
 (defn app-html [record]
   (let [url (first (:uris (:json record)))
@@ -74,9 +74,9 @@
 
 (defn reinitialize []
   "Run this on the REPL to reload web.clj and restart the web server"
-  (stackato-doctor.web/shutdown)
-  (use :reload-all 'stackato-doctor.web)
-  (stackato-doctor.web/initialize))
+  (stackato-dashboard.web/shutdown)
+  (use :reload-all 'stackato-dashboard.web)
+  (stackato-dashboard.web/initialize))
 
 (defn -main []
   (initialize))

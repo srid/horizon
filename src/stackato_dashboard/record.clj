@@ -1,4 +1,4 @@
-(ns stackato-doctor.record
+(ns stackato-dashboard.record
   (:use [clojure.contrib.duck-streams :only (read-lines)]
         [clojure.contrib.json :only (read-json)]
         [clojure.contrib.cond :only (cond-let)]
