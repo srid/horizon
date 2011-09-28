@@ -6,6 +6,18 @@ Stackato dashboard for reporting a) the state of the cloud and b) real-time oper
 
     $ lein deps
     $ lein run  # also starts the web UI
+    
+## Development
+
+Start CLJS watch:
+
+    CLOJURESCRIPT_HOME=../clojurescript cljs-watch cljs
+    
+`cake swank` followed by `M-x slime-connect` and eval:
+
+    (stackato-doctor.sink/initialize)
+    (stackato-doctor.event/initialize)
+    (stackato-doctor.web/initialize)
 
 ## Architecture
 
