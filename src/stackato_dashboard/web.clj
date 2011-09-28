@@ -35,12 +35,14 @@
     [:title "Stackato Doctor"]
     (include-css "/css/lessframework.css")
     (include-css "/css/style.css")
-    (include-css "http://fonts.googleapis.com/css?family=PT+Sans+Caption")]
+    (include-css "http://fonts.googleapis.com/css?family=PT+Sans+Caption")
+    (include-js "/cljs/bootstrap.js")]
    [:body
     [:h1 "Stackato Doctor"]
     [:ul {:id "events"}
     (for [evt events]
-      (record-html [nil evt]))]]))
+      (record-html [nil evt]))]
+    (javascript-tag "stackato.init();")]))
 
 (defn event-queue-handler [request]
   {:status 200
@@ -59,11 +61,11 @@
 (defn initialize []
   (if @server
     (println "Warning: already initialized")
-    (do
-      (println "Starting http://localhost:9000/")
+    (let [port 8001]
+      (println (format "Starting http://localhost:%s/" port))
       (swap! server (fn [_] (start-http-server
                              (wrap-ring-handler app-routes)
-                             {:port 9000}))))))
+                             {:port port}))))))
 
 (defn shutdown []
   (when @server
