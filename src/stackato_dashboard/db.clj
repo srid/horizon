@@ -20,8 +20,12 @@
 (defn get-users
   "Return users, their apps, routes, and services"
   []
+  ;; TODO - service bindings
   (let [[users apps routes sb] (load-data)]
-    (for [user (vals users)]
-      (let [uapps (filter #(= (:owner_id %) (:id user)) (vals apps))]
-        (merge user {:apps (for [app uapps]
-                             (merge app {:routes (filter #(= (:app_id %) (:id app)) (vals routes))}))})))))
+    (letfn [(apps-by-user [user] (filter #(= (:owner_id %) (:id user)) (vals apps)))
+            (routes-by-app [app] (filter #(= (:app_id %) (:id app)) (vals routes)))]
+      (for [user (vals users)]
+        (let [my-apps (apps-by-user user)
+              my-apps (for [app my-apps]
+                        (merge app {:routes (routes-by-app app)}))]
+          (merge user {:apps my-apps}))))))

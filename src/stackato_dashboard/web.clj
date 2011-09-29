@@ -32,27 +32,30 @@
      (str "unknown record type " (:type record)))
    [:small [:pre (str record)]]])
 
+(defn users-html []
+  [:div {:id "users"}
+   (for [user (db/get-users)]
+     [:div
+      [:h3 (:email user)]
+      (for [app (:apps user)]
+        [:span
+         [:h5 (:name app)]
+         [:i (:framework app)]
+         " "
+         (let [url (str "http://" (:url (first (:routes app))))]
+           [:a {:href url} "link"])])])])
+
 (defn main-page [events]
   (html5
    [:head
-    [:title "Stackato Doctor"]
+    [:title "Stackato Dashboard"]
     (include-css "/css/lessframework.css")
     (include-css "/css/style.css")
     (include-css "http://fonts.googleapis.com/css?family=PT+Sans+Caption")
     (include-js "/cljs/bootstrap.js")]
    [:body
     [:h1 "Stackato Doctor"]
-    [:div {:id "users"}
-     (for [user (db/get-users)]
-       [:div
-        [:h3 (:email user)]
-        (for [app (:apps user)]
-          [:span
-           [:h5 (:name app)]
-           [:i (:framework app)]
-           " "
-           (let [url (str "http://" (:url (first (:routes app))))]
-             [:a {:href url} "link"])])])]
+    (users-html)
     [:ul {:id "events"}
     (for [evt events]
       (record-html [nil evt]))]
