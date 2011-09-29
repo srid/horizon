@@ -8,6 +8,20 @@
 
 (q/open-global db)
 
-(defn play []
-  [@(q/table :apps) @(q/table :users) @(q/table :service_bindings)])
+(defn load-data
+  "Load data from SQLite into memory"
+  []
+  (letfn [(hash-by-id [items] (zipmap (map #(:id %) items) items))]
+    (map (comp hash-by-id deref) [(q/table :users)
+                                  (q/table :apps)
+                                  (q/table :routes)
+                                  (q/table :service_bindings)])))
 
+(defn get-users
+  "Return users, their apps, routes, and services"
+  []
+  (let [[users apps routes sb] (load-data)]
+    (for [user (vals users)]
+      (let [uapps (filter #(= (:owner_id %) (:id user)) (vals apps))]
+        (merge user {:apps (for [app uapps]
+                             (merge app {:routes (filter #(= (:app_id %) (:id app)) (vals routes))}))})))))

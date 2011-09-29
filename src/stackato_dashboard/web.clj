@@ -7,11 +7,14 @@
         hiccup.page-helpers
         lamina.core
         aleph.http)
-  (:require [compojure.route :as route]
-            [compojure.handler :as handler]
-            [compojure.response :as response]
-            [stackato-dashboard.event :as event]
-            [stackato-dashboard.record :as record]))
+  (:require [compojure
+             [route :as route]
+             [handler :as handler]
+             [response :as response]]
+            [stackato-dashboard
+             [event :as event]
+             [record :as record]
+             [db :as db]]))
 
 (defn app-html [record]
   (let [url (first (:uris (:json record)))
@@ -39,6 +42,17 @@
     (include-js "/cljs/bootstrap.js")]
    [:body
     [:h1 "Stackato Doctor"]
+    [:div {:id "users"}
+     (for [user (db/get-users)]
+       [:div
+        [:h3 (:email user)]
+        (for [app (:apps user)]
+          [:span
+           [:h5 (:name app)]
+           [:i (:framework app)]
+           " "
+           (let [url (str "http://" (:url (first (:routes app))))]
+             [:a {:href url} "link"])])])]
     [:ul {:id "events"}
     (for [evt events]
       (record-html [nil evt]))]
