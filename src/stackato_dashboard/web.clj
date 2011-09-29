@@ -56,7 +56,7 @@
   (route/resources "/")
   (route/not-found "Page not found"))
 
-(def server (atom nil))
+(defonce server (atom nil))
 
 (defn initialize []
   (if @server
@@ -66,19 +66,6 @@
       (swap! server (fn [_] (start-http-server
                              (wrap-ring-handler app-routes)
                              {:port port}))))))
-
-(defn shutdown []
-  (when @server
-    (do
-      (println "Shutting down web server")
-      (@server)
-      (swap! server (fn [_] nil)))))
-
-(defn reinitialize []
-  "Run this on the REPL to reload web.clj and restart the web server"
-  (stackato-dashboard.web/shutdown)
-  (use :reload-all 'stackato-dashboard.web)
-  (stackato-dashboard.web/initialize))
 
 (defn -main []
   (initialize))
