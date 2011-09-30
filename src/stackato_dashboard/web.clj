@@ -45,6 +45,22 @@
          (let [url (str "http://" (:url (first (:routes app))))]
            [:a {:href url} "link"])])])])
 
+
+(defn all-users-table-html []
+  [:table {:id "all-users" :border "0" :cellpang "3"}
+   [:thead
+    [:tr
+     [:th "User"]
+     [:th "App"]
+     [:th "Services"]]]
+   [:tbody
+    (for [user (db/get-users)]
+      (for [app (:apps user)]
+        [:tr [:td (:email user)]
+         [:td (:name app)]
+         [:td "N/A"]]))]])
+
+
 (defn main-page [events]
   (html5
    [:head
@@ -54,8 +70,8 @@
     (include-css "http://fonts.googleapis.com/css?family=PT+Sans+Caption")
     (include-js "/cljs/bootstrap.js")]
    [:body
-    [:h1 "Stackato Doctor"]
-    (users-html)
+    [:h1 "Stackato Dashboard"]
+    (all-users-table-html)
     [:ul {:id "events"}
     (for [evt events]
       (record-html [nil evt]))]
@@ -76,13 +92,11 @@
 (defonce server (atom nil))
 
 (defn initialize []
-  (if @server
-    (println "Warning: already initialized")
-    (let [port 8001]
-      (println (format "Starting http://localhost:%s/" port))
-      (swap! server (fn [_] (start-http-server
-                             (wrap-ring-handler app-routes)
-                             {:port port}))))))
+  (let [port 8001]
+    (println (format "Starting http://localhost:%s/" port))
+    (swap! server (fn [_] (start-http-server
+                          (wrap-ring-handler app-routes)
+                          {:port port})))))
 
 (defn -main []
   (initialize))

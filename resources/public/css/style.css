@@ -7,6 +7,14 @@ ul#events li {
   padding: 1em;
 }
 
+th.goog-tablesorter-sorted {
+    background-color: #eef;
+}
+
+th.goog-tablesorter-sorted-reverse {
+    background-color: #fee;
+}
+
 article a {
   text-decoration: none;
 }

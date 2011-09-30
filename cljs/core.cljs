@@ -1,7 +1,12 @@
 (ns stackato
   (:require [goog.dom :as dom]
-            [goog.ui.Tab :as Tab]
-            [goog.ui.TabBar :as TabBar]))
+            [goog.ui.TableSorter :as TableSorter]))
 
 (defn ^:export init [n]
-  (str "Hello " n))
+  ;; Make all-users table sortable
+  (let [component (goog.ui/TableSorter.)]
+    (doto component
+      (.decorate (dom/getElement "all-users"))
+      (.setSortFunction 1 TableSorter/alphaSort)
+      (.setSortFunction 2 (TableSorter/createReverseSort
+                           TableSorter/alphaSort)))))

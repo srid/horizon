@@ -25,7 +25,6 @@
     (letfn [(apps-by-user [user] (filter #(= (:owner_id %) (:id user)) (vals apps)))
             (routes-by-app [app] (filter #(= (:app_id %) (:id app)) (vals routes)))]
       (for [user (vals users)]
-        (let [my-apps (apps-by-user user)
-              my-apps (for [app my-apps]
+        (let [my-apps (for [app (apps-by-user user)]
                         (merge app {:routes (routes-by-app app)}))]
           (merge user {:apps my-apps}))))))
