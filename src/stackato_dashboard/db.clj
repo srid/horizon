@@ -4,27 +4,40 @@
 
 (def db {:classname "org.sqlite.JDBC"
          :subprotocol "sqlite"
-         :subname "/Users/sridharr/cloudcontroller.sqlite3"})
+         :subname "cloudcontroller.sqlite3"})
 
 (q/open-global db)
 
-(defn load-data
+(defn- load-data
   "Load data from SQLite into memory"
   []
   (letfn [(hash-by-id [items] (zipmap (map #(:id %) items) items))]
     (map (comp hash-by-id deref) [(q/table :users)
                                   (q/table :apps)
                                   (q/table :routes)
-                                  (q/table :service_bindings)])))
+                                  (q/table :service_bindings)
+                                  (q/table :service_configs)
+                                  (q/table :services)])))
 
-(defn get-users
-  "Return users, their apps, routes, and services"
+(defn- filter-by-presence
+  [row table pk]
+  (filter #(= (pk %) (:id row)) table))
+
+(defn- assoc-service-info
+  [row sc srv]
+  (let [cfg (sc  (:service_config_id row))
+        s   (srv (:service_id sc))]
+    (assoc row
+      :name (:name s)
+      :alias (:alias cfg))))
+
+(defn get-data
   []
-  ;; TODO - service bindings
-  (let [[users apps routes sb] (load-data)]
-    (letfn [(apps-by-user [user] (filter #(= (:owner_id %) (:id user)) (vals apps)))
-            (routes-by-app [app] (filter #(= (:app_id %) (:id app)) (vals routes)))]
-      (for [user (vals users)]
-        (let [my-apps (for [app (apps-by-user user)]
-                        (merge app {:routes (routes-by-app app)}))]
-          (merge user {:apps my-apps}))))))
+  (let [[users apps routes sb sc srv] (load-data)]
+    (for [user (vals users)]
+      (assoc user
+        :apps (for [app (filter-by-presence user (vals apps) :owner_id)]
+                (assoc app
+                  :routes   (filter-by-presence app (vals routes) :app_id)
+                  :services (map #(assoc-service-info % sc srv)
+                                 (filter-by-presence app (vals sb) :app_id))))))))

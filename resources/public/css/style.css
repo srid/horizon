@@ -7,6 +7,15 @@ ul#events li {
   padding: 1em;
 }
 
+table#all-users td {
+    padding: 0.5em;
+}
+
+table#all-users th:hover {
+    cursor: pointer;
+    opacity: 0.7;
+}
+
 th.goog-tablesorter-sorted {
     background-color: #eef;
 }

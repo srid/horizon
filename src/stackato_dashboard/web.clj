@@ -16,34 +16,21 @@
              [record :as record]
              [db :as db]]))
 
-(defn app-html [record]
+(defn app-html2 [record]
   (let [url (first (:uris (:json record)))
         url (if url (str "http://" url))]
     [:b [:a {:href url :target "_blank"} (:appname record)]]))
-
 (defn record-html [[host record]]
   [:li
    [:b (record/format-log-datetime record)] " "
    (condp = (:type record)
      :instance-ready-for-connections
-     [:span "DEA has deployed: " (app-html record)]
+     [:span "DEA has deployed: " (app-html2 record)]
      :received-start-message
-     [:span "DEA is deploying: " (app-html record) " by " (first (:users record)) " ...."]
+     [:span "DEA is deploying: " (app-html2 record) " by " (first (:users record)) " ...."]
      (str "unknown record type " (:type record)))
    [:small [:pre (str record)]]])
 
-(defn users-html []
-  [:div {:id "users"}
-   (for [user (db/get-users)]
-     [:div
-      [:h3 (:email user)]
-      (for [app (:apps user)]
-        [:span
-         [:h5 (:name app)]
-         [:i (:framework app)]
-         " "
-         (let [url (str "http://" (:url (first (:routes app))))]
-           [:a {:href url} "link"])])])])
 
 
 (defn all-users-table-html []
@@ -54,11 +41,12 @@
      [:th "App"]
      [:th "Services"]]]
    [:tbody
-    (for [user (db/get-users)]
+    (for [user (db/get-data)]
       (for [app (:apps user)]
         [:tr [:td (:email user)]
-         [:td (:name app)]
-         [:td "N/A"]]))]])
+         [:td [:a {:href (str "http://" (:url (first (:routes app))))} (:name app)]]
+         [:td [:div (for [srv (:services app)]
+                      [:a (str (:alias srv) " - " (:name srv))])]]]))]])
 
 
 (defn main-page [events]
