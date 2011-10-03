@@ -23,19 +23,23 @@
     (.sort 4)))
 
 (defn handle-tab-select [tabbar e]
-  (let [tab         (.target e)
-        tab-title   (. tab (getCaption))
-        tab-content (dom/getElement (str tab-title "_content"))
-        content     (dom/getElement (str (. tabbar (getId)) "_content"))]
-    (set! (.innerHTML content) (.innerHTML tab-content))
-    (when-let [all-users (dom/findNode content #(= "all-users" (.getAttribute % "id")))]
-      (table-make-sortable all-users))))
+  (let [tab      (.target e)
+        title    (. tab (getCaption))
+        content  (dom/getElement (str title "_content"))]
+    ;; prim-seq is required to seq through a node collection
+    (doseq [e (prim-seq (dom/getChildren (dom/getElement (.parentNode content))) 0)]
+      (goog.style.showElement e false))
+    (window.p title)
+    (window.p content)
+    (goog.style.showElement content true)))
 
 (def events (.getValues goog.object goog.ui.Component/EventType))
 
 (defn ^:export init [n]
+  (table-make-sortable (dom/getElement "all-users"))
   (.decorate tabbar (.getElement goog.dom "maintab"))
   (.listen goog.events
            tabbar
            goog.ui.Component.EventType/SELECT
-           (partial handle-tab-select tabbar)))
+           (partial handle-tab-select tabbar))
+  (.setSelectedTabIndex tabbar 1))

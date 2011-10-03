@@ -11256,16 +11256,25 @@ stackato.table_make_sortable = function(a) {
   return b
 };
 stackato.handle_tab_select = function(a, b) {
-  var c = b.target.getCaption(), c = goog.dom.getElement.call(null, cljs.core.str.call(null, c, "_content")), d = goog.dom.getElement.call(null, cljs.core.str.call(null, a.getId(), "_content"));
-  d.innerHTML = c.innerHTML;
-  c = goog.dom.findNode.call(null, d, function(a) {
-    return cljs.core._EQ_.call(null, "all-users", a.getAttribute("id"))
-  });
-  return cljs.core.truth_(c) ? stackato.table_make_sortable.call(null, c) : null
+  var c = b.target.getCaption(), d = goog.dom.getElement.call(null, cljs.core.str.call(null, c, "_content")), e = cljs.core.seq.call(null, cljs.core.prim_seq.call(null, goog.dom.getChildren.call(null, goog.dom.getElement.call(null, d.parentNode)), 0));
+  if(cljs.core.truth_(e)) {
+    for(var f = cljs.core.first.call(null, e);;) {
+      if(goog.style.showElement.call(null, f, !1), f = cljs.core.next.call(null, e), cljs.core.truth_(f)) {
+        e = f, f = cljs.core.first.call(null, e)
+      }else {
+        break
+      }
+    }
+  }
+  window.p.call(null, c);
+  window.p.call(null, d);
+  return goog.style.showElement.call(null, d, !0)
 };
 stackato.events = goog.object.getValues(goog.ui.Component.EventType);
 stackato.init = function() {
+  stackato.table_make_sortable.call(null, goog.dom.getElement.call(null, "all-users"));
   stackato.tabbar.decorate(goog.dom.getElement("maintab"));
-  return goog.events.listen(stackato.tabbar, goog.ui.Component.EventType.SELECT, cljs.core.partial.call(null, stackato.handle_tab_select, stackato.tabbar))
+  goog.events.listen(stackato.tabbar, goog.ui.Component.EventType.SELECT, cljs.core.partial.call(null, stackato.handle_tab_select, stackato.tabbar));
+  return stackato.tabbar.setSelectedTabIndex(1)
 };
 goog.exportSymbol("stackato.init", stackato.init);

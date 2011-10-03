@@ -27,7 +27,7 @@ table#all-users th:hover {
 }
 
 .hidden {
-    display: none;
+    background-color: red;
 }
 
 th.goog-tablesorter-sorted {

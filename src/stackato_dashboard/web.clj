@@ -69,9 +69,10 @@
     (for [[tab-title tab-content] tabs]
       [:div {:class "goog-tab" :id tab-title} tab-title])]
    [:div {:id "goog-tab-bar-clear"}]
-   [:div {:id (str id "_content") :class "goog-tab-content"} "Nothing"]
-   (for [[tab-title tab-content] tabs]
-     [:div {:id (str tab-title "_content") :class "hidden"} tab-content])])
+   [:div {:id (str id "_content") :class "goog-tab-content"}
+    (for [[tab-title tab-content] tabs]
+      [:div {:id (str tab-title "_content") :style "display: none;"} tab-content])
+    ]])
 
 
 (defn main-page [events]
@@ -89,12 +90,15 @@
    [:body
     [:header [:h1 "Stackato Dashboard"]]
     (goog-tab-bar "maintab"
-     ["Events" [:ul {:id "events"}
-                (for [evt events]
-                  (record-html [nil evt]))]]
+     ["Events"
+      [:div
+       [:p "Only showing events since the app server was started; not real-time yet (needs refreshing)"]
+       [:ul {:id "events"}
+        (for [evt events]
+         (record-html [nil evt]))]]]
      ["State" (all-users-table-html)])
     [:footer "Footer"]
-    (javascript-tag "stackato.init();")]))
+    (javascript-tag "window.p = function(x){console.log(x); return x;}; stackato.init();")]))
 
 (defn event-queue-handler [request]
   {:status 200
