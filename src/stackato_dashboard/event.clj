@@ -11,7 +11,7 @@
   (when (:type record)
     (swap! current-events (partial cons record))))
 
-(def ^{:private false} event-queue (lm/channel))
+(def ^{:private false} event-queue (lm/permanent-channel))
 
 ;; TODO - write shutdown; store (future ...) val? how?
 (defn initialize
