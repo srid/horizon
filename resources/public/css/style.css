@@ -2,13 +2,23 @@ body {
   font-family: 'PT Sans Caption', sans-serif;
 }
 
+a, a:hover { text-decoration: none; }
+a:hover {text-decoration: underline;}
 ul#events li {
   list-style-type: none;
   padding: 1em;
 }
 
+table#all-users tr.inactive-user {
+    font-size: small;
+}
+
 table#all-users td {
     padding: 0.5em;
+}
+
+table#all-users th {
+    background-color: #88c6d3;
 }
 
 table#all-users th:hover {
@@ -17,18 +27,11 @@ table#all-users th:hover {
 }
 
 th.goog-tablesorter-sorted {
-    background-color: #eef;
+    background-color: #eef !important;
 }
 
 th.goog-tablesorter-sorted-reverse {
-    background-color: #fee;
-}
-
-article a {
-  text-decoration: none;
-}
-article a:hover {
-  border-bottom: 2px solid;
+    background-color: #fee !important;
 }
 
 header {
@@ -38,12 +41,6 @@ header h1 {
   border-bottom: 3px solid brown;
 }
 
-article {
-  margin-bottom: 0.3em;
-}
-article span.meta {
-  font-size: 75%;
-}
 footer {
   text-align: left;
   border-top: 3px solid gray;

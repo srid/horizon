@@ -39,17 +39,26 @@
     [:tr
      [:th "User"]
      [:th "App"]
+     [:th "Framework"]
      [:th "Services"]
      [:th "Last updated"]]]
    [:tbody
     (for [user (db/get-data)]
-      (for [app (:apps user)]
-        [:tr
+      (if (seq (:apps user))
+        (for [app (:apps user)]
+          [:tr
+           [:td (:email user)]
+           [:td [:a {:href (str "http://" (:url (first (:routes app))))} (:name app)]]
+           [:td (:framework app)]
+           [:td [:div (for [srv (:services app)]
+                        [:a (str (:alias srv) " - " (:name srv))])]]
+           [:td (:updated_at app)]])
+        [:tr {:class "inactive-user"}
          [:td (:email user)]
-         [:td [:a {:href (str "http://" (:url (first (:routes app))))} (:name app)]]
-         [:td [:div (for [srv (:services app)]
-                      [:a (str (:alias srv) " - " (:name srv))])]]
-         [:td (:updated_at app)]]))]])
+         [:td]
+         [:td]
+         [:td]
+         [:td]]))]])
 
 
 (defn main-page [events]
@@ -61,12 +70,13 @@
     (include-css "http://fonts.googleapis.com/css?family=PT+Sans+Caption")
     (include-js "/cljs/bootstrap.js")]
    [:body
-    [:h1 "Stackato Dashboard"]
+    [:header [:h1 "Stackato Dashboard"]]
     (all-users-table-html)
     [:ul {:id "events"}
     (for [evt events]
       (record-html [nil evt]))]
-    (javascript-tag "stackato.init();")]))
+    (javascript-tag "stackato.init();")
+    [:footer "Footer"]]))
 
 (defn event-queue-handler [request]
   {:status 200

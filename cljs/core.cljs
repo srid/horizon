@@ -8,6 +8,8 @@
     (doto component
       (.decorate (dom/getElement "all-users"))
       (.setSortFunction 0 TableSorter/alphaSort)
-      (.setSortFunction 1 (TableSorter/createReverseSort
+      (.setSortFunction 1 TableSorter/alphaSort)
+      (.setSortFunction 2 TableSorter/alphaSort)
+      (.setSortFunction 4 (TableSorter/createReverseSort
                            TableSorter/alphaSort))
-      (.setSortFunction 3 TableSorter/alphaSort))))
+      (.sort 4))))

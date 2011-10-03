@@ -32,6 +32,7 @@
       :alias (:alias cfg))))
 
 (defn get-data
+  "Load the cloud controller database into memory"
   []
   (let [[users apps routes sb sc srv] (load-data)]
     (for [user (vals users)]

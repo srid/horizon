@@ -9811,8 +9811,10 @@ var stackato = {init:function() {
   var a = new goog.ui.TableSorter;
   a.decorate(goog.dom.getElement.call(null, "all-users"));
   a.setSortFunction(0, goog.ui.TableSorter.alphaSort);
-  a.setSortFunction(1, goog.ui.TableSorter.createReverseSort.call(null, goog.ui.TableSorter.alphaSort));
-  a.setSortFunction(3, goog.ui.TableSorter.alphaSort);
+  a.setSortFunction(1, goog.ui.TableSorter.alphaSort);
+  a.setSortFunction(2, goog.ui.TableSorter.alphaSort);
+  a.setSortFunction(4, goog.ui.TableSorter.createReverseSort.call(null, goog.ui.TableSorter.alphaSort));
+  a.sort(4);
   return a
 }};
 goog.exportSymbol("stackato.init", stackato.init);
