@@ -9,40 +9,29 @@ goog.require('goog.ui.Tab');
 goog.require('goog.ui.TabBar');
 stackato.tabbar = (new goog.ui.TabBar());
 stackato.tablesorter = (new goog.ui.TableSorter());
-stackato.table_make_sortable = (function table_make_sortable(element){
-var G__3223__3224 = stackato.tablesorter;
-
-G__3223__3224.decorate(element);
-G__3223__3224.setSortFunction(0,goog.ui.TableSorter.alphaSort);
-G__3223__3224.setSortFunction(1,goog.ui.TableSorter.alphaSort);
-G__3223__3224.setSortFunction(2,goog.ui.TableSorter.alphaSort);
-G__3223__3224.setSortFunction(4,goog.ui.TableSorter.createReverseSort.call(null,goog.ui.TableSorter.alphaSort));
-G__3223__3224.sort(4);
-return G__3223__3224;
-});
 stackato.handle_tab_select = (function handle_tab_select(tabbar,e){
-var tab__3225 = e.target;
-var title__3226 = tab__3225.getCaption();
-var content__3227 = goog.dom.getElement.call(null,cljs.core.str.call(null,title__3226,"_content"));
+var tab__2417 = e.target;
+var title__2418 = tab__2417.getCaption();
+var content__2419 = goog.dom.getElement.call(null,cljs.core.str.call(null,title__2418,"_content"));
 
-var G__3228__3229 = cljs.core.seq.call(null,cljs.core.prim_seq.call(null,goog.dom.getChildren.call(null,goog.dom.getElement.call(null,content__3227.parentNode)),0));
+var G__2420__2421 = cljs.core.seq.call(null,cljs.core.prim_seq.call(null,goog.dom.getChildren.call(null,goog.dom.getElement.call(null,content__2419.parentNode)),0));
 
-if(cljs.core.truth_(G__3228__3229))
-{var e__3230 = cljs.core.first.call(null,G__3228__3229);
-var G__3228__3231 = G__3228__3229;
+if(cljs.core.truth_(G__2420__2421))
+{var e__2422 = cljs.core.first.call(null,G__2420__2421);
+var G__2420__2423 = G__2420__2421;
 
 while(true){
-goog.style.showElement.call(null,e__3230,false);
-var temp__3698__auto____3232 = cljs.core.next.call(null,G__3228__3231);
+goog.style.showElement.call(null,e__2422,false);
+var temp__3698__auto____2424 = cljs.core.next.call(null,G__2420__2423);
 
-if(cljs.core.truth_(temp__3698__auto____3232))
-{var G__3228__3233 = temp__3698__auto____3232;
+if(cljs.core.truth_(temp__3698__auto____2424))
+{var G__2420__2425 = temp__3698__auto____2424;
 
 {
-var G__3234 = cljs.core.first.call(null,G__3228__3233);
-var G__3235 = G__3228__3233;
-e__3230 = G__3234;
-G__3228__3231 = G__3235;
+var G__2426 = cljs.core.first.call(null,G__2420__2425);
+var G__2427 = G__2420__2425;
+e__2422 = G__2426;
+G__2420__2423 = G__2427;
 continue;
 }
 } else
@@ -51,13 +40,39 @@ break;
 }
 } else
 {}
-window.p.call(null,title__3226);
-window.p.call(null,content__3227);
-return goog.style.showElement.call(null,content__3227,true);
+window.p.call(null,title__2418);
+window.p.call(null,content__2419);
+return goog.style.showElement.call(null,content__2419,true);
 });
-stackato.events = goog.object.getValues(goog.ui.Component.EventType);
 stackato.init = (function init(n){
-stackato.table_make_sortable.call(null,goog.dom.getElement.call(null,"all-users"));
+stackato.tablesorter.decorate(goog.dom.getElement.call(null,"all-users"));
+var G__2428__2429 = cljs.core.seq.call(null,cljs.core.Vector.fromArray([0,1,2,4]));
+
+if(cljs.core.truth_(G__2428__2429))
+{var index__2430 = cljs.core.first.call(null,G__2428__2429);
+var G__2428__2431 = G__2428__2429;
+
+while(true){
+stackato.tablesorter.setSortFunction(index__2430,goog.ui.TableSorter.createReverseSort.call(null,goog.ui.TableSorter.alphaSort));
+var temp__3698__auto____2432 = cljs.core.next.call(null,G__2428__2431);
+
+if(cljs.core.truth_(temp__3698__auto____2432))
+{var G__2428__2433 = temp__3698__auto____2432;
+
+{
+var G__2434 = cljs.core.first.call(null,G__2428__2433);
+var G__2435 = G__2428__2433;
+index__2430 = G__2434;
+G__2428__2431 = G__2435;
+continue;
+}
+} else
+{}
+break;
+}
+} else
+{}
+stackato.tablesorter.sort(4);
 stackato.tabbar.decorate(goog.dom.getElement("maintab"));
 goog.events.listen(stackato.tabbar,goog.ui.Component.EventType.SELECT,cljs.core.partial.call(null,stackato.handle_tab_select,stackato.tabbar));
 return stackato.tabbar.setSelectedTabIndex(1);

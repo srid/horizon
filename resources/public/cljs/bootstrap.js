@@ -11245,16 +11245,6 @@ cljs.core.prefers = function(a) {
 var stackato = {};
 stackato.tabbar = new goog.ui.TabBar;
 stackato.tablesorter = new goog.ui.TableSorter;
-stackato.table_make_sortable = function(a) {
-  var b = stackato.tablesorter;
-  b.decorate(a);
-  b.setSortFunction(0, goog.ui.TableSorter.alphaSort);
-  b.setSortFunction(1, goog.ui.TableSorter.alphaSort);
-  b.setSortFunction(2, goog.ui.TableSorter.alphaSort);
-  b.setSortFunction(4, goog.ui.TableSorter.createReverseSort.call(null, goog.ui.TableSorter.alphaSort));
-  b.sort(4);
-  return b
-};
 stackato.handle_tab_select = function(a, b) {
   var c = b.target.getCaption(), d = goog.dom.getElement.call(null, cljs.core.str.call(null, c, "_content")), e = cljs.core.seq.call(null, cljs.core.prim_seq.call(null, goog.dom.getChildren.call(null, goog.dom.getElement.call(null, d.parentNode)), 0));
   if(cljs.core.truth_(e)) {
@@ -11270,9 +11260,19 @@ stackato.handle_tab_select = function(a, b) {
   window.p.call(null, d);
   return goog.style.showElement.call(null, d, !0)
 };
-stackato.events = goog.object.getValues(goog.ui.Component.EventType);
 stackato.init = function() {
-  stackato.table_make_sortable.call(null, goog.dom.getElement.call(null, "all-users"));
+  stackato.tablesorter.decorate(goog.dom.getElement.call(null, "all-users"));
+  var a = cljs.core.seq.call(null, cljs.core.Vector.fromArray([0, 1, 2, 4]));
+  if(cljs.core.truth_(a)) {
+    for(var b = cljs.core.first.call(null, a);;) {
+      if(stackato.tablesorter.setSortFunction(b, goog.ui.TableSorter.createReverseSort.call(null, goog.ui.TableSorter.alphaSort)), b = cljs.core.next.call(null, a), cljs.core.truth_(b)) {
+        a = b, b = cljs.core.first.call(null, a)
+      }else {
+        break
+      }
+    }
+  }
+  stackato.tablesorter.sort(4);
   stackato.tabbar.decorate(goog.dom.getElement("maintab"));
   goog.events.listen(stackato.tabbar, goog.ui.Component.EventType.SELECT, cljs.core.partial.call(null, stackato.handle_tab_select, stackato.tabbar));
   return stackato.tabbar.setSelectedTabIndex(1)

@@ -8,19 +8,7 @@
             [goog.ui.TabBar :as TabBar]))
 
 (def tabbar (goog.ui.TabBar.))
-
 (def tablesorter (goog.ui/TableSorter.))
-
-(defn table-make-sortable [element]
-  ;; Make all-users table sortable
-  (doto tablesorter
-    (.decorate element)
-    (.setSortFunction 0 TableSorter/alphaSort)
-    (.setSortFunction 1 TableSorter/alphaSort)
-    (.setSortFunction 2 TableSorter/alphaSort)
-    (.setSortFunction 4 (TableSorter/createReverseSort
-                         TableSorter/alphaSort))
-    (.sort 4)))
 
 (defn handle-tab-select [tabbar e]
   (let [tab      (.target e)
@@ -33,10 +21,16 @@
     (window.p content)
     (goog.style.showElement content true)))
 
-(def events (.getValues goog.object goog.ui.Component/EventType))
-
 (defn ^:export init [n]
-  (table-make-sortable (dom/getElement "all-users"))
+  ;; Setup all-users table to be sortable
+  (.decorate tablesorter (dom/getElement "all-users"))
+  (doseq [index [0 1 2 4]]
+    (.setSortFunction tablesorter index
+                      (TableSorter/createReverseSort
+                       TableSorter/alphaSort)))
+  (.sort tablesorter 4)
+
+  ;; Setup the tabbar
   (.decorate tabbar (.getElement goog.dom "maintab"))
   (.listen goog.events
            tabbar
