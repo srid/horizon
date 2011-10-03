@@ -1,0 +1,2 @@
+ssh -i ~/.ec2/sandbox.pem ubuntu@sandbox.activestate.com "sudo cp /home/stackato/stackato/vcap/cloud_controller/db/cloudcontroller.sqlite3 /tmp/; sudo chown \$USER /tmp/cloudcontroller.sqlite3"
+scp  -i ~/.ec2/sandbox.pem ubuntu@sandbox.activestate.com:/tmp/cloudcontroller.sqlite3 .  
