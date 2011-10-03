@@ -71,12 +71,14 @@
     (include-js "/cljs/bootstrap.js")]
    [:body
     [:header [:h1 "Stackato Dashboard"]]
-    (all-users-table-html)
+    [:h3 "Real-time events"]
     [:ul {:id "events"}
     (for [evt events]
       (record-html [nil evt]))]
-    (javascript-tag "stackato.init();")
-    [:footer "Footer"]]))
+    [:h3 "State"]
+    (all-users-table-html)
+    [:footer "Footer"]
+    (javascript-tag "stackato.init();")]))
 
 (defn event-queue-handler [request]
   {:status 200
