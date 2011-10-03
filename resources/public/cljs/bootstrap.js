@@ -11262,7 +11262,7 @@ stackato.handle_tab_select = function(a, b) {
 };
 stackato.init = function() {
   stackato.tablesorter.decorate(goog.dom.getElement.call(null, "all-users"));
-  var a = cljs.core.seq.call(null, cljs.core.Vector.fromArray([0, 1, 2, 4]));
+  var a = cljs.core.seq.call(null, cljs.core.Vector.fromArray([0, 1, 2, 3, 4]));
   if(cljs.core.truth_(a)) {
     for(var b = cljs.core.first.call(null, a);;) {
       if(stackato.tablesorter.setSortFunction(b, goog.ui.TableSorter.createReverseSort.call(null, goog.ui.TableSorter.alphaSort)), b = cljs.core.next.call(null, a), cljs.core.truth_(b)) {

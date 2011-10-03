@@ -31,9 +31,13 @@
      (str "unknown record type " (:type record)))
    [:small [:pre (str record)]]])
 
+(defn inactive-users-table-html [users]
+  [:ul
+   (for [user users]
+     (when-not (seq (:apps user))
+       [:li (:email user)]))])
 
-
-(defn all-users-table-html []
+(defn all-users-table-html [users]
   [:table {:id "all-users" :border "0" :cellpang "3"}
    [:thead
     [:tr
@@ -43,22 +47,15 @@
      [:th "Services"]
      [:th "Last updated"]]]
    [:tbody
-    (for [user (db/get-data)]
-      (if (seq (:apps user))
-        (for [app (:apps user)]
-          [:tr
-           [:td (:email user)]
-           [:td [:a {:href (str "http://" (:url (first (:routes app))))} (:name app)]]
-           [:td (:framework app)]
-           [:td [:div (for [srv (:services app)]
-                        [:a (str (:alias srv) " - " (:name srv))])]]
-           [:td (:updated_at app)]])
-        [:tr {:class "inactive-user"}
+    (for [user users]
+      (for [app (:apps user)]
+        [:tr
          [:td (:email user)]
-         [:td]
-         [:td]
-         [:td]
-         [:td]]))]])
+         [:td [:a {:href (str "http://" (:url (first (:routes app))))} (:name app)]]
+         [:td (:framework app)]
+         [:td [:div (for [srv (:services app)]
+                      [:a (str (:alias srv) " - " (:name srv))])]]
+         [:td (:updated_at app)]]))]])
 
 
 (defn- goog-tab-bar
@@ -80,23 +77,24 @@
    [:head
     [:title "Stackato Dashboard"]
     (include-css "/css/lessframework.css")
-    (include-css "/css/style.css")
     (include-css "http://fonts.googleapis.com/css?family=PT+Sans+Caption")
-    ;; TODO -- move this to (goog-tab-bar)
     (include-css "http://closure-library.googlecode.com/svn/trunk/closure/goog/css/tab.css")
     (include-css "http://closure-library.googlecode.com/svn/trunk/closure/goog/css/tabbar.css")
-    (include-css "http://closure-library.googlecode.com/svn/trunk/closure/goog/css/roundedtab.css")
+    (include-css "/css/style.css")
     (include-js "/cljs/bootstrap.js")]
    [:body
     [:header [:h1 "Stackato Dashboard"]]
-    (goog-tab-bar "maintab"
-     ["Events"
-      [:div
-       [:p "Only showing events since the app server was started; not real-time yet (needs refreshing)"]
-       [:ul {:id "events"}
-        (for [evt events]
-         (record-html [nil evt]))]]]
-     ["State" (all-users-table-html)])
+    (let [users (db/get-data)]
+      (goog-tab-bar
+       "maintab"
+       ["Events"
+        [:div
+         [:p "Only showing events since the app server was started; not real-time yet (needs refreshing)"]
+         [:ul {:id "events"}
+          (for [evt events]
+            (record-html [nil evt]))]]]
+       ["State" (all-users-table-html users)]
+       ["Inactive Users" (inactive-users-table-html users)]))
     [:footer "Footer"]
     (javascript-tag "window.p = function(x){console.log(x); return x;}; stackato.init();")]))
 

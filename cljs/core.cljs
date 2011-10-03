@@ -24,7 +24,7 @@
 (defn ^:export init [n]
   ;; Setup all-users table to be sortable
   (.decorate tablesorter (dom/getElement "all-users"))
-  (doseq [index [0 1 2 4]]
+  (doseq [index [0 1 2 3 4]]
     (.setSortFunction tablesorter index
                       (TableSorter/createReverseSort
                        TableSorter/alphaSort)))
