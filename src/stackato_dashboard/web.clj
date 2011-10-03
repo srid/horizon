@@ -39,14 +39,17 @@
     [:tr
      [:th "User"]
      [:th "App"]
-     [:th "Services"]]]
+     [:th "Services"]
+     [:th "Last updated"]]]
    [:tbody
     (for [user (db/get-data)]
       (for [app (:apps user)]
-        [:tr [:td (:email user)]
+        [:tr
+         [:td (:email user)]
          [:td [:a {:href (str "http://" (:url (first (:routes app))))} (:name app)]]
          [:td [:div (for [srv (:services app)]
-                      [:a (str (:alias srv) " - " (:name srv))])]]]))]])
+                      [:a (str (:alias srv) " - " (:name srv))])]]
+         [:td (:updated_at app)]]))]])
 
 
 (defn main-page [events]

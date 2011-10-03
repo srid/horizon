@@ -9,4 +9,5 @@
       (.decorate (dom/getElement "all-users"))
       (.setSortFunction 0 TableSorter/alphaSort)
       (.setSortFunction 1 (TableSorter/createReverseSort
-                           TableSorter/alphaSort)))))
+                           TableSorter/alphaSort))
+      (.setSortFunction 3 TableSorter/alphaSort))))
