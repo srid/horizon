@@ -61,6 +61,19 @@
          [:td]]))]])
 
 
+(defn- goog-tab-bar
+  "Create a goog.ui.TabBar element"
+  [id & tabs]
+  [:div
+   [:div {:id id :class "goog-tab-bar goog-tab-bar-top"}
+    (for [[tab-title tab-content] tabs]
+      [:div {:class "goog-tab" :id tab-title} tab-title])]
+   [:div {:id "goog-tab-bar-clear"}]
+   [:div {:id (str id "_content") :class "goog-tab-content"} "Nothing"]
+   (for [[tab-title tab-content] tabs]
+     [:div {:id (str tab-title "_content") :class "hidden"} tab-content])])
+
+
 (defn main-page [events]
   (html5
    [:head
@@ -68,15 +81,18 @@
     (include-css "/css/lessframework.css")
     (include-css "/css/style.css")
     (include-css "http://fonts.googleapis.com/css?family=PT+Sans+Caption")
+    ;; TODO -- move this to (goog-tab-bar)
+    (include-css "http://closure-library.googlecode.com/svn/trunk/closure/goog/css/tab.css")
+    (include-css "http://closure-library.googlecode.com/svn/trunk/closure/goog/css/tabbar.css")
+    (include-css "http://closure-library.googlecode.com/svn/trunk/closure/goog/css/roundedtab.css")
     (include-js "/cljs/bootstrap.js")]
    [:body
     [:header [:h1 "Stackato Dashboard"]]
-    [:h3 "Real-time events"]
-    [:ul {:id "events"}
-    (for [evt events]
-      (record-html [nil evt]))]
-    [:h3 "State"]
-    (all-users-table-html)
+    (goog-tab-bar "maintab"
+     ["Events" [:ul {:id "events"}
+                (for [evt events]
+                  (record-html [nil evt]))]]
+     ["State" (all-users-table-html)])
     [:footer "Footer"]
     (javascript-tag "stackato.init();")]))
 

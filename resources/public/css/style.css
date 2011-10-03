@@ -26,6 +26,10 @@ table#all-users th:hover {
     opacity: 0.7;
 }
 
+.hidden {
+    display: none;
+}
+
 th.goog-tablesorter-sorted {
     background-color: #eef !important;
 }
