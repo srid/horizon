@@ -26,9 +26,9 @@
 (defn- assoc-service-info
   [row sc srv]
   (let [cfg (sc  (:service_config_id row))
-        s   (srv (:service_id sc))]
+        s   (srv (:service_id cfg))]
     (assoc row
-      :name (:name s)
+      :service-name (:name s)
       :alias (:alias cfg))))
 
 (defn get-data

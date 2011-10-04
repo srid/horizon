@@ -46,7 +46,10 @@ th.goog-tablesorter-sorted-reverse {
 }
 
 header {
-  margin-bottom: 30px;
+  margin-bottom: 20px;
+}
+header p {
+  color: gray;
 }
 
 footer {

@@ -62,7 +62,7 @@
          [:td (:email user)]
          [:td (:framework app)]
          [:td [:div (for [srv (:services app)]
-                      [:a (str (:alias srv) " - " (:name srv))])]]
+                      [:span (:service-name srv) [:small [:tt (str " (" (:alias srv) ")")]]])]]
          [:td (:updated_at app)]]))]])
 
 (defn- goog-tab-bar
@@ -80,7 +80,7 @@
 (defn main-page [events]
   (html5
    [:head
-    [:title "Stackato Dashboard"]
+    [:title "Horizon"]
     (include-css "/css/lessframework.css")
     (include-css "http://fonts.googleapis.com/css?family=PT+Sans+Caption")
     (include-css "http://closure-library.googlecode.com/svn/trunk/closure/goog/css/tab.css")
@@ -88,7 +88,9 @@
     (include-css "/css/style.css")
     (include-js "/cljs/bootstrap.js")]
    [:body
-    [:header [:h1 "Stackato Dashboard"]]
+    [:header
+     [:h1 "Horizon"]
+     [:p "Stackato dashboard"]]
     (let [users (db/get-data)]
       (goog-tab-bar
        "maintab"
