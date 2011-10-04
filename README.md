@@ -1,23 +1,31 @@
 # stackato-dashboard
 
-Stackato dashboard for reporting a) the state of the cloud and b) real-time operations statistics. The former presents data from the cloud controller's database, while the later does real-time processing of the log files just like [Heroku's pulse](http://github.com/heroku/pulse).
+Stackato dashboard for reporting a) the state of the cloud and b) real-time operations statistics. The former presents data from the cloud controller's database, while the later does real-time processing of the log files just like [Heroku's pulse](http://lanyrd.com/2011/clojure-conj/shhfd/).
 
 ## Usage
 
-    $ lein deps
-    $ lein run  # also starts the web UI
+```bash
+$ lein deps
+$ lein run  # also starts the web UI
+```
     
 ## Development
 
-Start CLJS watch:
+Start CLJS watch in a second terminal:
 
-    CLOJURESCRIPT_HOME=../clojurescript cljs-watch src/cljs
+```
+# install cljs-watch: https://github.com/ibdknox/cljs-watch
+git clone https://github.com/clojure/clojurescript.git ../clojurescript
+CLOJURESCRIPT_HOME=../clojurescript cljs-watch src/cljs
+```
     
-`cake swank` followed by `M-x slime-connect` and eval:
+`M-x clojure-jack-in` and eval:
 
-    (stackato-doctor.sink/initialize)
-    (stackato-doctor.event/initialize)
-    (stackato-doctor.web/initialize)
+```clj
+(stackato-doctor.sink/initialize)
+(stackato-doctor.event/initialize)
+(stackato-doctor.web/initialize)
+```
 
 ## Architecture
 
@@ -27,7 +35,6 @@ TODO
 
 * Lamina and Aleph
 * [Storm](https://github.com/nathanmarz/storm) - Distributed and fault-tolerant realtime computation
-* Beanstalk fork (based on Lamina and Aleph) - https://github.com/sunng87/clojalk
 
 ## License
 
