@@ -16,20 +16,19 @@
              [record :as record]
              [db :as db]]))
 
-(defn app-html2 [record]
+(defn record-app-html [record]
   (let [url (first (:uris (:json record)))
         url (if url (str "http://" url))]
     [:b [:a {:href url :target "_blank"} (:appname record)]]))
 (defn record-html [[host record]]
-  [:li
-   [:b (record/format-log-datetime record)] " "
+  [:li {:title (str record)}
+   [:b (record/format-log-datetime record)] " -- "
    (condp = (:type record)
      :instance-ready-for-connections
-     [:span "DEA has deployed: " (app-html2 record)]
+     [:span "DEA has started: " (record-app-html record)]
      :received-start-message
-     [:span "DEA is deploying: " (app-html2 record) " by " (first (:users record)) " ...."]
-     (str "unknown record type " (:type record)))
-   [:small [:pre (str record)]]])
+     [:span "DEA is starting: " (record-app-html record) " by " (first (:users record)) " ...."]
+     (str "unknown record type " (:type record)))])
 
 
 (defn users-table-html [users]
@@ -76,8 +75,7 @@
    [:div {:id "goog-tab-bar-clear"}]
    [:div {:id (str id "_content") :class "goog-tab-content"}
     (for [[tab-title tab-content] tabs]
-      [:div {:id (str tab-title "_content") :style "display: none;"} tab-content])
-    ]])
+      [:div {:id (str tab-title "_content") :style "display: none;"} tab-content])]])
 
 (defn main-page [events]
   (html5
@@ -96,7 +94,7 @@
        "maintab"
        ["Events"
         [:div
-         [:p "Only showing recent events; not real-time yet (needs refreshing)"]
+         [:i [:p {:style "padding: 1em;"} "Only showing recent events; not real-time yet (needs refreshing)"]]
          [:ul {:id "events"}
           (for [evt events]
             (record-html [nil evt]))]]]
