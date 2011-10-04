@@ -1,5 +1,5 @@
-(ns stackato-dashboard.test.core
-  (:use [stackato-dashboard.core])
+(ns horizon.test.core
+  (:use [horizon.core])
   (:use [clojure.test]))
 
 (deftest replace-me ;; FIXME: write

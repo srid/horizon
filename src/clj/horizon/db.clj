@@ -1,4 +1,4 @@
-(ns stackato-dashboard.db
+(ns horizon.db
   (:use [clojure.java.jdbc :only (with-connection with-query-results)])
   (:require [clojureql.core :as q]))
 

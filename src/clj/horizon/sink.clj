@@ -1,4 +1,4 @@
-(ns stackato-dashboard.sink
+(ns horizon.sink
   (use [clojure.java.shell :only (sh)]
        [clojure.string :only (split-lines)]
        [lamina.core :as lm]))

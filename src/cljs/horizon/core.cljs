@@ -1,4 +1,4 @@
-(ns stackato
+(ns horizon
   (:require [goog.dom :as dom]
             [goog.object :as goog-object]
             [goog.events.Event :as goog-event]

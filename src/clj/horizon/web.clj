@@ -1,4 +1,4 @@
-(ns stackato-dashboard.web
+(ns horizon.web
   (:use compojure.core
         ring.middleware.stacktrace
         [ring.util.response :only [response]]
@@ -11,7 +11,7 @@
              [route :as route]
              [handler :as handler]
              [response :as response]]
-            [stackato-dashboard
+            [horizon
              [event :as event]
              [record :as record]
              [db :as db]]))
@@ -101,7 +101,7 @@
        ["Apps" (apps-table-html users)]
        ["Users" (users-table-html users)]))
     [:footer [:a {:href "http://stackato.com/"} "ActiveState Stackato"]]
-    (javascript-tag "window.p = function(x){console.log(x); return x;}; stackato.init();")]))
+    (javascript-tag "window.p = function(x){console.log(x); return x;}; horizon.init();")]))
 
 (defn event-queue-handler [request]
   {:status 200

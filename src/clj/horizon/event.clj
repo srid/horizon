@@ -1,7 +1,7 @@
-(ns stackato-dashboard.event
+(ns horizon.event
   (:use [lamina.core :as lm])
-  (:require [stackato-dashboard.record :as record]
-            [stackato-dashboard.sink :as sink]))
+  (:require [horizon.record :as record]
+            [horizon.sink :as sink]))
 
 ;; Events for last N minutes -- must deprecate
 (defonce ^{:private false} current-events (atom []))

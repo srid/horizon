@@ -1,4 +1,4 @@
-(ns stackato-dashboard.record
+(ns horizon.record
   (:use [clojure.data.json :only (read-json)]
         [clj-time.core :only (date-time)]
         [clj-time.format :only (unparse formatter)]

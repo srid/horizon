@@ -5531,6 +5531,9 @@ goog.ui.registry.setDecoratorByClassName(goog.ui.TabBarRenderer.CSS_CLASS, funct
   return new goog.ui.TabBar
 });
 var cljs = {core:{}};
+cljs.core._STAR_print_fn_STAR_ = function() {
+  throw Error("No *print-fn* fn set for evaluation environment");
+};
 cljs.core.truth_ = function(a) {
   return a != null && a !== !1
 };
@@ -7407,6 +7410,24 @@ cljs.core.hash_coll = function(a) {
   return cljs.core.reduce.call(null, function(a, c) {
     return cljs.core.hash_combine.call(null, a, cljs.core.hash.call(null, c))
   }, cljs.core.hash.call(null, cljs.core.first.call(null, a)), cljs.core.next.call(null, a))
+};
+cljs.core.extend_object_BANG_ = function(a, b) {
+  var c = cljs.core.seq.call(null, b);
+  if(cljs.core.truth_(c)) {
+    var d = cljs.core.first.call(null, c);
+    cljs.core.nth.call(null, d, 0, null);
+    for(cljs.core.nth.call(null, d, 1, null);;) {
+      var e = d, d = cljs.core.nth.call(null, e, 0, null), e = cljs.core.nth.call(null, e, 1, null), d = cljs.core.name.call(null, d);
+      a[d] = e;
+      c = cljs.core.next.call(null, c);
+      if(cljs.core.truth_(c)) {
+        d = c, c = cljs.core.first.call(null, d), e = d, d = c, c = e
+      }else {
+        break
+      }
+    }
+  }
+  return a
 };
 cljs.core.List = function(a, b, c, d) {
   this.meta = a;
@@ -10280,7 +10301,7 @@ cljs.core.pr_sequential = function(a, b, c, d, e, f) {
   }, f))), cljs.core.Vector.fromArray([d]))
 };
 cljs.core.string_print = function(a) {
-  print.call(null, a);
+  cljs.core._STAR_print_fn_STAR_.call(null, a);
   return null
 };
 cljs.core.flush = function() {
@@ -11242,11 +11263,11 @@ cljs.core.get_method = function(a, b) {
 cljs.core.prefers = function(a) {
   return cljs.core._prefers.call(null, a)
 };
-var stackato = {};
-stackato.tabbar = new goog.ui.TabBar;
-stackato.apps_tablesorter = new goog.ui.TableSorter;
-stackato.users_tablesorter = new goog.ui.TableSorter;
-stackato.handle_tab_select = function(a, b) {
+var horizon = {};
+horizon.tabbar = new goog.ui.TabBar;
+horizon.apps_tablesorter = new goog.ui.TableSorter;
+horizon.users_tablesorter = new goog.ui.TableSorter;
+horizon.handle_tab_select = function(a, b) {
   var c = b.target.getCaption(), c = goog.dom.getElement.call(null, cljs.core.str.call(null, c, "_content")), d = cljs.core.seq.call(null, cljs.core.prim_seq.call(null, goog.dom.getChildren.call(null, goog.dom.getElement.call(null, c.parentNode)), 0));
   if(cljs.core.truth_(d)) {
     for(var e = cljs.core.first.call(null, d);;) {
@@ -11259,34 +11280,34 @@ stackato.handle_tab_select = function(a, b) {
   }
   return goog.style.showElement.call(null, c, !0)
 };
-stackato.init = function() {
-  stackato.apps_tablesorter.decorate(goog.dom.getElement.call(null, "app"));
+horizon.init = function() {
+  horizon.apps_tablesorter.decorate(goog.dom.getElement.call(null, "app"));
   var a = cljs.core.seq.call(null, cljs.core.Vector.fromArray([0, 1, 2, 3, 4]));
   if(cljs.core.truth_(a)) {
     for(var b = cljs.core.first.call(null, a);;) {
-      if(stackato.apps_tablesorter.setSortFunction(b, goog.ui.TableSorter.createReverseSort.call(null, goog.ui.TableSorter.alphaSort)), b = cljs.core.next.call(null, a), cljs.core.truth_(b)) {
+      if(horizon.apps_tablesorter.setSortFunction(b, goog.ui.TableSorter.createReverseSort.call(null, goog.ui.TableSorter.alphaSort)), b = cljs.core.next.call(null, a), cljs.core.truth_(b)) {
         a = b, b = cljs.core.first.call(null, a)
       }else {
         break
       }
     }
   }
-  stackato.apps_tablesorter.sort(4);
-  stackato.users_tablesorter.decorate(goog.dom.getElement.call(null, "users"));
+  horizon.apps_tablesorter.sort(4);
+  horizon.users_tablesorter.decorate(goog.dom.getElement.call(null, "users"));
   a = cljs.core.seq.call(null, cljs.core.Vector.fromArray([0, 1]));
   if(cljs.core.truth_(a)) {
     for(b = cljs.core.first.call(null, a);;) {
-      if(stackato.users_tablesorter.setSortFunction(b, goog.ui.TableSorter.createReverseSort.call(null, goog.ui.TableSorter.alphaSort)), b = cljs.core.next.call(null, a), cljs.core.truth_(b)) {
+      if(horizon.users_tablesorter.setSortFunction(b, goog.ui.TableSorter.createReverseSort.call(null, goog.ui.TableSorter.alphaSort)), b = cljs.core.next.call(null, a), cljs.core.truth_(b)) {
         a = b, b = cljs.core.first.call(null, a)
       }else {
         break
       }
     }
   }
-  stackato.users_tablesorter.setSortFunction(2, goog.ui.TableSorter.createReverseSort.call(null, goog.ui.TableSorter.numericSort));
-  stackato.users_tablesorter.sort(2);
-  stackato.tabbar.decorate(goog.dom.getElement("maintab"));
-  goog.events.listen(stackato.tabbar, goog.ui.Component.EventType.SELECT, cljs.core.partial.call(null, stackato.handle_tab_select, stackato.tabbar));
-  return stackato.tabbar.setSelectedTabIndex(1)
+  horizon.users_tablesorter.setSortFunction(2, goog.ui.TableSorter.createReverseSort.call(null, goog.ui.TableSorter.numericSort));
+  horizon.users_tablesorter.sort(2);
+  horizon.tabbar.decorate(goog.dom.getElement("maintab"));
+  goog.events.listen(horizon.tabbar, goog.ui.Component.EventType.SELECT, cljs.core.partial.call(null, horizon.handle_tab_select, horizon.tabbar));
+  return horizon.tabbar.setSelectedTabIndex(1)
 };
-goog.exportSymbol("stackato.init", stackato.init);
+goog.exportSymbol("horizon.init", horizon.init);

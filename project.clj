@@ -1,4 +1,4 @@
-(defproject stackato-dashboard "1.0.0-SNAPSHOT"
+(defproject horizon "1.0.0-SNAPSHOT"
   :description "Stackato dashboard"
   :dependencies [[org.clojure/clojure "1.2.1"]
                  [org.clojure/tools.logging "0.2.0"]
@@ -14,4 +14,4 @@
                  [compojure "0.6.4"]
                  [ring "0.3.11"]]
   :source-path "src/clj"
-  :main stackato-dashboard.core)
+  :main horizon.core)

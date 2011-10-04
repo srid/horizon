@@ -1,6 +1,6 @@
-# stackato-dashboard
+# horizon
 
-Stackato dashboard for reporting a) the state of the cloud and b) real-time operations statistics. The former presents data from the cloud controller's database, while the later does real-time processing of the log files just like [Heroku's pulse](http://lanyrd.com/2011/clojure-conj/shhfd/).
+Horizon is the Stackato dashboard for reporting a) the state of the cloud and b) real-time operations statistics. The former presents data from the cloud controller's database, while the later does real-time processing of the log files just like [Heroku's pulse](http://lanyrd.com/2011/clojure-conj/shhfd/).
 
 ## Usage
 
@@ -22,9 +22,9 @@ CLOJURESCRIPT_HOME=../clojurescript cljs-watch src/cljs
 `M-x clojure-jack-in` and eval:
 
 ```clj
-(stackato-doctor.sink/initialize)
-(stackato-doctor.event/initialize)
-(stackato-doctor.web/initialize)
+(horizon.sink/initialize)
+(horizon.event/initialize)
+(horizon.web/initialize)
 ```
 
 ## Architecture
