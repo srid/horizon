@@ -45,11 +45,18 @@ th.goog-tablesorter-sorted-reverse {
     background-color: #fee !important;
 }
 
+body {
+    padding-top: 1em !important;
+}
 header {
   margin-bottom: 20px;
+  background:url(/img/horizon.jpg);
+  color: #eeeeee;
+  text-align: right;
+  padding: 1em;
 }
 header p {
-  color: gray;
+  color: #aaaaaa;
 }
 
 footer {

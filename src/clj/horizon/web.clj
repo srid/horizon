@@ -95,7 +95,7 @@
       (goog-tab-bar
        "maintab"
        ["Events"
-        [:div
+        [:div {:style "height: 800px;"}
          [:i [:p {:style "padding: 1em;"} "Only showing recent events; not real-time yet (needs refreshing)"]]
          [:ul {:id "events"}
           (for [evt events]
