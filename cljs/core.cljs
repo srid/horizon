@@ -8,7 +8,8 @@
             [goog.ui.TabBar :as TabBar]))
 
 (def tabbar (goog.ui.TabBar.))
-(def tablesorter (goog.ui/TableSorter.))
+(def apps-tablesorter (goog.ui/TableSorter.))
+(def users-tablesorter (goog.ui/TableSorter.))
 
 (defn handle-tab-select [tabbar e]
   (let [tab      (.target e)
@@ -17,18 +18,27 @@
     ;; prim-seq is required to seq through a node collection
     (doseq [e (prim-seq (dom/getChildren (dom/getElement (.parentNode content))) 0)]
       (goog.style.showElement e false))
-    (window.p title)
-    (window.p content)
     (goog.style.showElement content true)))
 
 (defn ^:export init [n]
-  ;; Setup all-users table to be sortable
-  (.decorate tablesorter (dom/getElement "all-users"))
+  ;; Setup app table to be sortable
+  (.decorate apps-tablesorter (dom/getElement "app"))
   (doseq [index [0 1 2 3 4]]
-    (.setSortFunction tablesorter index
+    (.setSortFunction apps-tablesorter index
                       (TableSorter/createReverseSort
                        TableSorter/alphaSort)))
-  (.sort tablesorter 4)
+  (.sort apps-tablesorter 4)
+
+  ;; Setup users table to be sortable
+  (.decorate users-tablesorter (dom/getElement "users"))
+  (doseq [index [0 1]]
+    (.setSortFunction users-tablesorter index
+                      (TableSorter/createReverseSort
+                       TableSorter/alphaSort)))
+  (.setSortFunction users-tablesorter 2
+                    (TableSorter/createReverseSort
+                     TableSorter/numericSort))
+  (.sort users-tablesorter 2)
 
   ;; Setup the tabbar
   (.decorate tabbar (.getElement goog.dom "maintab"))

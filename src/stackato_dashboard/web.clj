@@ -31,18 +31,27 @@
      (str "unknown record type " (:type record)))
    [:small [:pre (str record)]]])
 
-(defn inactive-users-table-html [users]
-  [:ul
-   (for [user users]
-     (when-not (seq (:apps user))
-       [:li (:email user)]))])
 
-(defn all-users-table-html [users]
-  [:table {:id "all-users" :border "0" :cellpang "3"}
+(defn users-table-html [users]
+  [:table {:class "state" :id "users"}
    [:thead
     [:tr
      [:th "User"]
+     [:th "Registered"]
+     [:th "Apps"]]
+    [:tbody
+     (for [user users]
+       [:tr
+        [:td (:email user)]
+        [:td (:created_at user)]
+        [:td (count (:apps user))]])]]])
+
+(defn apps-table-html [users]
+  [:table {:class "state" :id "app" :border "0" :cellpang "3"}
+   [:thead
+    [:tr
      [:th "App"]
+     [:th "User"]
      [:th "Framework"]
      [:th "Services"]
      [:th "Last updated"]]]
@@ -50,13 +59,12 @@
     (for [user users]
       (for [app (:apps user)]
         [:tr
-         [:td (:email user)]
          [:td [:a {:href (str "http://" (:url (first (:routes app))))} (:name app)]]
+         [:td (:email user)]
          [:td (:framework app)]
          [:td [:div (for [srv (:services app)]
                       [:a (str (:alias srv) " - " (:name srv))])]]
          [:td (:updated_at app)]]))]])
-
 
 (defn- goog-tab-bar
   "Create a goog.ui.TabBar element"
@@ -70,7 +78,6 @@
     (for [[tab-title tab-content] tabs]
       [:div {:id (str tab-title "_content") :style "display: none;"} tab-content])
     ]])
-
 
 (defn main-page [events]
   (html5
@@ -93,9 +100,9 @@
          [:ul {:id "events"}
           (for [evt events]
             (record-html [nil evt]))]]]
-       ["State" (all-users-table-html users)]
-       ["Inactive Users" (inactive-users-table-html users)]))
-    [:footer "Footer"]
+       ["Apps" (apps-table-html users)]
+       ["Users" (users-table-html users)]))
+    [:footer [:a {:href "http://stackato.com/"} "ActiveState Stackato"]]
     (javascript-tag "window.p = function(x){console.log(x); return x;}; stackato.init();")]))
 
 (defn event-queue-handler [request]

@@ -1,5 +1,6 @@
 body { 
   font-family: 'PT Sans Caption', sans-serif;
+  margin: auto;
 }
 
 a, a:hover { text-decoration: none; }
@@ -9,19 +10,15 @@ ul#events li {
   padding: 1em;
 }
 
-table#all-users tr.inactive-user {
-    font-size: small;
+table.state td {
+    padding: 0.2em;
 }
 
-table#all-users td {
-    padding: 0.5em;
+table.state th {
+    background-color: #cccccc;
 }
 
-table#all-users th {
-    background-color: #88c6d3;
-}
-
-table#all-users th:hover {
+table.state th:hover {
     cursor: pointer;
     opacity: 0.7;
 }
@@ -49,9 +46,6 @@ th.goog-tablesorter-sorted-reverse {
 
 header {
   margin-bottom: 30px;
-}
-header h1 { 
-  border-bottom: 3px solid brown;
 }
 
 footer {
