@@ -11,7 +11,7 @@ Stackato dashboard for reporting a) the state of the cloud and b) real-time oper
 
 Start CLJS watch:
 
-    CLOJURESCRIPT_HOME=../clojurescript cljs-watch cljs
+    CLOJURESCRIPT_HOME=../clojurescript cljs-watch src/cljs
     
 `cake swank` followed by `M-x slime-connect` and eval:
 

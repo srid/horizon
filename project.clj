@@ -13,4 +13,5 @@
                  [hiccup "0.3.6"]
                  [compojure "0.6.4"]
                  [ring "0.3.11"]]
+  :source-path "src/clj"
   :main stackato-dashboard.core)
