@@ -89,7 +89,7 @@
        "maintab"
        ["Events"
         [:div
-         [:p "Only showing events since the app server was started; not real-time yet (needs refreshing)"]
+         [:p "Only showing recent events; not real-time yet (needs refreshing)"]
          [:ul {:id "events"}
           (for [evt events]
             (record-html [nil evt]))]]]

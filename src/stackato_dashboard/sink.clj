@@ -21,14 +21,14 @@
   (sh-line-seq (str "scripts/tail-dea-log " host)))
 
 ;; log queue
-(def ^{:private true} log-queue (lm/channel))
+(defonce ^{:private true} log-queue (lm/channel))
 (defn- register-log-source [host lazy-lines]
   (future
     (doseq [line lazy-lines]
       (lm/enqueue log-queue [host line]))))
 
 ;; mapping from hostname to open line-seq on dea.log (via ssh/tail-f)
-(def ^{:private true} running-deas (agent {}))
+(defonce ^{:private true} running-deas (agent {}))
 (defn- update-running-deas
   "Update the running-deas agent with new set of deas from AWS"
   [curr]
