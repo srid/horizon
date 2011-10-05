@@ -1,5 +1,5 @@
 body { 
-  font-family: 'Alike Angular', sans-serif;
+  font-family: helvetica, arial, freesans, clean, sans-serif;
   margin: auto;
   font-size: 90%;
   background-color: #fefefe;
@@ -9,7 +9,6 @@ body {
     padding-top: 1em !important;
 }
 header {
- font-family: 'Spinnaker', serif;
   margin-bottom: 20px;
   background:url(/img/horizon.jpg);
   color: #eeeeee;
@@ -19,12 +18,12 @@ header {
 header p {
   color: #aaaaaa;
 }
-.titlefont, .goog-tab, th {
-    font-family: 'Spinnaker', serif;    
+
+header, footer {
+    font-family: 'Spinnaker', serif;
 }
 
 footer {
-  font-family: 'Spinnaker', serif;    
   text-align: left;
   border-top: 3px solid gray;
   margin-top: 30px;

@@ -6,7 +6,7 @@ Horizon is the Stackato dashboard for reporting a) the state of the cloud and b)
 
 ```bash
 $ lein deps
-$ # Compiled cljs scripts (see 'Development' below)
+$ # Compile cljs scripts (see 'Development' below)
 $ lein run  # also starts the web UI
 ```
     
@@ -14,7 +14,7 @@ $ lein run  # also starts the web UI
 
 Start CLJS watch in a second terminal:
 
-```
+```bash
 # install cljs-watch: https://github.com/ibdknox/cljs-watch
 git clone https://github.com/clojure/clojurescript.git ../clojurescript
 CLOJURESCRIPT_HOME=../clojurescript cljs-watch src/cljs

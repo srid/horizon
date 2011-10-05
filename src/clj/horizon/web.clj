@@ -99,7 +99,6 @@
    [:head
     [:title "Horizon &mdash; Stackato dashboard"]
     (include-css "/css/lessframework.css")
-    (include-css "http://fonts.googleapis.com/css?family=Alike+Angular")
     (include-css "http://fonts.googleapis.com/css?family=Spinnaker")
     (include-css "http://closure-library.googlecode.com/svn/trunk/closure/goog/css/tab.css")
     (include-css "http://closure-library.googlecode.com/svn/trunk/closure/goog/css/tabbar.css")
