@@ -122,14 +122,15 @@
     [:footer [:a {:href "http://stackato.com/"} "ActiveState Stackato"]]
     (javascript-tag "window.p = function(x){console.log(x); return x;}; horizon.init();")]))
 
-(defn event-queue-handler [request]
-  {:status 200
-   :headers {"content-type" "text/html"}
-   :body (map* #(html (record-html %)) event/event-queue)})
+(defn event-broadcast-handler [ch request]
+  (enqueue ch
+           {:status 200
+            :headers {"content-type" "text/plain"}
+            :body (map* #(str (html (record-html %)) "\n") (fork event/event-queue))}))
 
 (defroutes app-routes
   (GET "/" []  (main-page (seq @event/current-events)))
-  (GET "/events" [] event-queue-handler)
+  (GET "/events" [] (wrap-aleph-handler event-broadcast-handler))
   
   (route/resources "/")
   (route/not-found "Page not found"))
@@ -137,10 +138,10 @@
 (defonce server (atom nil))
 
 (defn initialize []
-  (let [port 8001]
+  (let [port (Integer/parseInt (get (System/getenv) "PORT" "8000"))]
     (println (format "Starting http://localhost:%s/" port))
     (swap! server (fn [_] (start-http-server
-                          (wrap-ring-handler app-routes)
+                          (wrap-ring-handler (wrap-stacktrace app-routes))
                           {:port port})))))
 
 (defn -main []
