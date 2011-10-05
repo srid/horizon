@@ -41,7 +41,7 @@
   (let [dt        (parse-sqlite-datetime s)
         sortrepr  (unparse (formatters :basic-ordinal-date-time-no-ms) dt)
         humanrepr (unparse (formatter "EEE, dd MMM yyyy HH:mm:ss") dt)]
-    [:span
+    [:tt
      [:span {:style "display: none;"} sortrepr]
      humanrepr]))
 
@@ -54,10 +54,11 @@
      [:th "Apps"]]
     [:tbody
      (for [user users]
-       [:tr
-        [:td (:email user)]
-        [:td (sqlite-datetime-html (:created_at user))]
-        [:td {:class "num"} (count (:apps user))]])]]])
+       (let [numapps (count (:apps user))]
+         [:tr (when (zero? numapps) {:class "inactive"})
+          [:td {:class "titlefont"} (:email user)]
+          [:td (sqlite-datetime-html (:created_at user))]
+          [:td {:class "num"} numapps]]))]]])
 
 (defn apps-table-html [users]
   [:table {:class "state" :id "app" :border "0" :cellpang "3"}
@@ -72,15 +73,13 @@
     (for [user users]
       (for [app (:apps user)]
         [:tr
-         [:td [:a {:href (str "http://" (:url (first (:routes app))))} (:name app)]]
-         [:td [:small (:email user)]]
+         [:td {:class "titlefont"}
+          [:a {:href (str "http://" (:url (first (:routes app))))} (:name app)]]
+         [:td (:email user)]
          [:td (:framework app)]
          [:td [:div (for [srv (:services app)]
-                      [:span
-                       (:service-name srv)
-                       ": "
-                       [:small
-                        [:tt (:alias srv)]]])]]
+                      [:a {:title (:alias srv)}
+                       (:service-name srv)])]]
          [:td (sqlite-datetime-html (:updated_at app))]]))]])
 
 (defn- goog-tab-bar
@@ -100,7 +99,8 @@
    [:head
     [:title "Horizon &mdash; Stackato dashboard"]
     (include-css "/css/lessframework.css")
-    (include-css "http://fonts.googleapis.com/css?family=PT+Sans+Caption")
+    (include-css "http://fonts.googleapis.com/css?family=Alike+Angular")
+    (include-css "http://fonts.googleapis.com/css?family=Spinnaker")
     (include-css "http://closure-library.googlecode.com/svn/trunk/closure/goog/css/tab.css")
     (include-css "http://closure-library.googlecode.com/svn/trunk/closure/goog/css/tabbar.css")
     (include-css "/css/style.css")

@@ -1,8 +1,42 @@
 body { 
-  font-family: 'PT Sans Caption', sans-serif;
+  font-family: 'Alike Angular', sans-serif;
   margin: auto;
+  font-size: 90%;
   background-color: #fefefe;
 }
+
+body {
+    padding-top: 1em !important;
+}
+header {
+ font-family: 'Spinnaker', serif;
+  margin-bottom: 20px;
+  background:url(/img/horizon.jpg);
+  color: #eeeeee;
+  text-align: right;
+  padding: 1em;
+}
+header p {
+  color: #aaaaaa;
+}
+.titlefont, .goog-tab, th {
+    font-family: 'Spinnaker', serif;    
+}
+
+footer {
+  font-family: 'Spinnaker', serif;    
+  text-align: left;
+  border-top: 3px solid gray;
+  margin-top: 30px;
+  color: #666666;
+  background-color: #1F1F1F;
+  padding: 5px;
+}
+footer a, footer a:visited, footer a:active {
+  color: #666666;
+}
+
+
 
 a, a:hover { text-decoration: none; }
 a:hover {text-decoration: underline;}
@@ -30,6 +64,10 @@ table.state td.num {
     text-align: right;
 }
 
+table.state tr.inactive {
+    color: #aaaaaa;
+}
+
 .hidden {
     background-color: red;
 }
@@ -49,31 +87,5 @@ th.goog-tablesorter-sorted {
 
 th.goog-tablesorter-sorted-reverse {
     background-color: #fee !important;
-}
-
-body {
-    padding-top: 1em !important;
-}
-header {
-  margin-bottom: 20px;
-  background:url(/img/horizon.jpg);
-  color: #eeeeee;
-  text-align: right;
-  padding: 1em;
-}
-header p {
-  color: #aaaaaa;
-}
-
-footer {
-  text-align: left;
-  border-top: 3px solid gray;
-  margin-top: 30px;
-  color: #666666;
-  background-color: #1F1F1F;
-  padding: 5px;
-}
-footer a, footer a:visited, footer a:active {
-  color: #666666;
 }
 
