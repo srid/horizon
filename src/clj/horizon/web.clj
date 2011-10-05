@@ -5,6 +5,7 @@
         [hiccup.middleware :only (wrap-base-url)]
         hiccup.core
         hiccup.page-helpers
+        [clj-time.format :only (parse unparse formatter)]
         lamina.core
         aleph.http)
   (:require [compojure
@@ -31,6 +32,14 @@
      (str "unknown record type " (:type record)))])
 
 
+(defn parse-sqlite-datetime
+  [s]
+  (parse (clojure.string/replace s " " "T")))
+
+(defn datetime->humanrepr
+  [dt]
+  (unparse (formatter "EEE, dd MMM yyyy HH:mm:ss") dt))
+
 (defn users-table-html [users]
   [:table {:class "state" :id "users"}
    [:thead
@@ -42,7 +51,9 @@
      (for [user users]
        [:tr
         [:td (:email user)]
-        [:td (:created_at user)]
+        [:td (datetime->humanrepr
+              (parse-sqlite-datetime
+               (:created_at user)))]
         [:td (count (:apps user))]])]]])
 
 (defn apps-table-html [users]
@@ -59,11 +70,12 @@
       (for [app (:apps user)]
         [:tr
          [:td [:a {:href (str "http://" (:url (first (:routes app))))} (:name app)]]
-         [:td (:email user)]
+         [:td [:small (:email user)]]
          [:td (:framework app)]
          [:td [:div (for [srv (:services app)]
                       [:span (:service-name srv) [:small [:tt (str " (" (:alias srv) ")")]]])]]
-         [:td (:updated_at app)]]))]])
+         [:td (datetime->humanrepr
+               (parse-sqlite-datetime (:updated_at app)))]]))]])
 
 (defn- goog-tab-bar
   "Create a goog.ui.TabBar element"
@@ -80,7 +92,7 @@
 (defn main-page [events]
   (html5
    [:head
-    [:title "Horizon"]
+    [:title "Horizon &mdash; Stackato dashboard"]
     (include-css "/css/lessframework.css")
     (include-css "http://fonts.googleapis.com/css?family=PT+Sans+Caption")
     (include-css "http://closure-library.googlecode.com/svn/trunk/closure/goog/css/tab.css")
@@ -94,7 +106,7 @@
     (let [users (db/get-data)]
       (goog-tab-bar
        "maintab"
-       ["Events"
+       ["Cloud events (real-time)"
         [:div {:style "height: 800px;"}
          [:i [:p {:style "padding: 1em;"} "Only showing recent events; not real-time yet (needs refreshing)"]]
          [:ul {:id "events"}
