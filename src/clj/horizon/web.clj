@@ -5,7 +5,7 @@
         [hiccup.middleware :only (wrap-base-url)]
         hiccup.core
         hiccup.page-helpers
-        [clj-time.format :only (parse unparse formatter)]
+        [clj-time.format :only (parse unparse formatter formatters)]
         lamina.core
         aleph.http)
   (:require [compojure
@@ -36,9 +36,14 @@
   [s]
   (parse (clojure.string/replace s " " "T")))
 
-(defn datetime->humanrepr
-  [dt]
-  (unparse (formatter "EEE, dd MMM yyyy HH:mm:ss") dt))
+(defn sqlite-datetime-html
+  [s]
+  (let [dt        (parse-sqlite-datetime s)
+        sortrepr  (unparse (formatters :basic-ordinal-date-time-no-ms) dt)
+        humanrepr (unparse (formatter "EEE, dd MMM yyyy HH:mm:ss") dt)]
+    [:span
+     [:span {:style "display: none;"} sortrepr]
+     humanrepr]))
 
 (defn users-table-html [users]
   [:table {:class "state" :id "users"}
@@ -51,9 +56,7 @@
      (for [user users]
        [:tr
         [:td (:email user)]
-        [:td (datetime->humanrepr
-              (parse-sqlite-datetime
-               (:created_at user)))]
+        [:td (sqlite-datetime-html (:created_at user))]
         [:td (count (:apps user))]])]]])
 
 (defn apps-table-html [users]
@@ -74,8 +77,7 @@
          [:td (:framework app)]
          [:td [:div (for [srv (:services app)]
                       [:span (:service-name srv) [:small [:tt (str " (" (:alias srv) ")")]]])]]
-         [:td (datetime->humanrepr
-               (parse-sqlite-datetime (:updated_at app)))]]))]])
+         [:td (sqlite-datetime-html (:updated_at app))]]))]])
 
 (defn- goog-tab-bar
   "Create a goog.ui.TabBar element"
