@@ -1,6 +1,7 @@
 (ns horizon.core
   (:require [horizon.event :as event]
             [goog.dom :as dom]
+            [goog.dom.classes :as classes]
             [goog.object :as goog-object]
             [goog.events.Event :as goog-event]
             [goog.events.EventType :as goog-event-type]
@@ -19,6 +20,11 @@
     ;; prim-seq is required to seq through a node collection
     (doseq [e (prim-seq (dom/getChildren (dom/getElement (.parentNode content))) 0)]
       (goog.style.showElement e false))
+
+    ;; remove the green highlight (see events.cljs)
+    (if (= "Cloud events" title)
+      (classes/remove (dom/getElement "Cloud events") "goog-tab-newactivity"))
+    
     (goog.style.showElement content true)))
 
 (defn ^:export init [n]

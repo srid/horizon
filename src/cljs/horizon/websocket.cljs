@@ -23,7 +23,7 @@
        (.listen handler soc websocket-event/OPENED opened)
        (.listen handler soc websocket-event/MESSAGE
                 #(let [payload (.message %)]
-                   (log/debug "websocket" (str "R: " payload))
+                   (log/debug "websocket" (str "R: " (take 10 payload)))
                    (message payload)))
        (when error
          (.listen handler soc websocket-event/ERROR error))

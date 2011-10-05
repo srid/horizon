@@ -36,6 +36,10 @@ footer a, footer a:visited, footer a:active {
 }
 
 
+.goog-tab-newactivity {
+    color: green;
+    font-style: italic;
+}
 
 a, a:hover { text-decoration: none; }
 a:hover {text-decoration: underline;}

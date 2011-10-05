@@ -94,7 +94,7 @@
     (for [[tab-title tab-content] tabs]
       [:div {:id (str tab-title "_content") :style "display: none;"} tab-content])]])
 
-(defn main-page [events]
+(defn main-page []
   (html5
    [:head
     [:title "Horizon &mdash; Stackato dashboard"]
@@ -111,33 +111,28 @@
     (let [users (db/get-data)]
       (goog-tab-bar
        "maintab"
-       ["Cloud events (real-time)"
-        [:div {:style "height: 800px;"}
-         [:i [:p {:style "padding: 1em;"} "Only showing recent events; not real-time yet (needs refreshing)"]]
+       ["Cloud events"
+        [:div {:style "height: 400px;"}
+         [:i [:p {:style "padding: 1em;"} "Recent activity in the DEAs (CC, HM, ... will be added later).
+This list updates in " [:b "real-time"] ". Try pushing/updating an app."]]
          [:ul {:id "events"}
-          (for [evt events]
+          [:li "........."]
+          (for [evt (take 5 @event/current-events)]
             [:li (record-html [nil evt])])]]]
        ["Apps" (apps-table-html users)]
        ["Users" (users-table-html users)]))
-    [:div {:id "log"}
+    [:div {:id "log" :style "display: none;"}
      [:h4 "DEBUG"]]
     [:footer [:a {:href "http://stackato.com/"} "ActiveState Stackato"]]
     (javascript-tag "window.p = function(x){console.log(x); return x;}; horizon.core.init();")]))
 
-(defn event-broadcast-handler [ch request]
-  (enqueue ch
-           {:status 200
-            :headers {"content-type" "text/plain"}
-            :body (map* #(str (html (record-html %)) "\n") (fork event/event-queue))}))
-
-(defn ws-handler
+(defn events-websocket-handler
   [ch request]
   (siphon (map* #(str (html (record-html %)) "\n") event/event-queue) ch))
 
 (defroutes app-routes
-  (GET "/" []  (main-page (seq @event/current-events)))
-  (GET "/socket" [] (wrap-aleph-handler ws-handler))
-  (GET "/events" [] (wrap-aleph-handler event-broadcast-handler))
+  (GET "/" []  (main-page))
+  (GET "/socket" [] (wrap-aleph-handler events-websocket-handler))
   
   (route/resources "/")
   (route/not-found "Page not found"))

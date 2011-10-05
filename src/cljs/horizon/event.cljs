@@ -1,5 +1,8 @@
 (ns horizon.event
   (:require [goog.dom :as dom]
+            [goog.dom.classes :as classes]
+            [goog.fx :as fx]
+            [goog.fx.dom :as fx-dom]
             [horizon.logger :as log]
             [horizon.websocket :as socket]))
 
@@ -13,9 +16,12 @@
   (dom/insertSiblingBefore node (dom/getFirstElementChild parent)))
 
 (defn websocket-message [msg]
-  (log/info "event" (str "Received message: " msg))
-  (let [event-ele (dom/createDom "li" nil (dom/htmlToDocumentFragment msg))]
-    (prependChild (dom/getElement "events") event-ele)))
+  (log/info "event" "Received message from server")
+  (let [events    (dom/getElement "events")
+        event-ele (dom/createDom "li" nil (dom/htmlToDocumentFragment msg))]
+    (prependChild events event-ele)
+    (classes/add (dom/getElement "Cloud events") "goog-tab-newactivity")
+    (.play (new goog.fx.dom/FadeOutAndHide event-ele 3000))))
 
 (defn websocket-error [event]
   (log/info "websocket" (str "WebSocket error: " event)))
