@@ -16,12 +16,18 @@ table.state td {
 }
 
 table.state th {
-    background-color: #cccccc;
+    border: 1px solid;
+    background-color: #dedede;
+    padding: 0.1em 0.5em;
 }
 
 table.state th:hover {
     cursor: pointer;
     opacity: 0.7;
+}
+
+table.state td.num {
+    text-align: right;
 }
 
 .hidden {

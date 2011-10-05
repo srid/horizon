@@ -57,7 +57,7 @@
        [:tr
         [:td (:email user)]
         [:td (sqlite-datetime-html (:created_at user))]
-        [:td (count (:apps user))]])]]])
+        [:td {:class "num"} (count (:apps user))]])]]])
 
 (defn apps-table-html [users]
   [:table {:class "state" :id "app" :border "0" :cellpang "3"}
@@ -76,7 +76,11 @@
          [:td [:small (:email user)]]
          [:td (:framework app)]
          [:td [:div (for [srv (:services app)]
-                      [:span (:service-name srv) [:small [:tt (str " (" (:alias srv) ")")]]])]]
+                      [:span
+                       (:service-name srv)
+                       ": "
+                       [:small
+                        [:tt (:alias srv)]]])]]
          [:td (sqlite-datetime-html (:updated_at app))]]))]])
 
 (defn- goog-tab-bar
