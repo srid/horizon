@@ -6,3 +6,4 @@ pom.xml
 .lein-deps-sum
 .cake
 cloudcontroller.sqlite3
+resources/public/cljs/
