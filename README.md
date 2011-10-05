@@ -17,6 +17,11 @@ Start CLJS watch in a second terminal:
 ```bash
 # install cljs-watch: https://github.com/ibdknox/cljs-watch
 git clone https://github.com/clojure/clojurescript.git ../clojurescript
+cd ../clojurescript 
+# Apply this patch to get closure trunk (for WebSockets)
+# https://github.com/neotyk/clojurescript/commit/d8d51fec2cc61b41de0666d12a3d6b65da4063c0
+script/bootstrap
+cd ..
 CLOJURESCRIPT_HOME=../clojurescript cljs-watch src/cljs
 ```
     

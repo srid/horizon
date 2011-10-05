@@ -22,7 +22,7 @@
         url (if url (str "http://" url))]
     [:b [:a {:href url :target "_blank"} (:appname record)]]))
 (defn record-html [[host record]]
-  [:li {:title (str record)}
+  [:span {:title (str record)}
    [:b (record/format-log-datetime record)] " -- "
    (condp = (:type record)
      :instance-ready-for-connections
@@ -116,11 +116,13 @@
          [:i [:p {:style "padding: 1em;"} "Only showing recent events; not real-time yet (needs refreshing)"]]
          [:ul {:id "events"}
           (for [evt events]
-            (record-html [nil evt]))]]]
+            [:li (record-html [nil evt])])]]]
        ["Apps" (apps-table-html users)]
        ["Users" (users-table-html users)]))
+    [:div {:id "log"}
+     [:h4 "DEBUG"]]
     [:footer [:a {:href "http://stackato.com/"} "ActiveState Stackato"]]
-    (javascript-tag "window.p = function(x){console.log(x); return x;}; horizon.init();")]))
+    (javascript-tag "window.p = function(x){console.log(x); return x;}; horizon.core.init();")]))
 
 (defn event-broadcast-handler [ch request]
   (enqueue ch
@@ -128,8 +130,13 @@
             :headers {"content-type" "text/plain"}
             :body (map* #(str (html (record-html %)) "\n") (fork event/event-queue))}))
 
+(defn ws-handler
+  [ch request]
+  (siphon (map* #(str (html (record-html %)) "\n") event/event-queue) ch))
+
 (defroutes app-routes
   (GET "/" []  (main-page (seq @event/current-events)))
+  (GET "/socket" [] (wrap-aleph-handler ws-handler))
   (GET "/events" [] (wrap-aleph-handler event-broadcast-handler))
   
   (route/resources "/")
@@ -137,12 +144,15 @@
 
 (defonce server (atom nil))
 
+(defn shutdown []
+  (@server))
+
 (defn initialize []
   (let [port (Integer/parseInt (get (System/getenv) "PORT" "8000"))]
     (println (format "Starting http://localhost:%s/" port))
     (swap! server (fn [_] (start-http-server
                           (wrap-ring-handler (wrap-stacktrace app-routes))
-                          {:port port})))))
+                          {:port port :websocket true})))))
 
 (defn -main []
   (initialize))

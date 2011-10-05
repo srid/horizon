@@ -1,5 +1,6 @@
-(ns horizon
-  (:require [goog.dom :as dom]
+(ns horizon.core
+  (:require [horizon.event :as event]
+            [goog.dom :as dom]
             [goog.object :as goog-object]
             [goog.events.Event :as goog-event]
             [goog.events.EventType :as goog-event-type]
@@ -46,4 +47,7 @@
            tabbar
            goog.ui.Component.EventType/SELECT
            (partial handle-tab-select tabbar))
-  (.setSelectedTabIndex tabbar 1))
+  (.setSelectedTabIndex tabbar 1)
+
+  ;; Setup cloud events
+  (event/init))
