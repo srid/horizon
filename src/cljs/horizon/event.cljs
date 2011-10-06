@@ -20,7 +20,12 @@
   (let [events    (dom/getElement "events")
         event-ele (dom/createDom "li" nil (dom/htmlToDocumentFragment msg))]
     (prependChild events event-ele)
-    (classes/add (dom/getElement "Cloud events") "goog-tab-newactivity")
+
+    ;; Highlight the tab on new activity
+    (let [curr-tab (.. horizon.core/tabbar (getSelectedTab) (getCaption))]
+      (when (not= "Cloud events" curr-tab) 
+        (classes/add (dom/getElement "Cloud events") "goog-tab-newactivity")))
+    
     (.play (new goog.fx.dom/FadeOutAndHide event-ele 3000))))
 
 (defn websocket-error [event]

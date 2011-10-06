@@ -9,7 +9,7 @@
             [goog.ui.Tab :as Tab]
             [goog.ui.TabBar :as TabBar]))
 
-(def tabbar (goog.ui.TabBar.))
+(def ^:export  tabbar (goog.ui.TabBar.))
 (def apps-tablesorter (goog.ui/TableSorter.))
 (def users-tablesorter (goog.ui/TableSorter.))
 
