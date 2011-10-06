@@ -45,7 +45,7 @@ def main():
     run('stackato target api.sandbox.activestate.com')
     for app in list_apps()[:2]:
         run('stackato delete -n %s' % app)
-    run_every(60, run, 'stackato push %s -n' % random_appname())
+    run_every(60, lambda: run('stackato push %s -n' % random_appname()))
 
 
 if __name__ == '__main__':
