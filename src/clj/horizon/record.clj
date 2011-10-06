@@ -29,7 +29,7 @@
 
    ;; App is now ready for connections
    :instance-ready-for-connections
-   [#"^Instance \(name=(\w+).+instance=(\w+).+is ready for connections, notifying system of status$"
+   [#"^Instance \(name=([^\s]+).+instance=(\w+).+is ready for connections, notifying system of status$"
    [:appname :container]],
    })
 

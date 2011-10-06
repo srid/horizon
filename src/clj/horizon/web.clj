@@ -113,8 +113,9 @@
        "maintab"
        ["Cloud events"
         [:div {:style "height: 400px;"}
-         [:i [:p {:style "padding: 1em;"} "Recent activity in the DEAs (CC, HM, ... will be added later).
-This list updates in " [:b "real-time"] ". Try pushing/updating an app."]]
+         [:i [:p {:style "padding: 1em; width: 75%;"} "Recent activity in the DEAs (CC, HM, ... will be added later).
+This list updates in " [:b "real-time"] ". Try pushing/updating an app. "
+              [:a {:href "https://github.com/ActiveState/horizon#readme"} "Learn more"]]]
          [:ul {:id "events"}
           [:li "........."]
           (for [evt (take 5 @event/current-events)]
