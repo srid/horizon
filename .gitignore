@@ -6,4 +6,5 @@ pom.xml
 .lein-deps-sum
 .cake
 cloudcontroller.sqlite3
-resources/public/cljs/
+resources/public/cljs/cljs
+resources/public/cljs/horizon

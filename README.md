@@ -6,7 +6,6 @@ Horizon is the Stackato dashboard for reporting a) the state of the cloud and b)
 
 ```bash
 $ lein deps
-$ # Compile cljs scripts (see 'Development' below)
 $ lein run  # also starts the web UI
 ```
     
