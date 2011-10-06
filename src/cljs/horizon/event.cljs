@@ -4,7 +4,8 @@
             [goog.fx :as fx]
             [goog.fx.dom :as fx-dom]
             [horizon.logger :as log]
-            [horizon.websocket :as socket]))
+            [horizon.websocket :as socket]
+            [horizon.ui :as ui]))
 
 ;; WebSocket handlers
 (defn websocket-opened [soc]
@@ -22,9 +23,7 @@
     (prependChild events event-ele)
 
     ;; Highlight the tab on new activity
-    (let [curr-tab (.. horizon.core/tabbar (getSelectedTab) (getCaption))]
-      (when (not= "Cloud events" curr-tab) 
-        (classes/add (dom/getElement "Cloud events") "goog-tab-newactivity")))
+    (ui/tabbar-flash "Cloud events")
     
     (.play (new goog.fx.dom/FadeOutAndHide event-ele 3000))))
 
