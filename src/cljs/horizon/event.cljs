@@ -8,33 +8,29 @@
             [horizon.ui :as ui]))
 
 ;; WebSocket handlers
-(defn websocket-opened [soc]
+(defn- websocket-opened [soc]
   (fn [event]
     (log/info "websocket" (str "WebSocket opened: " event))))
 
-(defn prependChild
-  [parent node]
-  (dom/insertSiblingBefore node (dom/getFirstElementChild parent)))
-
-(defn websocket-message [msg]
+(defn- websocket-message [msg]
   (log/info "event" "Received message from server")
   (let [events    (dom/getElement "events")
         event-ele (dom/createDom "li" nil (dom/htmlToDocumentFragment msg))]
-    (prependChild events event-ele)
+    (ui/prependChild events event-ele)
 
     ;; Highlight the tab on new activity
     (ui/tabbar-flash "Cloud events")
-    
+
+    ;; FIXME: this doesn't work
     (.play (new goog.fx.dom/FadeOutAndHide event-ele 3000))))
 
-(defn websocket-error [event]
+(defn- websocket-error [event]
   (log/info "websocket" (str "WebSocket error: " event)))
 
-(defn websocket-closed [event]
+(defn- websocket-closed [event]
   (log/info "websocket" (str "WebSocket closed: " event)))
 
-
-(defn init []
+(defn ^:export init []
   (log/init "log")
   (log/info "event" "Initializing events websocket")
   (let [socket (socket/create)]

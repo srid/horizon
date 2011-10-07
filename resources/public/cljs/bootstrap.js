@@ -13598,10 +13598,15 @@ horizon.ui.tabbar = new goog.ui.TabBar;
 goog.exportSymbol("horizon.ui.tabbar", horizon.ui.tabbar);
 horizon.ui.apps_tablesorter = new goog.ui.TableSorter;
 horizon.ui.users_tablesorter = new goog.ui.TableSorter;
+horizon.ui.prependChild = function(a, b) {
+  return goog.dom.insertSiblingBefore.call(null, b, goog.dom.getFirstElementChild.call(null, a))
+};
+goog.exportSymbol("horizon.ui.prependChild", horizon.ui.prependChild);
 horizon.ui.tabbar_flash = function(a) {
   var b = horizon.ui.tabbar.getSelectedTab().getCaption();
   return cljs.core.truth_(cljs.core.not_EQ_.call(null, a, b)) ? goog.dom.classes.add.call(null, goog.dom.getElement.call(null, a), "goog-tab-newactivity") : null
 };
+goog.exportSymbol("horizon.ui.tabbar_flash", horizon.ui.tabbar_flash);
 horizon.ui.tabbar_clear_flash = function(a) {
   return goog.dom.classes.remove.call(null, goog.dom.getElement.call(null, a), "goog-tab-newactivity")
 };
@@ -13619,13 +13624,14 @@ horizon.ui.handle_tab_select = function(a, b) {
   horizon.ui.tabbar_clear_flash.call(null, c);
   return goog.style.showElement.call(null, d, true)
 };
-horizon.ui.init = function() {
+horizon.ui.init_tables = function() {
+  var a = goog.ui.TableSorter.createReverseSort.call(null, goog.ui.TableSorter.alphaSort), b = goog.ui.TableSorter.createReverseSort.call(null, goog.ui.TableSorter.numericSort);
   horizon.ui.apps_tablesorter.decorate(goog.dom.getElement.call(null, "app"));
-  var a = cljs.core.seq.call(null, cljs.core.Vector.fromArray([0, 1, 2, 3, 4]));
-  if(cljs.core.truth_(a)) {
-    for(var b = cljs.core.first.call(null, a);;) {
-      if(horizon.ui.apps_tablesorter.setSortFunction(b, goog.ui.TableSorter.createReverseSort.call(null, goog.ui.TableSorter.alphaSort)), b = cljs.core.next.call(null, a), cljs.core.truth_(b)) {
-        a = b, b = cljs.core.first.call(null, a)
+  var c = cljs.core.seq.call(null, cljs.core.Vector.fromArray([0, 1, 2, 3, 4]));
+  if(cljs.core.truth_(c)) {
+    for(var d = cljs.core.first.call(null, c);;) {
+      if(horizon.ui.apps_tablesorter.setSortFunction(d, a), d = cljs.core.next.call(null, c), cljs.core.truth_(d)) {
+        c = d, d = cljs.core.first.call(null, c)
       }else {
         break
       }
@@ -13633,21 +13639,27 @@ horizon.ui.init = function() {
   }
   horizon.ui.apps_tablesorter.sort(4);
   horizon.ui.users_tablesorter.decorate(goog.dom.getElement.call(null, "users"));
-  a = cljs.core.seq.call(null, cljs.core.Vector.fromArray([0, 1]));
-  if(cljs.core.truth_(a)) {
-    for(b = cljs.core.first.call(null, a);;) {
-      if(horizon.ui.users_tablesorter.setSortFunction(b, goog.ui.TableSorter.createReverseSort.call(null, goog.ui.TableSorter.alphaSort)), b = cljs.core.next.call(null, a), cljs.core.truth_(b)) {
-        a = b, b = cljs.core.first.call(null, a)
+  c = cljs.core.seq.call(null, cljs.core.Vector.fromArray([0, 1]));
+  if(cljs.core.truth_(c)) {
+    for(d = cljs.core.first.call(null, c);;) {
+      if(horizon.ui.users_tablesorter.setSortFunction(d, a), d = cljs.core.next.call(null, c), cljs.core.truth_(d)) {
+        c = d, d = cljs.core.first.call(null, c)
       }else {
         break
       }
     }
   }
-  horizon.ui.users_tablesorter.setSortFunction(2, goog.ui.TableSorter.createReverseSort.call(null, goog.ui.TableSorter.numericSort));
-  horizon.ui.users_tablesorter.sort(2);
+  horizon.ui.users_tablesorter.setSortFunction(2, b);
+  return horizon.ui.users_tablesorter.sort(2)
+};
+horizon.ui.init_tabbar = function() {
   horizon.ui.tabbar.decorate(goog.dom.getElement("maintab"));
   goog.events.listen(horizon.ui.tabbar, goog.ui.Component.EventType.SELECT, cljs.core.partial.call(null, horizon.ui.handle_tab_select, horizon.ui.tabbar));
   return horizon.ui.tabbar.setSelectedTabIndex(1)
+};
+horizon.ui.init = function() {
+  horizon.ui.init_tables.call(null);
+  return horizon.ui.init_tabbar.call(null)
 };
 goog.exportSymbol("horizon.ui.init", horizon.ui.init);
 horizon.event = {};
@@ -13656,13 +13668,10 @@ horizon.event.websocket_opened = function() {
     return horizon.logger.info.call(null, "websocket", cljs.core.str.call(null, "WebSocket opened: ", a))
   }
 };
-horizon.event.prependChild = function(a, b) {
-  return goog.dom.insertSiblingBefore.call(null, b, goog.dom.getFirstElementChild.call(null, a))
-};
 horizon.event.websocket_message = function(a) {
   horizon.logger.info.call(null, "event", "Received message from server");
   var b = goog.dom.getElement.call(null, "events"), a = goog.dom.createDom.call(null, "li", null, goog.dom.htmlToDocumentFragment.call(null, a));
-  horizon.event.prependChild.call(null, b, a);
+  horizon.ui.prependChild.call(null, b, a);
   horizon.ui.tabbar_flash.call(null, "Cloud events");
   return(new goog.fx.dom.FadeOutAndHide(a, 3E3)).play
 };
@@ -13678,6 +13687,7 @@ horizon.event.init = function() {
   var a = horizon.websocket.create.call(null), a = horizon.websocket.connect_BANG_.call(null, horizon.websocket.configure.call(null, a, horizon.event.websocket_opened.call(null, a), horizon.event.websocket_message, horizon.event.websocket_error, horizon.event.websocket_closed), "ws://" + document.location.host + "/socket");
   return cljs.core.truth_(a) ? horizon.logger.info.call(null, "event", "Socket opened!") : horizon.logger.info.call(null, "event", "Socket FAIL")
 };
+goog.exportSymbol("horizon.event.init", horizon.event.init);
 horizon.core = {};
 horizon.core.init = function() {
   horizon.ui.init.call(null);

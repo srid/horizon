@@ -12,7 +12,11 @@
 (def apps-tablesorter (goog.ui/TableSorter.))
 (def users-tablesorter (goog.ui/TableSorter.))
 
-(defn tabbar-flash
+(defn ^:export prependChild
+  [parent node]
+  (dom/insertSiblingBefore node (dom/getFirstElementChild parent)))
+
+(defn ^:export  tabbar-flash
   "Flash the tab unless it is already active"
   [tab-title]
   (let [curr-tab (.. tabbar (getSelectedTab) (getCaption))]
@@ -31,35 +35,37 @@
     ;; prim-seq is required to seq through a node collection
     (doseq [e (prim-seq (dom/getChildren (dom/getElement (.parentNode content))) 0)]
       (goog.style.showElement e false))
-
     (tabbar-clear-flash title)
-    
     (goog.style.showElement content true)))
 
-(defn ^:export init [n]
-  ;; Setup app table to be sortable
-  (.decorate apps-tablesorter (dom/getElement "app"))
-  (doseq [index [0 1 2 3 4]]
-    (.setSortFunction apps-tablesorter index
-                      (TableSorter/createReverseSort
-                       TableSorter/alphaSort)))
-  (.sort apps-tablesorter 4)
+(defn- init-tables
+  []
+  (let [reverse-alpha-sort (TableSorter/createReverseSort
+                            TableSorter/alphaSort)
+        reverse-num-sort   (TableSorter/createReverseSort
+                            TableSorter/numericSort)]
+    ;; Setup app table to be sortable
+    (.decorate apps-tablesorter (dom/getElement "app"))
+    (doseq [index [0 1 2 3 4]]
+      (.setSortFunction apps-tablesorter index reverse-alpha-sort))
+    (.sort apps-tablesorter 4)
 
-  ;; Setup users table to be sortable
-  (.decorate users-tablesorter (dom/getElement "users"))
-  (doseq [index [0 1]]
-    (.setSortFunction users-tablesorter index
-                      (TableSorter/createReverseSort
-                       TableSorter/alphaSort)))
-  (.setSortFunction users-tablesorter 2
-                    (TableSorter/createReverseSort
-                     TableSorter/numericSort))
-  (.sort users-tablesorter 2)
+    ;; Setup users table to be sortable
+    (.decorate users-tablesorter (dom/getElement "users"))
+    (doseq [index [0 1]]
+      (.setSortFunction users-tablesorter index reverse-alpha-sort))
+    (.setSortFunction users-tablesorter 2 reverse-num-sort)
+    (.sort users-tablesorter 2)))
 
-  ;; Setup the tabbar
+(defn- init-tabbar
+  []
   (.decorate tabbar (.getElement goog.dom "maintab"))
   (.listen goog.events
            tabbar
            goog.ui.Component.EventType/SELECT
            (partial handle-tab-select tabbar))
   (.setSelectedTabIndex tabbar 1))
+
+(defn ^:export init [n]
+  (init-tables)
+  (init-tabbar))
