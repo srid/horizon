@@ -29,9 +29,7 @@ CLOJURESCRIPT_HOME=../clojurescript cljs-watch src/cljs
 `M-x clojure-jack-in` and eval:
 
 ```clj
-(horizon.sink/initialize)
-(horizon.event/initialize)
-(horizon.web/initialize)
+(horizon.core/initialize)
 ```
 
 ## Architecture

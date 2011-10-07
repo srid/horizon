@@ -1,0 +1,6 @@
+[submodule "dev/clojurescript"]
+	path = dev/clojurescript
+	url = https://github.com/clojure/clojurescript.git
+[submodule "dev/cljs-watch"]
+	path = dev/cljs-watch
+	url = https://github.com/ibdknox/cljs-watch.git
