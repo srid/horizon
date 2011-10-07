@@ -30,6 +30,14 @@ def run_cat(cmd):
 def list_apps():
     return [app['name'] for app in json.loads(run_cat('stackato list --json'))]
 
+def delete_some_apps():
+    for app in list_apps()[:2]:
+        run('stackato delete -n %s' % app)
+
+def push_an_app():
+    delete_some_apps()  # sandbox has 2 apps limitation
+    run('stackato push %s -n' % random_appname())
+
 def run_every(seconds, function, *args):
     while True:
         function(*args)
@@ -43,9 +51,7 @@ def run_every(seconds, function, *args):
 def main():
     os.chdir(os.path.expanduser('~/as/stackato-samples/node/node-env'))
     run('stackato target api.sandbox.activestate.com')
-    for app in list_apps()[:2]:
-        run('stackato delete -n %s' % app)
-    run_every(60, lambda: run('stackato push %s -n' % random_appname()))
+    run_every(60, push_an_app)
 
 
 if __name__ == '__main__':
