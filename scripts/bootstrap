@@ -1,0 +1,13 @@
+#!/bin/bash
+set -x
+
+git submodule update
+
+# build clojurescript with patches applied
+pushd dev/clojurescript
+echo "Patching the bootstrap script to use closure library from svn HEAD"
+patch -R -p1 < ../use-closure-library-HEAD.patch
+script/bootstrap
+popd
+
+lein deps

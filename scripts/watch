@@ -1,0 +1,4 @@
+#!/bin/bash
+set -x
+
+CLOJURESCRIPT_HOME=dev/clojurescript dev/cljs-watch/cljs-watch src/cljs

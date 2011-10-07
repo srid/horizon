@@ -4,32 +4,27 @@ Horizon is the Stackato dashboard for reporting a) the state of the cloud and b)
 
 ![horizon architecture](http://dl.dropbox.com/u/87045/permalinks/horizon-arch.png)
 
-## Usage
+## Getting Started
 
 ```bash
-$ lein deps
+$ scripts/bootstrap
 $ lein run  # also starts the web UI
 ```
     
-## Development
+## Development mode
 
-Start CLJS watch in a second terminal:
+``lein run`` is not most suited for development if you are going to
+edit/recompile the modules. 
 
-```bash
-# install cljs-watch: https://github.com/ibdknox/cljs-watch
-git clone https://github.com/clojure/clojurescript.git ../clojurescript
-cd ../clojurescript 
-# Apply this patch to get closure trunk (for WebSockets)
-# https://github.com/neotyk/clojurescript/commit/d8d51fec2cc61b41de0666d12a3d6b65da4063c0
-script/bootstrap
-cd ..
-CLOJURESCRIPT_HOME=../clojurescript cljs-watch src/cljs
-```
-    
-`M-x clojure-jack-in` and eval:
+``bash
+$ scripts/boostrap
+$ scripts/watch  # leave this running in other terminal
+
+Open `src/clj/horizon/core.clj` in Emacs, `M-x clojure-jack-in`, `C-c
+C-k` the core.clj buffer and then eval the following in REPL:
 
 ```clj
-(horizon.core/initialize)
+(horizon.core/initialize)  ;; equivalent to `lein run`
 ```
 
 ## Architecture
