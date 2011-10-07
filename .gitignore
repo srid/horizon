@@ -8,3 +8,4 @@ pom.xml
 cloudcontroller.sqlite3
 resources/public/cljs/cljs
 resources/public/cljs/horizon
+.sass-cache

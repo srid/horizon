@@ -10,4 +10,9 @@ patch -R -p1 < ../use-closure-library-HEAD.patch
 script/bootstrap
 popd
 
+# install project dependencies
 lein deps
+
+# install sass (and foreman) as last step, as it may fail if rubygems
+# is not installed or if the user has no sudo access.
+sudo gem install --no-ri --no-rdoc sass foreman

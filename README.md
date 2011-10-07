@@ -8,7 +8,7 @@ Horizon is the Stackato dashboard for reporting a) the state of the cloud and b)
 
 ```bash
 $ scripts/bootstrap
-$ lein run  # also starts the web UI
+$ lein run
 ```
     
 ## Development mode
@@ -16,9 +16,13 @@ $ lein run  # also starts the web UI
 ``lein run`` is not most suited for development if you are going to
 edit/recompile the modules. 
 
-``bash
+```bash
 $ scripts/boostrap
-$ scripts/watch  # leave this running in other terminal
+$ scripts/watch  # leave this running on a second terminal
+```
+
+The watch script watches and compiles sass and cljs files to css and
+js.
 
 Open `src/clj/horizon/core.clj` in Emacs, `M-x clojure-jack-in`, `C-c
 C-k` the core.clj buffer and then eval the following in REPL:
