@@ -1,18 +1,28 @@
 #!/bin/bash
-set -x
+set -e -x
 
 git submodule update
+
+unamestr=`uname`
+if [[ "$unamestr" == 'Linux' ]]; then
+    sudo apt-get install -y rubygems
+    # these are required to build clojurescript on ubuntu
+    sudo apt-get install -y curl subversion openjdk-6-jdk
+fi
 
 # build clojurescript with patches applied
 pushd dev/clojurescript
 echo "Patching the bootstrap script to use closure library from svn HEAD"
-patch -R -p1 < ../use-closure-library-HEAD.patch
+patch -N -p1 < ../use-closure-library-HEAD.patch
 script/bootstrap
 popd
 
-# install project dependencies
-lein deps
-
-# install sass (and foreman) as last step, as it may fail if rubygems
-# is not installed or if the user has no sudo access.
+# install sass and foreman
 sudo gem install --no-ri --no-rdoc sass foreman
+if [[ "$unamestr" == 'Linux' ]]; then
+  echo "You must add foreman/sass to PATH manually"
+  echo "Type 'gem contents foreman' to find bin path"
+fi
+
+# install project dependencies
+dev/lein deps
