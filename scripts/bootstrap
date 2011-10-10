@@ -5,7 +5,6 @@ git submodule update
 
 unamestr=`uname`
 if [[ "$unamestr" == 'Linux' ]]; then
-    sudo apt-get install -y rubygems
     # these are required to build clojurescript on ubuntu
     sudo apt-get install -y curl subversion openjdk-6-jdk
 fi
@@ -18,10 +17,13 @@ script/bootstrap
 popd
 
 # install sass and foreman
-sudo gem install --no-ri --no-rdoc sass foreman
 if [[ "$unamestr" == 'Linux' ]]; then
-  echo "You must add foreman/sass to PATH manually"
-  echo "Type 'gem contents foreman' to find bin path"
+    echo "This assumes that you have ruby installed via RVM."
+    echo "Ubuntu's ruby packages are broken."
+    echo "See http://ryanbigg.com/2010/12/ubuntu-ruby-rvm-rails-and-you/"
+    gem install --no-ri --no-rdoc sass foreman
+else
+    sudo gem install --no-ri --no-rdoc sass foreman
 fi
 
 # install project dependencies
