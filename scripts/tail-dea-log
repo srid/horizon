@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Tails dea.log of the given host
 export SSHCMD="ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no "
 
