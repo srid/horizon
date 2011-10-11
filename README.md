@@ -10,6 +10,11 @@ Horizon is the Stackato dashboard for reporting a) the state of the cloud and b)
 $ scripts/bootstrap
 $ lein run
 ```
+
+For sandbox mode:
+
+1. Get ~/.ec2 and ~/Downloads/ec2-??? (asksrid)
+2. Run `scripts/copy-sandbox-db` get sandbox db
     
 ## Development mode
 

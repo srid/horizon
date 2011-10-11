@@ -133,6 +133,7 @@ This list updates in " [:b "real-time"] ". Try pushing/updating an app. "
 
 (defroutes app-routes
   (GET "/" []  (main-page))
+  (GET "/ping" []  "pong")
   (GET "/socket" [] (wrap-aleph-handler events-websocket-handler))
   
   (route/resources "/")
