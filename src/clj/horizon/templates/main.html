@@ -20,31 +20,32 @@
     </header>
 
     <!-- Google TabBar -->
-    <div>
+    <div id="content">
       <!-- List of tabs -->
       <div id="maintab" class="goog-tab-bar goog-tab-bar-top">
         <!-- `id` must match the tab title; used in JS -->
         <div id="Cloud events" class="goog-tab">Cloud events</div>
         <div id="Apps" class="goog-tab">Apps</div>
         <div id="Users" class="goog-tab">Users</div>
-        <div id="goog-tab-bar-clear"></div>
       </div>
 
+      <div id="goog-tab-bar-clear"></div>
+
       <!-- List of tab content-->
-      <div id="maintab_content">
+      <div id="maintab_content" class="goog-tab-content">
         <!-- `id` should be of the form "<tab-title>_content" -->
-        <div id="Cloud events_content" class="goog-tab-content"
+        <div id="Cloud events_content"
              style="display: none;">
           CLOUD events
         </div>
 
-        <div id="Apps_content" class="goog-tab-content"
+        <div id="Apps_content"
              style="display: none;">
           Apps table
           <!-- See apps-table.html -->
         </div>
 
-        <div id="Users_content" class="goog-tab-content"
+        <div id="Users_content"
              style="display: none;">
           Users content
         </div>
