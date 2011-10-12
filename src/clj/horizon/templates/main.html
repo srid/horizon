@@ -1,0 +1,68 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Horizon &mdash; Stackato dashboard</title>
+    
+    <link rel="stylesheet" href="/css/lessframework.css">
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Spinnaker">
+    <link rel="stylesheet" href="http://closure-library.googlecode.com/svn/trunk/closure/goog/css/tab.css">
+    <link rel="stylesheet" href="http://closure-library.googlecode.com/svn/trunk/closure/goog/css/tabbar.css">
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/cljs/bootstrap.js"></script>
+  </head>
+
+  <body>
+    <header>
+      <h1>Horizon</h1>
+      <p>Stackato dashboard</p>
+    </header>
+
+    <!-- Google TabBar -->
+    <div>
+      <!-- List of tabs -->
+      <div id="maintab" class="goog-tab-bar goog-tab-bar-top">
+        <!-- `id` must match the tab title; used in JS -->
+        <div id="Cloud events" class="goog-tab">Cloud events</div>
+        <div id="Apps" class="goog-tab">Apps</div>
+        <div id="Users" class="goog-tab">Users</div>
+        <div id="goog-tab-bar-clear"></div>
+      </div>
+
+      <!-- List of tab content-->
+      <div id="maintab_content">
+        <!-- `id` should be of the form "<tab-title>_content" -->
+        <div id="Cloud events_content" class="goog-tab-content"
+             style="display: none;">
+          CLOUD events
+        </div>
+
+        <div id="Apps_content" class="goog-tab-content"
+             style="display: none;">
+          Apps table
+          <!-- See apps-table.html -->
+        </div>
+
+        <div id="Users_content" class="goog-tab-content"
+             style="display: none;">
+          Users content
+        </div>
+      </div>
+    </div> <!-- end of Google TabBar -->
+
+    <!-- Debug -->
+    <div id="log" style="display: none;">
+      <h4>DEBUG</h4>
+    </div>
+
+    <footer>
+      <a href="http://stackato.com/">ActiveState Stackato</a>
+    </footer>
+
+    <script>
+      window.p = function(x) { console.log(x); return x; }
+      horizon.core.init();
+    </script>
+  </body>
+</html>

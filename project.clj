@@ -11,7 +11,14 @@
                  [lamina "0.4.0-beta2"]
                  [aleph "0.2.0-beta2"]
                  [hiccup "0.3.6"]
+                 [enlive "1.0.0"]
                  [compojure "0.6.4"]
                  [ring "0.3.11"]]
+
+  ;; websockets won't work on ring-server
+  :dev-dependencies [[lein-ring "0.4.5"]]
+  :ring {:handler horizon.web/app-routes
+         :init horizon.core/initialize}
+  
   :source-path "src/clj"
   :main horizon.core)

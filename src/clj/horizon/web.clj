@@ -1,17 +1,16 @@
 (ns horizon.web
   (:use compojure.core
-        ring.middleware.stacktrace
-        [ring.util.response :only [response]]
         [hiccup.middleware :only (wrap-base-url)]
         hiccup.core
         hiccup.page-helpers
         [clj-time.format :only (parse unparse formatter formatters)]
         lamina.core
-        aleph.http)
+        aleph.http
+        [horizon.util :only (render-to-response)])
   (:require [compojure
              [route :as route]
-             [handler :as handler]
-             [response :as response]]
+             [handler :as handler]]
+            [net.cgrand.enlive-html :as h]
             [horizon
              [event :as event]
              [record :as record]
@@ -131,9 +130,65 @@ This list updates in " [:b "real-time"] ". Try pushing/updating an app. "
   [ch request]
   (siphon (map* #(str (html (record-html %)) "\n") event/queue) ch))
 
+(defn deflate-users
+  [users]
+  (apply concat (for [user users]
+                  (for [app (:apps user)]
+                    [app user]))))
+
+(defn first-url-of-app
+  [app]
+  (str "http://" (:url (first (:routes app)))))
+
+(def datetime-readable-format
+  (formatter "EEE, dd MMM yyyy HH:mm:ss"))
+
+(def datetime-sortable-format
+  (formatters :basic-ordinal-date-time-no-ms))
+
+(defn sqlite-datetime-readable
+  [dt]
+  (->> dt parse-sqlite-datetime (unparse datetime-readable-format)))
+
+(defn sqlite-datetime-sortable
+  [dt]
+  (->> dt parse-sqlite-datetime (unparse datetime-sortable-format)))
+
+(h/defsnippet apps-table "horizon/templates/apps-table.html" [[:table]]
+  [users]
+  [:table :tbody :tr.row-template]
+  (h/clone-for
+   [[app user] (deflate-users users)]
+   [:td.titlefont :a]   (h/do->
+                         (h/content (:name app))
+                         (h/set-attr :href (first-url-of-app app)))
+   [:td.user-email]     (h/content (:email user))
+   [:td.app-framework]  (h/content (:framework app))
+
+   [:td.last-updated :.visible-date]   (h/content
+                                        (sqlite-datetime-readable
+                                         (:updated_at app)))
+   [:td.last-updated :.sortable-date]   (h/content
+                                        (sqlite-datetime-sortable
+                                         (:updated_at app)))
+
+   [:td.app-services :a.service-template]
+   (h/clone-for [srv (:services app)]
+                (h/do->
+                 (h/content (:service-name srv))
+                 (h/set-attr :title (:alias srv))))))
+
+(h/deftemplate index "horizon/templates/main.html"
+  [users]
+  [:div#Apps_content]   (h/content (apps-table users))
+  [:div#Users_content]  (h/content (apps-table users)))
+
+
+
 (defroutes app-routes
   (GET "/" []  (main-page))
   (GET "/ping" []  "pong")
+  (GET "/enlive" [] (render-to-response (index (db/get-data))))
   (GET "/socket" [] (wrap-aleph-handler events-websocket-handler))
   
   (route/resources "/")
@@ -148,7 +203,7 @@ This list updates in " [:b "real-time"] ". Try pushing/updating an app. "
   (let [port (Integer/parseInt (get (System/getenv) "PORT" "8000"))]
     (println (format "web: listening at http://localhost:%s/" port))
     (swap! server (fn [_] (start-http-server
-                          (wrap-ring-handler (wrap-stacktrace app-routes))
+                          (wrap-ring-handler app-routes)
                           {:port port :websocket true})))))
 
 (defn -main []

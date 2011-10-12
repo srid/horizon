@@ -1,6 +1,8 @@
 (ns horizon.util
   (use [clojure.java.shell :only (sh)]
-       [clojure.string :only (split-lines)]))
+       [clojure.string :only (split-lines)]
+       [ring.util.response :only [response]])
+  (require [net.cgrand.enlive-html :as h]))
 
 (defn run
   "Run cmd and return stdout only"
@@ -14,3 +16,9 @@
        .getInputStream
        clojure.java.io/reader
        line-seq))
+
+(defn render [t]
+  (apply str t))
+
+(def render-to-response
+  (comp response render))
