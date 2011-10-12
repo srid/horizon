@@ -32,7 +32,7 @@
 (defmulti cloudcontroller-db :name)
 
 (defmethod cloudcontroller-db ::microcloud [_]
-  "~/stackato/vcap/cloud_controller/db/cloudcontroller.sqlite3")
+  "/home/stackato/stackato/vcap/cloud_controller/db/cloudcontroller.sqlite3")
 
 (defmethod cloudcontroller-db ::sandbox [_]
   ;; locally copied by scripts/copy-sandbox-db
