@@ -146,7 +146,7 @@ This list updates in " [:b "real-time"] ". Try pushing/updating an app. "
 
 (defn initialize []
   (let [port (Integer/parseInt (get (System/getenv) "PORT" "8000"))]
-    (println (format "Starting http://localhost:%s/" port))
+    (println (format "web: listening at http://localhost:%s/" port))
     (swap! server (fn [_] (start-http-server
                           (wrap-ring-handler (wrap-stacktrace app-routes))
                           {:port port :websocket true})))))

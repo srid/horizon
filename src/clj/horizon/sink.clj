@@ -22,14 +22,13 @@
 (defn- update-running-components
   "Update the running components in the cloud"
   [agt]
-  (let [components (cloud/component-logs cloud/sandbox)]
+  (let [components (cloud/component-logs cloud/envconfig)]
     ;; TODO - remove obsolete components from agt
-    (println "updating with comps: " components)
     (reduce (fn [newagt comp]
               (if (newagt comp)
                 newagt
                 (do
-                  (println "adding comp: " comp)
+                  (println "registering component: " comp)
                   (assoc newagt comp
                        (enqueue-from-lazy-seq
                         queue
@@ -46,17 +45,3 @@
   []
   (println "sink: initializing log processing")
   (initialize-running-components))
-
-(defn next-record
-  "Return the next available log record. Block until one is available."
-  []
-  (wait-for-message queue))
-
-(defn -main []
-  (initialize)
-  (loop []
-    (let [[src log] (next-record)]
-      (println (format "%.15s:    %s" src log)))
-    ; (println (format "%d log entries; from %d dea's" (count log-queue) (count @running-deas)))
-    ;; TODO - (send running-deas update-running-deas)
-    (recur)))

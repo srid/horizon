@@ -1,10 +1,11 @@
 (ns horizon.db
   (:use [clojure.java.jdbc :only (with-connection with-query-results)])
-  (:require [clojureql.core :as q]))
+  (:require [clojureql.core :as q]
+            [horizon.cloud :as cloud]))
 
 (def db {:classname "org.sqlite.JDBC"
          :subprotocol "sqlite"
-         :subname "cloudcontroller.sqlite3"})
+         :subname (cloud/cloudcontroller-db cloud/envconfig)})
 
 (q/open-global db)
 

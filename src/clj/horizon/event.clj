@@ -19,7 +19,8 @@
   (future
     (println "event: initializing record processing")
     (doseq [record-str (lazy-channel-seq sink/queue)]
-      ;; (when-not (re-find #"to .+ du" record-str)
+      ;; (when (and (not (re-find #"to .+ du" record-str))
+      ;;            (re-find #"dea" record-str))
       ;;   (println ":: " record-str))
       (when-let [record (record/parse-line record-str)]
         (record/print-record record) ;; for debug
