@@ -1,17 +1,16 @@
 (ns horizon.event
-  (:use [lamina.core :as lm])
+  (:use [lamina.core :only (enqueue permanent-channel lazy-channel-seq)])
   (:require [horizon.record :as record]
             [horizon.sink :as sink]))
 
 ;; Events for last N minutes -- must deprecate
 (defonce ^{:private false} current-events (atom []))
-(defn add
+(defn- add
   "Add a log record to events"
   [record]
-  (when (:type record)
-    (swap! current-events (partial cons record))))
+  (swap! current-events (partial cons record)))
 
-(defonce ^{:private false} event-queue (lm/permanent-channel))
+(defonce ^{:private false} queue (permanent-channel))
 
 ;; TODO - write shutdown; store (future ...) val? how?
 (defn initialize
@@ -19,11 +18,10 @@
   []
   (future
     (println "event: initializing record processing")
-    (loop [[host record] (sink/next-log-record)]
-      (let [record (record/parse-log-record record)]
-        (when (:type record)
-          (do
-            (record/print-log-record record host) ;; for debug
-            (lm/enqueue event-queue [host record])))
-        (add record))
-      (recur (sink/next-log-record)))))
+    (doseq [record-str (lazy-channel-seq sink/queue)]
+      ;; (when-not (re-find #"to .+ du" record-str)
+      ;;   (println ":: " record-str))
+      (when-let [record (record/parse-line record-str)]
+        (record/print-record record) ;; for debug
+        (enqueue queue record)
+        (add record)))))

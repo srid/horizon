@@ -4,7 +4,21 @@
         [clj-time.format :only (unparse formatter)]
         [clansi]))
 
-(defn parse-log-datetime
+(def cf-log-prefix-re
+  #"(\[.+\]) [^\s]+ \- \w+ \w+ \w+\s+\w+ \-\- ")
+
+(defn cf-pattern
+  [pattern]
+  (re-pattern (str cf-log-prefix-re pattern)))
+
+(def dea-received-start-re
+  (cf-pattern #"DEA received start message\: (.+)$"))
+
+(def dea-instance-ready-re
+  (cf-pattern #"Instance \(name=([^\s]+).+instance=(\w+).+is ready for connections, notifying system of status$"))
+
+
+(defn- parse-cf-datetime
   "Parse datetime format of CF logging"
   [time]
   (if time
@@ -14,58 +28,40 @@
                 next
                 (map #(Integer/parseInt %))))))
 
-(def ^{:private true} log-record-types
-  {;; Beginning of DEA app start
-   :received-start-message
-   [#"^DEA received start message\: (.+)$"
-    (fn [[json-data]]
-      (let [j (read-json json-data)]
-        {:json j, :users (:users j), :appname (:name j)}))]
 
-   ;; Earlier know time of container ID
-   :grabbed-container
-   [#"^Grabbed container dir .+ for instance (\w+)$"
-    [:container]],
+(defn parse-dea-start [l]
+  (let [m (re-matcher dea-received-start-re l)]
+    (when (.find m)
+      (let [j (read-json (.group m 2))]
+        {:event_type "dea_start"
+         :datetime (parse-cf-datetime (.group m 1))
+         :json j
+         :users (:users j)
+         :appname (:name j)}))))
 
-   ;; App is now ready for connections
-   :instance-ready-for-connections
-   [#"^Instance \(name=([^\s]+).+instance=(\w+).+is ready for connections, notifying system of status$"
-   [:appname :container]],
-   })
+(defn parse-dea-ready [l]
+  (let [m (re-matcher dea-instance-ready-re l)]
+    (when (.find m)
+      {:event_type "dea_ready"
+       :datetime (parse-cf-datetime (.group m 1))
+       :appname (.group m 2)
+       :container (.group m 3)})))
 
-(defn- match-record-type
-  "Match the given record to one of defined types and return its extra metadata."
-  [record]
-  (loop [[[key [pattern meta]] & more :as coll] (seq log-record-types)]
-    (when-not (empty? coll)
-      (if-let [groups (next (re-find pattern (:message record "")))]
-        (merge {:type key} (if (coll? meta) (zipmap meta groups) (meta groups)))
-        (recur more)))))
-  
-(defn parse-log-record
-  "Parse a Cf log record. Return a map."
-  [line]
-  (let [pattern #"(\[.+\]) ([^\s]+) \- (\w+ \w+ \w+)\s+(\w+) \-\- (.+)"
-        keys    [:when :component :identifier :level :message]
-        record  (zipmap keys (next (re-matches pattern line)))
-        record  (assoc record :type nil :when (parse-log-datetime (:when record)))]
-    (merge record (match-record-type record))))
+
+(defn parse-line [l]
+  (or (parse-dea-start l)
+      (parse-dea-ready l)))
+
 
 (defn format-log-datetime [record]
-  (unparse (formatter "MM-dd/hh:mm:ss") (:when record)))
+  (unparse (formatter "MM-dd/hh:mm:ss") (:datetime record)))
 
-(defn print-log-record
+(defn print-record
   "Print the log-record to terminal"
-  [record host]
-  (let [record1         (dissoc record :type :message :foo :json :level :component :when)
-        time-to-display (format-log-datetime record)]
-    (println (format "[%.15s] %s %s -- %s"
-                     host
-                     (style time-to-display :underline)
-                     (style (:type record) :green)
-                     (if (nil? (:type record)) (:message record) record1)))))
+  [record]
+  (let [record1 (dissoc record :event_type :json :component :datetime)]
+    (println (format "%s %s -- %s"
+                     (style (format-log-datetime record) :underline)
+                     (style (:event_type record) :green)
+                     record1))))
 
-(defn events-timeline
-  "Return special log records"
-  [records]
-  (filter #(not (nil? (:type %))) records))

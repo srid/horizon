@@ -21,15 +21,15 @@
   (let [url (first (:uris (:json record)))
         url (if url (str "http://" url))]
     [:b [:a {:href url :target "_blank"} (:appname record)]]))
-(defn record-html [[host record]]
+(defn record-html [record]
   [:span {:title (str record)}
    [:b (record/format-log-datetime record)] " -- "
-   (condp = (:type record)
-     :instance-ready-for-connections
+   (condp = (:event_type record)
+     "dea_ready"
      [:span "DEA has started: " (record-app-html record)]
-     :received-start-message
+     "dea_start"
      [:span "DEA is starting: " (record-app-html record) " by " (first (:users record)) " ...."]
-     (str "unknown record type " (:type record)))])
+     (str "unknown record type " (:event_type record)))])
 
 
 (defn parse-sqlite-datetime
@@ -118,8 +118,8 @@ This list updates in " [:b "real-time"] ". Try pushing/updating an app. "
               [:a {:href "https://github.com/ActiveState/horizon#readme"} "Learn more"]]]
          [:ul {:id "events"}
           [:li "........."]
-          (for [evt (take 5 @event/current-events)]
-            [:li (record-html [nil evt])])]]]
+          (for [evt (take 10 @event/current-events)]
+            [:li (record-html evt)])]]]
        ["Apps" (apps-table-html users)]
        ["Users" (users-table-html users)]))
     [:div {:id "log" :style "display: none;"}
@@ -129,7 +129,7 @@ This list updates in " [:b "real-time"] ". Try pushing/updating an app. "
 
 (defn events-websocket-handler
   [ch request]
-  (siphon (map* #(str (html (record-html %)) "\n") event/event-queue) ch))
+  (siphon (map* #(str (html (record-html %)) "\n") event/queue) ch))
 
 (defroutes app-routes
   (GET "/" []  (main-page))

@@ -1,78 +1,61 @@
 (ns horizon.sink
-  (use [clojure.java.shell :only (sh)]
-       [clojure.string :only (split-lines)]
-       [lamina.core :as lm]))
+  (use [lamina.core :only (channel permanent-channel enqueue wait-for-message)]
+       [horizon.cloud :as cloud]
+       [horizon.util :only (run run-line-seq)]))
 
-(defn- run
-  "Run cmd and return stdout only"
-  [cmd]
-  ((sh cmd :return-map true) :out))
+;; A queue of logs from all components with the following format:
+;; <component>-<component-host>-<actual-log-record>
+(defonce ^{:private false} queue (permanent-channel))
 
-(defn- sh-line-seq
-  [cmd]
-  (->> (.exec (Runtime/getRuntime) cmd)
-       .getInputStream
-       clojure.java.io/reader
-       line-seq))
-
-(defn- dea-tail-f
-  "Returns the dea log lines (lazy seq) from this host"
-  [host]
-  (sh-line-seq (str "scripts/tail-dea-log " host)))
-
-;; log queue
-(defonce ^{:private true} log-queue (lm/channel))
-(defn- register-log-source [host lazy-lines]
+(defn- enqueue-from-lazy-seq
+  "Create a thread that enqueues the channel with items from lazy seq."
+  [ch lazyseq]
   (future
-    (doseq [line lazy-lines]
-      (lm/enqueue log-queue [host line]))))
+    (doseq [e lazyseq]
+      (enqueue ch e))))
 
-;; mapping from hostname to open line-seq on dea.log (via ssh/tail-f)
-(defonce ^{:private true} running-deas (agent {}))
-(defn- update-running-deas
-  "Update the running-deas agent with new set of deas from AWS"
-  [curr]
-  ;; TODO - remove shutdown DEAs as well.
-  (let [hosts (split-lines (run "scripts/print-running-deas"))]
-    (loop [newhosts (remove curr hosts)
-           nxt      curr]
-      (if (empty? newhosts)
-        nxt
-        (let [host       (first newhosts)
-              tailer     (register-log-source host (dea-tail-f host))]
-          (println "Added new DEA: " host)
-          (recur (next newhosts)
-                 (assoc nxt host tailer)))))))
 
-(defn- remove-running-dea
-  [host]
-  (future-cancel (@running-deas host))
-  (println "Removed DEA: " host " " (future-cancelled? (@running-deas host)))
-  (send running-deas dissoc host))
+;; An agent representing the currently running components in the
+;; cloud, with reference to their log sinker threads
+(defonce ^{:private true} running-components (agent {}))
+
+(defn- update-running-components
+  "Update the running components in the cloud"
+  [agt]
+  (let [components (cloud/component-logs cloud/sandbox)]
+    ;; TODO - remove obsolete components from agt
+    (println "updating with comps: " components)
+    (reduce (fn [newagt comp]
+              (if (newagt comp)
+                newagt
+                (do
+                  (println "adding comp: " comp)
+                  (assoc newagt comp
+                       (enqueue-from-lazy-seq
+                        queue
+                        ((components comp)))))))
+            agt
+            (keys components))))
+
+(defn- initialize-running-components
+  []
+  (send running-components update-running-components))
 
 (defn initialize
   "Initialize log processing from EC2"
   []
   (println "sink: initializing log processing")
-  (send running-deas update-running-deas))
+  (initialize-running-components))
 
-;; FIXME - this doesn't really cancel the futures
-(defn shutdown
-  "Shutdown log processing"
+(defn next-record
+  "Return the next available log record. Block until one is available."
   []
-  (println "Shutting down log processing")
-  (doseq [host (keys @running-deas)]
-    (remove-running-dea host)))
-
-(defn next-log-record
-  "Return the next available [host, log record]. Block until one is available."
-  []
-  (lm/wait-for-message log-queue))
+  (wait-for-message queue))
 
 (defn -main []
   (initialize)
   (loop []
-    (let [[src log] (next-log-record)]
+    (let [[src log] (next-record)]
       (println (format "%.15s:    %s" src log)))
     ; (println (format "%d log entries; from %d dea's" (count log-queue) (count @running-deas)))
     ;; TODO - (send running-deas update-running-deas)
