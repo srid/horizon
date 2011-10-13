@@ -827,56 +827,6 @@ goog.asserts.assertBoolean = function(a, b, c) {
 goog.asserts.assertInstanceof = function(a, b, c, d) {
   goog.asserts.ENABLE_ASSERTS && !(a instanceof b) && goog.asserts.doAssertFailure_("instanceof check failed.", null, c, Array.prototype.slice.call(arguments, 3))
 };
-goog.disposable = {};
-goog.disposable.IDisposable = function() {
-};
-goog.Disposable = function() {
-  goog.Disposable.ENABLE_MONITORING && (goog.Disposable.instances_[goog.getUid(this)] = this)
-};
-goog.Disposable.ENABLE_MONITORING = false;
-goog.Disposable.instances_ = {};
-goog.Disposable.getUndisposedObjects = function() {
-  var a = [], b;
-  for(b in goog.Disposable.instances_) {
-    goog.Disposable.instances_.hasOwnProperty(b) && a.push(goog.Disposable.instances_[Number(b)])
-  }
-  return a
-};
-goog.Disposable.clearUndisposedObjects = function() {
-  goog.Disposable.instances_ = {}
-};
-goog.Disposable.prototype.disposed_ = false;
-goog.Disposable.prototype.isDisposed = function() {
-  return this.disposed_
-};
-goog.Disposable.prototype.getDisposed = goog.Disposable.prototype.isDisposed;
-goog.Disposable.prototype.dispose = function() {
-  if(!this.disposed_ && (this.disposed_ = true, this.disposeInternal(), goog.Disposable.ENABLE_MONITORING)) {
-    var a = goog.getUid(this);
-    if(!goog.Disposable.instances_.hasOwnProperty(a)) {
-      throw Error(this + " did not call the goog.Disposable base constructor or was disposed of after a clearUndisposedObjects call");
-    }
-    delete goog.Disposable.instances_[a]
-  }
-};
-goog.Disposable.prototype.registerDisposable = function(a) {
-  if(!this.dependentDisposables_) {
-    this.dependentDisposables_ = []
-  }
-  this.dependentDisposables_.push(a)
-};
-goog.Disposable.prototype.disposeInternal = function() {
-  this.dependentDisposables_ && goog.disposeAll.apply(null, this.dependentDisposables_)
-};
-goog.dispose = function(a) {
-  a && typeof a.dispose == "function" && a.dispose()
-};
-goog.disposeAll = function(a) {
-  for(var b = 0, c = arguments.length;b < c;++b) {
-    var d = arguments[b];
-    goog.isArrayLike(d) ? goog.disposeAll.apply(null, d) : goog.dispose(d)
-  }
-};
 goog.array = {};
 goog.NATIVE_ARRAY_PROTOTYPES = true;
 goog.array.peek = function(a) {
@@ -1232,6 +1182,86 @@ goog.array.shuffle = function(a, b) {
     a[e] = f
   }
 };
+goog.disposable = {};
+goog.disposable.IDisposable = function() {
+};
+goog.Disposable = function() {
+  goog.Disposable.ENABLE_MONITORING && (goog.Disposable.instances_[goog.getUid(this)] = this)
+};
+goog.Disposable.ENABLE_MONITORING = false;
+goog.Disposable.instances_ = {};
+goog.Disposable.getUndisposedObjects = function() {
+  var a = [], b;
+  for(b in goog.Disposable.instances_) {
+    goog.Disposable.instances_.hasOwnProperty(b) && a.push(goog.Disposable.instances_[Number(b)])
+  }
+  return a
+};
+goog.Disposable.clearUndisposedObjects = function() {
+  goog.Disposable.instances_ = {}
+};
+goog.Disposable.prototype.disposed_ = false;
+goog.Disposable.prototype.isDisposed = function() {
+  return this.disposed_
+};
+goog.Disposable.prototype.getDisposed = goog.Disposable.prototype.isDisposed;
+goog.Disposable.prototype.dispose = function() {
+  if(!this.disposed_ && (this.disposed_ = true, this.disposeInternal(), goog.Disposable.ENABLE_MONITORING)) {
+    var a = goog.getUid(this);
+    if(!goog.Disposable.instances_.hasOwnProperty(a)) {
+      throw Error(this + " did not call the goog.Disposable base constructor or was disposed of after a clearUndisposedObjects call");
+    }
+    delete goog.Disposable.instances_[a]
+  }
+};
+goog.Disposable.prototype.registerDisposable = function(a) {
+  if(!this.dependentDisposables_) {
+    this.dependentDisposables_ = []
+  }
+  this.dependentDisposables_.push(a)
+};
+goog.Disposable.prototype.disposeInternal = function() {
+  this.dependentDisposables_ && goog.disposeAll.apply(null, this.dependentDisposables_)
+};
+goog.dispose = function(a) {
+  a && typeof a.dispose == "function" && a.dispose()
+};
+goog.disposeAll = function(a) {
+  for(var b = 0, c = arguments.length;b < c;++b) {
+    var d = arguments[b];
+    goog.isArrayLike(d) ? goog.disposeAll.apply(null, d) : goog.dispose(d)
+  }
+};
+goog.events = {};
+goog.events.Event = function(a, b) {
+  goog.Disposable.call(this);
+  this.type = a;
+  this.currentTarget = this.target = b
+};
+goog.inherits(goog.events.Event, goog.Disposable);
+goog.events.Event.prototype.disposeInternal = function() {
+  delete this.type;
+  delete this.target;
+  delete this.currentTarget
+};
+goog.events.Event.prototype.propagationStopped_ = false;
+goog.events.Event.prototype.returnValue_ = true;
+goog.events.Event.prototype.stopPropagation = function() {
+  this.propagationStopped_ = true
+};
+goog.events.Event.prototype.preventDefault = function() {
+  this.returnValue_ = false
+};
+goog.events.Event.stopPropagation = function(a) {
+  a.stopPropagation()
+};
+goog.events.Event.preventDefault = function(a) {
+  a.preventDefault()
+};
+goog.fx = {};
+goog.fx.Transition = function() {
+};
+goog.fx.Transition.EventType = {PLAY:"play", BEGIN:"begin", RESUME:"resume", END:"end", STOP:"stop", FINISH:"finish", PAUSE:"pause"};
 goog.debug.entryPointRegistry = {};
 goog.debug.EntryPointMonitor = function() {
 };
@@ -1341,33 +1371,7 @@ goog.userAgent.isDocumentModeCache_ = {};
 goog.userAgent.isDocumentMode = function(a) {
   return goog.userAgent.isDocumentModeCache_[a] || (goog.userAgent.isDocumentModeCache_[a] = goog.userAgent.IE && document.documentMode && document.documentMode >= a)
 };
-goog.events = {};
 goog.events.BrowserFeature = {HAS_W3C_BUTTON:!goog.userAgent.IE || goog.userAgent.isDocumentMode(9), SET_KEY_CODE_TO_PREVENT_DEFAULT:goog.userAgent.IE && !goog.userAgent.isVersion("8")};
-goog.events.Event = function(a, b) {
-  goog.Disposable.call(this);
-  this.type = a;
-  this.currentTarget = this.target = b
-};
-goog.inherits(goog.events.Event, goog.Disposable);
-goog.events.Event.prototype.disposeInternal = function() {
-  delete this.type;
-  delete this.target;
-  delete this.currentTarget
-};
-goog.events.Event.prototype.propagationStopped_ = false;
-goog.events.Event.prototype.returnValue_ = true;
-goog.events.Event.prototype.stopPropagation = function() {
-  this.propagationStopped_ = true
-};
-goog.events.Event.prototype.preventDefault = function() {
-  this.returnValue_ = false
-};
-goog.events.Event.stopPropagation = function(a) {
-  a.stopPropagation()
-};
-goog.events.Event.preventDefault = function(a) {
-  a.preventDefault()
-};
 goog.events.EventType = {CLICK:"click", DBLCLICK:"dblclick", MOUSEDOWN:"mousedown", MOUSEUP:"mouseup", MOUSEOVER:"mouseover", MOUSEOUT:"mouseout", MOUSEMOVE:"mousemove", SELECTSTART:"selectstart", KEYPRESS:"keypress", KEYDOWN:"keydown", KEYUP:"keyup", BLUR:"blur", FOCUS:"focus", DEACTIVATE:"deactivate", FOCUSIN:goog.userAgent.IE ? "focusin" : "DOMFocusIn", FOCUSOUT:goog.userAgent.IE ? "focusout" : "DOMFocusOut", CHANGE:"change", SELECT:"select", SUBMIT:"submit", INPUT:"input", PROPERTYCHANGE:"propertychange", 
 DRAGSTART:"dragstart", DRAGENTER:"dragenter", DRAGOVER:"dragover", DRAGLEAVE:"dragleave", DROP:"drop", TOUCHSTART:"touchstart", TOUCHMOVE:"touchmove", TOUCHEND:"touchend", TOUCHCANCEL:"touchcancel", CONTEXTMENU:"contextmenu", ERROR:"error", HELP:"help", LOAD:"load", LOSECAPTURE:"losecapture", READYSTATECHANGE:"readystatechange", RESIZE:"resize", SCROLL:"scroll", UNLOAD:"unload", HASHCHANGE:"hashchange", PAGEHIDE:"pagehide", PAGESHOW:"pageshow", POPSTATE:"popstate", COPY:"copy", PASTE:"paste", CUT:"cut", 
 BEFORECOPY:"beforecopy", BEFORECUT:"beforecut", BEFOREPASTE:"beforepaste", MESSAGE:"message", CONNECT:"connect"};
@@ -2212,6 +2216,58 @@ goog.events.EventTarget.prototype.disposeInternal = function() {
   goog.events.removeAll(this);
   this.parentEventTarget_ = null
 };
+goog.fx.TransitionBase = function() {
+  goog.events.EventTarget.call(this);
+  this.state_ = goog.fx.TransitionBase.State.STOPPED;
+  this.endTime = this.startTime = null
+};
+goog.inherits(goog.fx.TransitionBase, goog.events.EventTarget);
+goog.fx.TransitionBase.State = {STOPPED:0, PAUSED:-1, PLAYING:1};
+goog.fx.TransitionBase.prototype.getStateInternal = function() {
+  return this.state_
+};
+goog.fx.TransitionBase.prototype.setStatePlaying = function() {
+  this.state_ = goog.fx.TransitionBase.State.PLAYING
+};
+goog.fx.TransitionBase.prototype.setStatePaused = function() {
+  this.state_ = goog.fx.TransitionBase.State.PAUSED
+};
+goog.fx.TransitionBase.prototype.setStateStopped = function() {
+  this.state_ = goog.fx.TransitionBase.State.STOPPED
+};
+goog.fx.TransitionBase.prototype.isPlaying = function() {
+  return this.state_ == goog.fx.TransitionBase.State.PLAYING
+};
+goog.fx.TransitionBase.prototype.isPaused = function() {
+  return this.state_ == goog.fx.TransitionBase.State.PAUSED
+};
+goog.fx.TransitionBase.prototype.isStopped = function() {
+  return this.state_ == goog.fx.TransitionBase.State.STOPPED
+};
+goog.fx.TransitionBase.prototype.onBegin = function() {
+  this.dispatchAnimationEvent(goog.fx.Transition.EventType.BEGIN)
+};
+goog.fx.TransitionBase.prototype.onEnd = function() {
+  this.dispatchAnimationEvent(goog.fx.Transition.EventType.END)
+};
+goog.fx.TransitionBase.prototype.onFinish = function() {
+  this.dispatchAnimationEvent(goog.fx.Transition.EventType.FINISH)
+};
+goog.fx.TransitionBase.prototype.onPause = function() {
+  this.dispatchAnimationEvent(goog.fx.Transition.EventType.PAUSE)
+};
+goog.fx.TransitionBase.prototype.onPlay = function() {
+  this.dispatchAnimationEvent(goog.fx.Transition.EventType.PLAY)
+};
+goog.fx.TransitionBase.prototype.onResume = function() {
+  this.dispatchAnimationEvent(goog.fx.Transition.EventType.RESUME)
+};
+goog.fx.TransitionBase.prototype.onStop = function() {
+  this.dispatchAnimationEvent(goog.fx.Transition.EventType.STOP)
+};
+goog.fx.TransitionBase.prototype.dispatchAnimationEvent = function(a) {
+  this.dispatchEvent(a)
+};
 goog.Timer = function(a, b) {
   goog.events.EventTarget.call(this);
   this.interval_ = a || 1;
@@ -2280,10 +2336,6 @@ goog.Timer.callOnce = function(a, b, c) {
 goog.Timer.clear = function(a) {
   goog.Timer.defaultTimerObject.clearTimeout(a)
 };
-goog.fx = {};
-goog.fx.Transition = function() {
-};
-goog.fx.Transition.EventType = {PLAY:"play", BEGIN:"begin", RESUME:"resume", END:"end", STOP:"stop", FINISH:"finish", PAUSE:"pause"};
 goog.fx.anim = {};
 goog.fx.anim.Animated = function() {
 };
@@ -2344,7 +2396,7 @@ goog.fx.anim.cycleAnimations_ = function(a) {
   goog.object.isEmpty(goog.fx.anim.activeAnimations_) || goog.fx.anim.requestAnimationTimer_()
 };
 goog.fx.Animation = function(a, b, c, d) {
-  goog.events.EventTarget.call(this);
+  goog.fx.TransitionBase.call(this);
   if(!goog.isArray(a) || !goog.isArray(b)) {
     throw Error("Start and end parameters must be arrays");
   }
@@ -2357,50 +2409,44 @@ goog.fx.Animation = function(a, b, c, d) {
   this.accel_ = d;
   this.coords = []
 };
-goog.inherits(goog.fx.Animation, goog.events.EventTarget);
+goog.inherits(goog.fx.Animation, goog.fx.TransitionBase);
 goog.fx.Animation.EventType = {PLAY:goog.fx.Transition.EventType.PLAY, BEGIN:goog.fx.Transition.EventType.BEGIN, RESUME:goog.fx.Transition.EventType.RESUME, END:goog.fx.Transition.EventType.END, STOP:goog.fx.Transition.EventType.STOP, FINISH:goog.fx.Transition.EventType.FINISH, PAUSE:goog.fx.Transition.EventType.PAUSE, ANIMATE:"animate", DESTROY:"destroy"};
 goog.fx.Animation.TIMEOUT = goog.fx.anim.TIMEOUT;
-goog.fx.Animation.State = {STOPPED:0, PAUSED:-1, PLAYING:1};
+goog.fx.Animation.State = goog.fx.TransitionBase.State;
 goog.fx.Animation.setAnimationWindow = function(a) {
   goog.fx.anim.setAnimationWindow(a)
 };
-goog.fx.Animation.prototype.state_ = goog.fx.Animation.State.STOPPED;
 goog.fx.Animation.prototype.fps_ = 0;
 goog.fx.Animation.prototype.progress = 0;
-goog.fx.Animation.prototype.startTime = null;
-goog.fx.Animation.prototype.endTime = null;
 goog.fx.Animation.prototype.lastFrame = null;
-goog.fx.Animation.prototype.getStateInternal = function() {
-  return this.state_
-};
 goog.fx.Animation.prototype.play = function(a) {
-  if(a || this.state_ == goog.fx.Animation.State.STOPPED) {
+  if(a || this.isStopped()) {
     this.progress = 0, this.coords = this.startPoint
   }else {
-    if(this.state_ == goog.fx.Animation.State.PLAYING) {
+    if(this.isPlaying()) {
       return false
     }
   }
   goog.fx.anim.unregisterAnimation(this);
   this.startTime = a = goog.now();
-  this.state_ == goog.fx.Animation.State.PAUSED && (this.startTime -= this.duration * this.progress);
+  this.isPaused() && (this.startTime -= this.duration * this.progress);
   this.endTime = this.startTime + this.duration;
   this.lastFrame = this.startTime;
   if(!this.progress) {
     this.onBegin()
   }
   this.onPlay();
-  if(this.state_ == goog.fx.Animation.State.PAUSED) {
+  if(this.isPaused()) {
     this.onResume()
   }
-  this.state_ = goog.fx.Animation.State.PLAYING;
+  this.setStatePlaying();
   goog.fx.anim.registerAnimation(this);
   this.cycle(a);
   return true
 };
 goog.fx.Animation.prototype.stop = function(a) {
   goog.fx.anim.unregisterAnimation(this);
-  this.state_ = goog.fx.Animation.State.STOPPED;
+  this.setStateStopped();
   if(a) {
     this.progress = 1
   }
@@ -2409,18 +2455,16 @@ goog.fx.Animation.prototype.stop = function(a) {
   this.onEnd()
 };
 goog.fx.Animation.prototype.pause = function() {
-  if(this.state_ == goog.fx.Animation.State.PLAYING) {
-    goog.fx.anim.unregisterAnimation(this), this.state_ = goog.fx.Animation.State.PAUSED, this.onPause()
-  }
+  this.isPlaying() && (goog.fx.anim.unregisterAnimation(this), this.setStatePaused(), this.onPause())
 };
 goog.fx.Animation.prototype.setProgress = function(a) {
   this.progress = a;
-  if(this.state_ == goog.fx.Animation.State.PLAYING) {
+  if(this.isPlaying()) {
     this.startTime = goog.now() - this.duration * this.progress, this.endTime = this.startTime + this.duration
   }
 };
 goog.fx.Animation.prototype.disposeInternal = function() {
-  this.state_ != goog.fx.Animation.State.STOPPED && this.stop(false);
+  this.isStopped() || this.stop(false);
   this.onDestroy();
   goog.fx.Animation.superClass_.disposeInternal.call(this)
 };
@@ -2439,9 +2483,9 @@ goog.fx.Animation.prototype.cycle = function(a) {
   this.lastFrame = a;
   this.updateCoords_(this.progress);
   if(this.progress == 1) {
-    this.state_ = goog.fx.Animation.State.STOPPED, goog.fx.anim.unregisterAnimation(this), this.onFinish(), this.onEnd()
+    this.setStateStopped(), goog.fx.anim.unregisterAnimation(this), this.onFinish(), this.onEnd()
   }else {
-    if(this.state_ == goog.fx.Animation.State.PLAYING) {
+    if(this.isPlaying()) {
       this.onAnimate()
     }
   }
@@ -2454,33 +2498,12 @@ goog.fx.Animation.prototype.updateCoords_ = function(a) {
   }
 };
 goog.fx.Animation.prototype.onAnimate = function() {
-  this.dispatchAnimationEvent_(goog.fx.Animation.EventType.ANIMATE)
-};
-goog.fx.Animation.prototype.onBegin = function() {
-  this.dispatchAnimationEvent_(goog.fx.Transition.EventType.BEGIN)
+  this.dispatchAnimationEvent(goog.fx.Animation.EventType.ANIMATE)
 };
 goog.fx.Animation.prototype.onDestroy = function() {
-  this.dispatchAnimationEvent_(goog.fx.Animation.EventType.DESTROY)
+  this.dispatchAnimationEvent(goog.fx.Animation.EventType.DESTROY)
 };
-goog.fx.Animation.prototype.onEnd = function() {
-  this.dispatchAnimationEvent_(goog.fx.Transition.EventType.END)
-};
-goog.fx.Animation.prototype.onFinish = function() {
-  this.dispatchAnimationEvent_(goog.fx.Transition.EventType.FINISH)
-};
-goog.fx.Animation.prototype.onPause = function() {
-  this.dispatchAnimationEvent_(goog.fx.Transition.EventType.PAUSE)
-};
-goog.fx.Animation.prototype.onPlay = function() {
-  this.dispatchAnimationEvent_(goog.fx.Transition.EventType.PLAY)
-};
-goog.fx.Animation.prototype.onResume = function() {
-  this.dispatchAnimationEvent_(goog.fx.Transition.EventType.RESUME)
-};
-goog.fx.Animation.prototype.onStop = function() {
-  this.dispatchAnimationEvent_(goog.fx.Transition.EventType.STOP)
-};
-goog.fx.Animation.prototype.dispatchAnimationEvent_ = function(a) {
+goog.fx.Animation.prototype.dispatchAnimationEvent = function(a) {
   this.dispatchEvent(new goog.fx.AnimationEvent(a, this))
 };
 goog.fx.AnimationEvent = function(a, b) {
@@ -2492,7 +2515,7 @@ goog.fx.AnimationEvent = function(a, b) {
   this.duration = b.duration;
   this.progress = b.progress;
   this.fps = b.fps_;
-  this.state = b.state_;
+  this.state = b.getStateInternal();
   this.anim = b
 };
 goog.inherits(goog.fx.AnimationEvent, goog.events.Event);
@@ -6104,7 +6127,7 @@ goog.ui.Container.prototype.addChildAt = function(a, b, c) {
   (this.isFocusable() || !this.isFocusableChildrenAllowed()) && a.setSupportedState(goog.ui.Component.State.FOCUSED, false);
   a.setHandleMouseEvents(false);
   goog.ui.Container.superClass_.addChildAt.call(this, a, b, c);
-  c && this.isInDocument() && this.registerChildId_(a);
+  a.isInDocument() && this.isInDocument() && this.registerChildId_(a);
   b <= this.highlightedIndex_ && this.highlightedIndex_++
 };
 goog.ui.Container.prototype.removeChild = function(a, b) {
