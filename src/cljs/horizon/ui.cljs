@@ -17,21 +17,21 @@
   [parent node]
   (dom/insertSiblingBefore node (dom/getFirstElementChild parent)))
 
+(defn- makeid
+  [title]
+  (string/replace title #"\s" "_"))
+
 (defn ^:export  tabbar-flash
   "Flash the tab unless it is already active"
   [tab-title]
   (let [curr-tab (.. tabbar (getSelectedTab) (getCaption))]
     (when (not= tab-title curr-tab)
-      (classes/add (dom/getElement tab-title) "goog-tab-newactivity"))))
+      (classes/add (dom/getElement (makeid tab-title)) "goog-tab-newactivity"))))
 
 (defn- tabbar-clear-flash
   "Clear the flash on a tab"
   [tab-title]
-  (classes/remove (dom/getElement tab-title) "goog-tab-newactivity"))
-
-(defn- makeid
-  [title]
-  (string/replace title #"\s" "_"))
+  (classes/remove (dom/getElement (makeid tab-title)) "goog-tab-newactivity"))
 
 (defn- handle-tab-select [tabbar e]
   (let [tab      (.target e)

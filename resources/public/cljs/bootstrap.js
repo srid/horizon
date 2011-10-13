@@ -13540,6 +13540,146 @@ cljs.core.get_method = function(a, b) {
 cljs.core.prefers = function(a) {
   return cljs.core._prefers.call(null, a)
 };
+var clojure = {string:{}};
+clojure.string.seq_reverse = function(a) {
+  return cljs.core.reduce.call(null, cljs.core.conj, cljs.core.List.EMPTY, a)
+};
+clojure.string.reverse = function(a) {
+  if(cljs.core.truth_(cljs.core._EQ_.call(null, a.length, 0))) {
+    return""
+  }else {
+    for(var b = new goog.string.StringBuffer, a = clojure.string.seq_reverse.call(null, cljs.core.seq.call(null, a.split("")));;) {
+      if(cljs.core.truth_(a)) {
+        b.append(cljs.core.first.call(null, a)), a = cljs.core.next.call(null, a)
+      }else {
+        break
+      }
+    }
+    return b.toString()
+  }
+};
+clojure.string.replace = function(a, b, c) {
+  if(cljs.core.truth_(cljs.core.string_QMARK_.call(null, b))) {
+    return a.replace(RegExp(goog.string.regExpEscape.call(null, b), "g"), c)
+  }else {
+    if(cljs.core.truth_(b.hasOwnProperty("source"))) {
+      return a.replace(RegExp(b.source, "g"), c)
+    }else {
+      if(cljs.core.truth_("\ufdd0'else")) {
+        throw cljs.core.str.call(null, "Invalid match arg: ", b);
+      }else {
+        return null
+      }
+    }
+  }
+};
+clojure.string.replace_first = function(a, b, c) {
+  return a.replace(b, c)
+};
+clojure.string.join = function() {
+  var a = null;
+  return function(a, c) {
+    switch(arguments.length) {
+      case 1:
+        return cljs.core.apply.call(null, cljs.core.str, a);
+      case 2:
+        return cljs.core.apply.call(null, cljs.core.str, cljs.core.interpose.call(null, a, c))
+    }
+    throw"Invalid arity: " + arguments.length;
+  }
+}();
+clojure.string.upper_case = function(a) {
+  return a.toUpperCase()
+};
+clojure.string.lower_case = function(a) {
+  return a.toLowerCase()
+};
+clojure.string.capitalize = function(a) {
+  return cljs.core.truth_(cljs.core.count.call(null, a) < 2) ? clojure.string.upper_case.call(null, a) : cljs.core.str.call(null, clojure.string.upper_case.call(null, cljs.core.subs.call(null, a, 0, 1)), clojure.string.lower_case.call(null, cljs.core.subs.call(null, a, 1)))
+};
+clojure.string.split = function() {
+  var a = null;
+  return function(a, c, d) {
+    switch(arguments.length) {
+      case 2:
+        return cljs.core.vec.call(null, cljs.core.str.call(null, a).split(c));
+      case 3:
+        var e;
+        a: {
+          if(cljs.core.truth_(d < 1)) {
+            e = cljs.core.vec.call(null, cljs.core.str.call(null, a).split(c))
+          }else {
+            for(var f = a, g = d, h = cljs.core.Vector.fromArray([]);;) {
+              if(cljs.core.truth_(cljs.core._EQ_.call(null, g, 1))) {
+                e = cljs.core.conj.call(null, h, f);
+                break a
+              }else {
+                var i = cljs.core.re_find.call(null, c, f);
+                if(cljs.core.truth_(i)) {
+                  var j = i, i = f.indexOf(j), j = f.substring(i + cljs.core.count.call(null, j));
+                  g -= 1;
+                  h = cljs.core.conj.call(null, h, f.substring(0, i));
+                  f = j
+                }else {
+                  e = cljs.core.conj.call(null, h, f);
+                  break a
+                }
+              }
+            }
+          }
+        }
+        return e
+    }
+    throw"Invalid arity: " + arguments.length;
+  }
+}();
+clojure.string.split_lines = function(a) {
+  return clojure.string.split.call(null, a, /\n|\r\n/)
+};
+clojure.string.trim = function(a) {
+  return goog.string.trim.call(null, a)
+};
+clojure.string.triml = function(a) {
+  return goog.string.trimLeft.call(null, a)
+};
+clojure.string.trimr = function(a) {
+  return goog.string.trimRight.call(null, a)
+};
+clojure.string.trim_newline = function(a) {
+  for(var b = a.length;;) {
+    if(cljs.core.truth_(b === 0)) {
+      return""
+    }else {
+      var c = cljs.core.get.call(null, a, b - 1);
+      if(cljs.core.truth_(function() {
+        var a = cljs.core._EQ_.call(null, c, "\n");
+        return cljs.core.truth_(a) ? a : cljs.core._EQ_.call(null, c, "\r")
+      }())) {
+        b -= 1
+      }else {
+        return a.substring(0, b)
+      }
+    }
+  }
+};
+clojure.string.blank_QMARK_ = function(a) {
+  var b = cljs.core.str.call(null, a);
+  return cljs.core.truth_(function() {
+    var a = cljs.core.not.call(null, b);
+    return cljs.core.truth_(a) ? a : (a = cljs.core._EQ_.call(null, "", b), cljs.core.truth_(a) ? a : cljs.core.re_matches.call(null, /\s+/, b))
+  }()) ? true : false
+};
+clojure.string.escape = function(a, b) {
+  for(var c = new goog.string.StringBuffer, d = a.length, e = 0;;) {
+    if(cljs.core.truth_(cljs.core._EQ_.call(null, d, e))) {
+      return c.toString()
+    }else {
+      var f = a.charAt(e), g = cljs.core.get.call(null, b, f);
+      cljs.core.truth_(g) ? c.append(cljs.core.str.call(null, g)) : c.append(f);
+      e += 1
+    }
+  }
+};
 var horizon = {logger:{}};
 horizon.logger.info = function(a, b) {
   return goog.debug.Logger.getLogger.call(null, cljs.core.name.call(null, a)).info(b)
@@ -13625,16 +13765,19 @@ horizon.ui.prependChild = function(a, b) {
   return goog.dom.insertSiblingBefore.call(null, b, goog.dom.getFirstElementChild.call(null, a))
 };
 goog.exportSymbol("horizon.ui.prependChild", horizon.ui.prependChild);
+horizon.ui.makeid = function(a) {
+  return clojure.string.replace.call(null, a, /\s/, "_")
+};
 horizon.ui.tabbar_flash = function(a) {
   var b = horizon.ui.tabbar.getSelectedTab().getCaption();
-  return cljs.core.truth_(cljs.core.not_EQ_.call(null, a, b)) ? goog.dom.classes.add.call(null, goog.dom.getElement.call(null, a), "goog-tab-newactivity") : null
+  return cljs.core.truth_(cljs.core.not_EQ_.call(null, a, b)) ? goog.dom.classes.add.call(null, goog.dom.getElement.call(null, horizon.ui.makeid.call(null, a)), "goog-tab-newactivity") : null
 };
 goog.exportSymbol("horizon.ui.tabbar_flash", horizon.ui.tabbar_flash);
 horizon.ui.tabbar_clear_flash = function(a) {
-  return goog.dom.classes.remove.call(null, goog.dom.getElement.call(null, a), "goog-tab-newactivity")
+  return goog.dom.classes.remove.call(null, goog.dom.getElement.call(null, horizon.ui.makeid.call(null, a)), "goog-tab-newactivity")
 };
 horizon.ui.handle_tab_select = function(a, b) {
-  var c = b.target.getCaption(), d = goog.dom.getElement.call(null, cljs.core.str.call(null, c, "_content")), e = cljs.core.seq.call(null, cljs.core.prim_seq.call(null, goog.dom.getChildren.call(null, goog.dom.getElement.call(null, d.parentNode)), 0));
+  var c = b.target.getCaption(), d = goog.dom.getElement.call(null, cljs.core.str.call(null, horizon.ui.makeid.call(null, c), "_content")), e = cljs.core.seq.call(null, cljs.core.prim_seq.call(null, goog.dom.getChildren.call(null, goog.dom.getElement.call(null, d.parentNode)), 0));
   if(cljs.core.truth_(e)) {
     for(var f = cljs.core.first.call(null, e);;) {
       if(goog.style.showElement.call(null, f, false), f = cljs.core.next.call(null, e), cljs.core.truth_(f)) {
@@ -13644,7 +13787,7 @@ horizon.ui.handle_tab_select = function(a, b) {
       }
     }
   }
-  horizon.ui.tabbar_clear_flash.call(null, c);
+  horizon.ui.tabbar_clear_flash.call(null, horizon.ui.makeid.call(null, c));
   return goog.style.showElement.call(null, d, true)
 };
 horizon.ui.init_tables = function() {
