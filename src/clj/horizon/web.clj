@@ -165,6 +165,9 @@ This list updates in " [:b "real-time"] ". Try pushing/updating an app. "
   [:table :tbody :tr.row-template]
   (h/clone-for
    [user users]
+   [:tr]                 (if (zero? (count (:apps user)))
+                           (h/set-attr :class "inactive")
+                           identity)
    [:td.user-email]      (h/content (:email user))
    ;; Parametrize the datetime sorter HTML
    [:td.user-registered :.visible-date]   (h/content
