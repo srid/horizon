@@ -1,5 +1,7 @@
 (ns horizon.web
   (:use compojure.core
+        ring.middleware.reload
+        ring.middleware.stacktrace
         [hiccup.core :only (html)]
         hiccup.page-helpers
         [clj-time.format :only (parse unparse formatter formatters)]
@@ -149,7 +151,10 @@
   (let [port (Integer/parseInt (get (System/getenv) "PORT" "8000"))]
     (println (format "web: listening at http://localhost:%s/" port))
     (swap! server (fn [_] (start-http-server
-                          (wrap-ring-handler app-routes)
+                          (wrap-ring-handler
+                           (-> app-routes
+                               (wrap-reload '(horizon.web))
+                               (wrap-stacktrace)))
                           {:port port :websocket true})))))
 
 (defn -main []
