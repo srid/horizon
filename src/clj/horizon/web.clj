@@ -1,7 +1,6 @@
 (ns horizon.web
   (:use compojure.core
-        [hiccup.middleware :only (wrap-base-url)]
-        hiccup.core
+        [hiccup.core :only (html)]
         hiccup.page-helpers
         [clj-time.format :only (parse unparse formatter formatters)]
         lamina.core
@@ -43,88 +42,6 @@
     [:tt
      [:span {:style "display: none;"} sortrepr]
      humanrepr]))
-
-(defn users-table-html [users]
-  [:table {:class "state" :id "users"}
-   [:thead
-    [:tr
-     [:th "User"]
-     [:th "Registered"]
-     [:th "Apps"]]
-    [:tbody
-     (for [user users]
-       (let [numapps (count (:apps user))]
-         [:tr (when (zero? numapps) {:class "inactive"})
-          [:td {:class "titlefont"} (:email user)]
-          [:td (sqlite-datetime-html (:created_at user))]
-          [:td {:class "num"} numapps]]))]]])
-
-(defn apps-table-html [users]
-  [:table {:class "state" :id "app" :border "0" :cellpang "3"}
-   [:thead
-    [:tr
-     [:th "App"]
-     [:th "User"]
-     [:th "Framework"]
-     [:th "Services"]
-     [:th "Last updated"]]]
-   [:tbody
-    (for [user users]
-      (for [app (:apps user)]
-        [:tr
-         [:td {:class "titlefont"}
-          [:a {:href (str "http://" (:url (first (:routes app))))} (:name app)]]
-         [:td (:email user)]
-         [:td (:framework app)]
-         [:td [:div (for [srv (:services app)]
-                      [:a {:title (:alias srv)}
-                       (:service-name srv)])]]
-         [:td (sqlite-datetime-html (:updated_at app))]]))]])
-
-(defn- goog-tab-bar
-  "Create a goog.ui.TabBar element"
-  [id & tabs]
-  [:div
-   [:div {:id id :class "goog-tab-bar goog-tab-bar-top"}
-    (for [[tab-title tab-content] tabs]
-      [:div {:class "goog-tab" :id tab-title} tab-title])]
-   [:div {:id "goog-tab-bar-clear"}]
-   [:div {:id (str id "_content") :class "goog-tab-content"}
-    (for [[tab-title tab-content] tabs]
-      [:div {:id (str tab-title "_content") :style "display: none;"} tab-content])]])
-
-(defn main-page []
-  (html5
-   [:head
-    [:title "Horizon &mdash; Stackato dashboard"]
-    (include-css "/css/lessframework.css")
-    (include-css "http://fonts.googleapis.com/css?family=Spinnaker")
-    (include-css "http://closure-library.googlecode.com/svn/trunk/closure/goog/css/tab.css")
-    (include-css "http://closure-library.googlecode.com/svn/trunk/closure/goog/css/tabbar.css")
-    (include-css "/css/style.css")
-    (include-js "/cljs/bootstrap.js")]
-   [:body
-    [:header
-     [:h1 "Horizon"]
-     [:p "Stackato dashboard"]]
-    (let [users (db/get-data)]
-      (goog-tab-bar
-       "maintab"
-       ["Cloud events"
-        [:div {:style "height: 400px;"}
-         [:i [:p {:style "padding: 1em; width: 75%;"} "Recent activity in the DEAs (CC, HM, ... will be added later).
-This list updates in " [:b "real-time"] ". Try pushing/updating an app. "
-              [:a {:href "https://github.com/ActiveState/horizon#readme"} "Learn more"]]]
-         [:ul {:id "events"}
-          [:li "........."]
-          (for [evt (take 10 @event/current-events)]
-            [:li (record-html evt)])]]]
-       ["Apps" (apps-table-html users)]
-       ["Users" (users-table-html users)]))
-    [:div {:id "log" :style "display: none;"}
-     [:h4 "DEBUG"]]
-    [:footer [:a {:href "http://stackato.com/"} "ActiveState Stackato"]]
-    (javascript-tag "window.p = function(x){console.log(x); return x;}; horizon.core.init();")]))
 
 (defn events-websocket-handler
   [ch request]
@@ -204,16 +121,16 @@ This list updates in " [:b "real-time"] ". Try pushing/updating an app. "
 
 (h/deftemplate index "horizon/templates/main.html"
   [users]
-  [:div#Cloud_events_content] (h/content (cloud-events (take 10 @event/current-events)))
-  [:div#Apps_content]   (h/content (apps-table users))
-  [:div#Users_content]  (h/content (users-table users)))
-
-
+  [:div#Cloud_events_content]
+  (h/content (cloud-events (take 10 @event/current-events)))
+  [:div#Apps_content]
+  (h/content (apps-table users))
+  [:div#Users_content]
+  (h/content (users-table users)))
 
 (defroutes app-routes
-  (GET "/" []  (main-page))
+  (GET "/" [] (render-to-response (index (db/get-data))))
   (GET "/ping" []  "pong")
-  (GET "/enlive" [] (render-to-response (index (db/get-data))))
   (GET "/socket" [] (wrap-aleph-handler events-websocket-handler))
   
   (route/resources "/")
