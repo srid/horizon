@@ -128,8 +128,12 @@
   [:div#Users_content]
   (h/content (users-table users)))
 
+(defn main-view
+  []
+  (render-to-response (index (db/get-data))))
+
 (defroutes app-routes
-  (GET "/" [] (render-to-response (index (db/get-data))))
+  (GET "/" [] (main-view))
   (GET "/ping" []  "pong")
   (GET "/socket" [] (wrap-aleph-handler events-websocket-handler))
   
