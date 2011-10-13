@@ -1,5 +1,6 @@
 (ns horizon.ui
-  (:require [goog.dom :as dom]
+  (:require [clojure.string :as string]
+            [goog.dom :as dom]
             [goog.dom.classes :as classes]
             [goog.object :as goog-object]
             [goog.events.Event :as goog-event]
@@ -28,14 +29,18 @@
   [tab-title]
   (classes/remove (dom/getElement tab-title) "goog-tab-newactivity"))
 
+(defn- makeid
+  [title]
+  (string/replace title #"\s" "_"))
+
 (defn- handle-tab-select [tabbar e]
   (let [tab      (.target e)
         title    (. tab (getCaption))
-        content  (dom/getElement (str title "_content"))]
+        content  (dom/getElement (str (makeid title) "_content"))]
     ;; prim-seq is required to seq through a node collection
     (doseq [e (prim-seq (dom/getChildren (dom/getElement (.parentNode content))) 0)]
       (goog.style.showElement e false))
-    (tabbar-clear-flash title)
+    (tabbar-clear-flash (makeid title))
     (goog.style.showElement content true)))
 
 (defn- init-tables

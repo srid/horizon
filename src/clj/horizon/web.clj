@@ -154,6 +154,11 @@ This list updates in " [:b "real-time"] ". Try pushing/updating an app. "
   [dt]
   (->> dt parse-sqlite-datetime (unparse datetime-sortable-format)))
 
+(h/defsnippet cloud-events "horizon/templates/cloud-events.html" [[:div]]
+  [current-events]
+  [:div :ul#events :li] (h/clone-for [evt current-events]
+                                     (h/content (str evt))))
+
 (h/defsnippet apps-table "horizon/templates/apps-table.html" [[:table]]
   [users]
   [:table :tbody :tr.row-template]
@@ -180,6 +185,7 @@ This list updates in " [:b "real-time"] ". Try pushing/updating an app. "
 
 (h/deftemplate index "horizon/templates/main.html"
   [users]
+  [:div#Cloud_events_content] (h/content (cloud-events (take 10 @event/current-events)))
   [:div#Apps_content]   (h/content (apps-table users))
   [:div#Users_content]  (h/content (apps-table users)))
 

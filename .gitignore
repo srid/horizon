@@ -7,5 +7,6 @@ pom.xml
 .cake
 cloudcontroller.sqlite3
 resources/public/cljs/cljs
+resources/public/cljs/clojure
 resources/public/cljs/horizon
 .sass-cache
