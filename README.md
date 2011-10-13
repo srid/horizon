@@ -36,9 +36,14 @@ C-k` the core.clj buffer and then eval the following in REPL:
 (horizon.core/initialize)  ;; equivalent to `lein run`
 ```
 
-## Architecture
+## Deployment
 
-TODO
+```bash
+lein uberjar
+[...]
+java -jar horizon-1.0.0-SNAPSHOT-standalone.jar
+[...]
+```
 
 ## Research
 

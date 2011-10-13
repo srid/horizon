@@ -2,7 +2,8 @@
   (:require [horizon.sink :as sink]
             [horizon.event :as event]
             [horizon.web :as web]
-            [horizon.cloud :as cloud]))
+            [horizon.cloud :as cloud])
+  (:gen-class))
 
 (defn initialize []
   (println "Horizon is initializing for: " cloud/envconfig)
@@ -10,5 +11,6 @@
   (event/initialize)
   (web/initialize))
 
-(defn -main []
+(declare main)
+(defn -main [& args]
   (initialize))
