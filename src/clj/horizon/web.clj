@@ -160,6 +160,21 @@ This list updates in " [:b "real-time"] ". Try pushing/updating an app. "
   (h/clone-for [evt current-events] (h/html-content
                                      (html (record-html evt)))))
 
+(h/defsnippet users-table "horizon/templates/users-table.html" [[:table]]
+  [users]
+  [:table :tbody :tr.row-template]
+  (h/clone-for
+   [user users]
+   [:td.user-email]      (h/content (:email user))
+   ;; Parametrize the datetime sorter HTML
+   [:td.user-registered :.visible-date]   (h/content
+                                           (sqlite-datetime-readable
+                                            (:created_at user)))
+   [:td.user-registered :.sortable-date]   (h/content
+                                            (sqlite-datetime-sortable
+                                             (:created_at user)))
+   [:td.user-apps]  (h/content (str (count (:apps user))))))
+
 (h/defsnippet apps-table "horizon/templates/apps-table.html" [[:table]]
   [users]
   [:table :tbody :tr.row-template]
@@ -188,7 +203,7 @@ This list updates in " [:b "real-time"] ". Try pushing/updating an app. "
   [users]
   [:div#Cloud_events_content] (h/content (cloud-events (take 10 @event/current-events)))
   [:div#Apps_content]   (h/content (apps-table users))
-  [:div#Users_content]  (h/content (apps-table users)))
+  [:div#Users_content]  (h/content (users-table users)))
 
 
 
