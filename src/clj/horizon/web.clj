@@ -156,8 +156,9 @@ This list updates in " [:b "real-time"] ". Try pushing/updating an app. "
 
 (h/defsnippet cloud-events "horizon/templates/cloud-events.html" [[:div]]
   [current-events]
-  [:div :ul#events :li] (h/clone-for [evt current-events]
-                                     (h/content (str evt))))
+  [:div :ul#events :li]
+  (h/clone-for [evt current-events] (h/html-content
+                                     (html (record-html evt)))))
 
 (h/defsnippet apps-table "horizon/templates/apps-table.html" [[:table]]
   [users]

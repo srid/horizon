@@ -38,7 +38,9 @@
         title    (. tab (getCaption))
         content  (dom/getElement (str (makeid title) "_content"))]
     ;; prim-seq is required to seq through a node collection
-    (doseq [e (prim-seq (dom/getChildren (dom/getElement (.parentNode content))) 0)]
+    (doseq [e (prim-seq (dom/getChildren
+                         (dom/getElement
+                          (.parentNode content))) 0)]
       (goog.style.showElement e false))
     (tabbar-clear-flash (makeid title))
     (goog.style.showElement content true)))
