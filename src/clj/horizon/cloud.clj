@@ -56,13 +56,14 @@
 
 (defmethod cloudcontroller-db ::outside_micro [{host :host}]
   (let [local-db (format "tmp/%s-cc.db" host)]
-    (println "Creating a local cache of sqlite db from" host "...")
-    (println "(the local database therefore won't update unless you restart horizon)")
-    ;; TODO - use expect to automate this? VM's default password is known.
-    (println "NOTE: if this hangs, then you may have forgot to copy your ssh pub key to the VM")
-    (println (format "      run `ssh-copy-id stackato@%s` to do this." host))
-    (scp "stackato" host (cloudcontroller-db inside_micro) local-db)
-    (println "... done.")
+    (do
+      (println "Creating a local cache of sqlite db from" host "...")
+      (println "(the local database therefore won't update unless you restart horizon)")
+      ;; TODO - use expect to automate this? VM's default password is known.
+      (println "NOTE: if this hangs, then you may have forgot to copy your ssh pub key to the VM")
+      (println (format "      run `ssh-copy-id stackato@%s` to do this." host))
+      (scp "stackato" host (cloudcontroller-db inside_micro) local-db)
+      (println "... done."))
     local-db))
 
 (defmethod cloudcontroller-db ::sandbox [_]

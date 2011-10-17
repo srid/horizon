@@ -13762,7 +13762,8 @@ goog.exportSymbol("horizon.ui.tabbar", horizon.ui.tabbar);
 horizon.ui.apps_tablesorter = new goog.ui.TableSorter;
 horizon.ui.users_tablesorter = new goog.ui.TableSorter;
 horizon.ui.prependChild = function(a, b) {
-  return goog.dom.insertSiblingBefore.call(null, b, goog.dom.getFirstElementChild.call(null, a))
+  var c = goog.dom.getFirstElementChild.call(null, a);
+  return cljs.core.truth_(c) ? goog.dom.insertSiblingBefore.call(null, b, c) : goog.dom.appendChild.call(null, a, b)
 };
 goog.exportSymbol("horizon.ui.prependChild", horizon.ui.prependChild);
 horizon.ui.makeid = function(a) {

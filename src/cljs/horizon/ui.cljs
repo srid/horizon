@@ -15,7 +15,10 @@
 
 (defn ^:export prependChild
   [parent node]
-  (dom/insertSiblingBefore node (dom/getFirstElementChild parent)))
+  (let [topnode (dom/getFirstElementChild parent)]
+    (if topnode
+      (dom/insertSiblingBefore node topnode)
+      (dom/appendChild parent node))))
 
 (defn- makeid
   [title]
