@@ -6,6 +6,20 @@ Horizon is the Stackato dashboard for reporting a) the state of the cloud and b)
 
 ## Getting Started
 
+### tl;dr
+
+Get a micro cloud VM running at `stackato.local` and then:
+
+```bash
+$ ssh-copy-id stackato@stackato.local  # one-time
+$ scripts/bootstrap # one-time
+$ lein run
+```
+
+Open http://localhost:8000/ and deploy some apps to your micro cloud.
+
+### Details
+
 ```bash
 $ scripts/bootstrap
 $ HORIZON_CLOUD=<mode> lein run
