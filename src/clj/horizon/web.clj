@@ -107,7 +107,8 @@
 (h/deftemplate index "horizon/templates/main.html"
   [users]
   [:div#Cloud_events_content]
-  (h/content (cloud-events (take 10 @event/current-events)))
+  (h/content (cloud-events
+              (reverse (sort-by :datetime (take 20 @event/current-events)))))
   [:div#Apps_content]
   (h/content (apps-table users))
   [:div#Users_content]
