@@ -32,6 +32,7 @@
             #(run-line-seq (format "ssh stackato@%s %s" host tailcmd)))]
     {{:component "dea"}       (remote-tail "tail -n 200 -f /tmp/vcap-run/dea.log")
      {:component "cc"}        (remote-tail "tail -n 200 -f /tmp/vcap-run/cloud_controller.log")
+     {:component "mongodb"}   (remote-tail "tail -n 200 -f /tmp/vcap-run/mongodb_gateway.log")
      {:component "hm"}        (remote-tail "tail -f /tmp/vcap-run/health_manager.log")
      {:component "router"}    (remote-tail "tail -f /tmp/vcap-run/router.log")}))
 

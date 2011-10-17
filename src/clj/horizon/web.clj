@@ -30,7 +30,11 @@
      [:span "DEA is starting: " (record-app-html record) " by " (first (:users record)) " ...."]
      "cc_start"
      [:span "CC is starting: " (record-app-html record) " by " (first (:users record)) " ...."]
-     (str "unknowdddn record type " (:event_type record)))])
+     "mongo_provision"
+     [:span "Provisioning new service: " [:b (:service-label record)]]
+     [:span
+      [:i "unknown event: "]
+      [:pre (str record)]])])
 
 
 (defn parse-sqlite-datetime
