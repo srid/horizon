@@ -31,6 +31,9 @@
 (def mongodb-provision-attempt-re
   (cf-service-pattern #".+ Attempting to provision instance \(label=([^,]+).+"))
 
+(def mongodb-provisioned-re
+  (cf-service-pattern #"Successfully provision response\:(.+)"))
+
 (defn- parse-datetime
   "Parse datetime format of CF logging"
   [time format]
@@ -90,12 +93,20 @@
        :datetime (parse-cf-service-datetime (.group m 1))
        :service-label (.group m 2)})))
 
+(defn parse-mongo-provisioned [l]
+  (let [m (re-matcher mongodb-provisioned-re l)]
+    (when (.find m)
+      (let [cred-ruby-hash (.group m 2)]
+        {:event_type "mongo_provisioned"
+         :datetime (parse-cf-service-datetime (.group m 1))
+         :cred cred-ruby-hash}))))
 
 (defn parse-line [l]
   (or (parse-dea-start l)
       (parse-dea-ready l)
       (parse-cc-start-app l)
-      (parse-mongo-provision-attempt l)))
+      (parse-mongo-provision-attempt l)
+      (parse-mongo-provisioned l)))
 
 
 (defn format-log-datetime [record]

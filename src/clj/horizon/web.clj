@@ -32,6 +32,8 @@
      [:span "CC is starting: " (record-app-html record) " by " (first (:users record)) " ...."]
      "mongo_provision"
      [:span "Provisioning new service: " [:b (:service-label record)]]
+     "mongo_provisioned"
+     [:span "Provisioned a new service"]
      [:span
       [:i "unknown event: "]
       [:pre (str record)]])])
