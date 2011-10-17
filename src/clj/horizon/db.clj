@@ -5,9 +5,7 @@
 
 (def db {:classname "org.sqlite.JDBC"
          :subprotocol "sqlite"
-         :subname (cloud/cloudcontroller-db cloud/envconfig)})
-
-(q/open-global db)
+         :subname #(cloud/cloudcontroller-db cloud/envconfig)})
 
 (defn- load-data
   "Load data from SQLite into memory"
@@ -43,3 +41,7 @@
                   :routes   (filter-by-presence app (vals routes) :app_id)
                   :services (map #(assoc-service-info % sc srv)
                                  (filter-by-presence app (vals sb) :app_id))))))))
+
+(defn initialize []
+  (println "db: creating database connection")
+  (q/open-global (assoc db :subname ((:subname db)))))

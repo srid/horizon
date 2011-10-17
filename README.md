@@ -8,8 +8,16 @@ Horizon is the Stackato dashboard for reporting a) the state of the cloud and b)
 
 ```bash
 $ scripts/bootstrap
-$ lein run
+$ HORIZON_CLOUD=<mode> lein run
 ```
+
+where `<mode>` can be one of:
+
+* `sandbox` -- runs Horizon against [the sandbox](http://sandbox.activestate.com/) (requries ec2 files -- see below).
+* `inside_micro` -- assuming Horizon is run from *within* a micro cloud VM
+* `outside_micro` -- runs Horizon against a micro cloud VM (`stackato.local`) running on your host
+
+The default is `outside_micro`.
 
 For sandbox mode:
 
