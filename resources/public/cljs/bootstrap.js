@@ -13822,7 +13822,7 @@ horizon.ui.init_tables = function() {
 horizon.ui.init_tabbar = function() {
   horizon.ui.tabbar.decorate(goog.dom.getElement("maintab"));
   goog.events.listen(horizon.ui.tabbar, goog.ui.Component.EventType.SELECT, cljs.core.partial.call(null, horizon.ui.handle_tab_select, horizon.ui.tabbar));
-  return horizon.ui.tabbar.setSelectedTabIndex(1)
+  return horizon.ui.tabbar.setSelectedTabIndex(0)
 };
 horizon.ui.init = function() {
   horizon.ui.init_tables.call(null);

@@ -74,7 +74,7 @@
            tabbar
            goog.ui.Component.EventType/SELECT
            (partial handle-tab-select tabbar))
-  (.setSelectedTabIndex tabbar 1))
+  (.setSelectedTabIndex tabbar 0))
 
 (defn ^:export init [n]
   (init-tables)
