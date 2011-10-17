@@ -1,7 +1,6 @@
 (defproject horizon "1.0.0-SNAPSHOT"
   :description "Stackato dashboard"
   :dependencies [[org.clojure/clojure "1.2.1"]
-                 [org.clojure/tools.logging "0.2.0"]
                  [org.clojure/data.json "0.1.1"]
                  [org.clojure/java.jdbc "0.0.6"]
                  [clojureql "1.0.0"]

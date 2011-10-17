@@ -28,7 +28,9 @@
      [:span "DEA has started: " (record-app-html record)]
      "dea_start"
      [:span "DEA is starting: " (record-app-html record) " by " (first (:users record)) " ...."]
-     (str "unknown record type " (:event_type record)))])
+     "cc_start"
+     [:span "CC is starting: " (record-app-html record) " by " (first (:users record)) " ...."]
+     (str "unknowdddn record type " (:event_type record)))])
 
 
 (defn parse-sqlite-datetime
@@ -133,7 +135,7 @@
            (fn [_] (start-http-server
                     (wrap-ring-handler
                      (-> app-routes
-                         (wrap-reload '(horizon.web))
+                         (wrap-reload '(horizon.web horizon.record))
                          (wrap-stacktrace)))
                     {:port port :websocket true})))))
 

@@ -7,7 +7,7 @@
 (def cf-log-prefix-re
   #"(\[.+\]) [^\s]+ \- \w+ \w+ \w+\s+\w+ \-\- ")
 
-(defn cf-pattern
+(defn- cf-pattern
   [pattern]
   (re-pattern (str cf-log-prefix-re pattern)))
 
@@ -16,6 +16,9 @@
 
 (def dea-instance-ready-re
   (cf-pattern #"Instance \(name=([^\s]+).+instance=(\w+).+is ready for connections, notifying system of status$"))
+
+(def cc-sending-start-re
+  (cf-pattern #"Sending start message (.+) to DEA (\w+)"))
 
 
 (defn- parse-cf-datetime
@@ -47,10 +50,21 @@
        :appname (.group m 2)
        :container (.group m 3)})))
 
+(defn parse-cc-start-app [l]
+  (let [m (re-matcher cc-sending-start-re l)]
+    (when (.find m)
+      (let [j (read-json (.group m 2))]
+        {:event_type "cc_start"
+         :datetime (parse-cf-datetime (.group m 1))
+         :json j
+         :users (:users j)
+         :appname (:name j)
+         }))))
 
 (defn parse-line [l]
   (or (parse-dea-start l)
-      (parse-dea-ready l)))
+      (parse-dea-ready l)
+      (parse-cc-start-app l)))
 
 
 (defn format-log-datetime [record]

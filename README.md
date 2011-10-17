@@ -11,7 +11,7 @@ Get a micro cloud VM running at `stackato.local` and then:
 ```bash
 $ ssh-copy-id stackato@stackato.local  # one-time
 $ scripts/bootstrap # one-time
-$ scripts/watch # leave this running on a different terminal if you are changing html/sass
+$ scripts/watch # leave this running on a different terminal if you are changing sass/cljs
 $ lein run
 ```
 
