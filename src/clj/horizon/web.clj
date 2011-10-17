@@ -34,6 +34,14 @@
      [:span "Provisioning new service: " [:b (:service-label record)]]
      "mongo_provisioned"
      [:span "Provisioned a new service"]
+     "dea_resource_limit_reached"
+     [:span
+      {:style "background-color: red; color: white"}
+      "A DEA has reached its resource limit; no more apps can be deployed"]
+     "cc_no_rsrc"
+     [:span
+      {:style "background-color: orange;"}
+      "CC cannot start an instance due to unavailable DEA's"]
      [:span
       [:i "unknown event: "]
       [:pre (str record)]])])
