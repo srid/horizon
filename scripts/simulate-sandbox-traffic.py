@@ -50,8 +50,8 @@ def run_every(seconds, function, *args):
 
 def main():
     os.chdir(os.path.expanduser('~/as/stackato-samples/node/node-env'))
-    run('stackato target api.sandbox.activestate.com')
-    run_every(60, push_an_app)
+    run('stackato target api.stackato.activestate.com')
+    run_every(60*15, push_an_app)
 
 
 if __name__ == '__main__':
