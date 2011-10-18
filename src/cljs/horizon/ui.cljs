@@ -56,9 +56,11 @@
                             TableSorter/numericSort)]
     ;; Setup app table to be sortable
     (.decorate apps-tablesorter (dom/getElement "app"))
-    (doseq [index [0 1 2 3 4]]
+    (doseq [index [0 1 2 3 6]]
       (.setSortFunction apps-tablesorter index reverse-alpha-sort))
-    (.sort apps-tablesorter 4)
+    (doseq [index [4 5]]
+      (.setSortFunction apps-tablesorter index reverse-num-sort))
+    (.sort apps-tablesorter 6)
 
     ;; Setup users table to be sortable
     (.decorate users-tablesorter (dom/getElement "users"))

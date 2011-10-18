@@ -13794,7 +13794,7 @@ horizon.ui.handle_tab_select = function(a, b) {
 horizon.ui.init_tables = function() {
   var a = goog.ui.TableSorter.createReverseSort.call(null, goog.ui.TableSorter.alphaSort), b = goog.ui.TableSorter.createReverseSort.call(null, goog.ui.TableSorter.numericSort);
   horizon.ui.apps_tablesorter.decorate(goog.dom.getElement.call(null, "app"));
-  var c = cljs.core.seq.call(null, cljs.core.Vector.fromArray([0, 1, 2, 3, 4]));
+  var c = cljs.core.seq.call(null, cljs.core.Vector.fromArray([0, 1, 2, 3, 6]));
   if(cljs.core.truth_(c)) {
     for(var d = cljs.core.first.call(null, c);;) {
       if(horizon.ui.apps_tablesorter.setSortFunction(d, a), d = cljs.core.next.call(null, c), cljs.core.truth_(d)) {
@@ -13804,7 +13804,17 @@ horizon.ui.init_tables = function() {
       }
     }
   }
-  horizon.ui.apps_tablesorter.sort(4);
+  c = cljs.core.seq.call(null, cljs.core.Vector.fromArray([4, 5]));
+  if(cljs.core.truth_(c)) {
+    for(d = cljs.core.first.call(null, c);;) {
+      if(horizon.ui.apps_tablesorter.setSortFunction(d, b), d = cljs.core.next.call(null, c), cljs.core.truth_(d)) {
+        c = d, d = cljs.core.first.call(null, c)
+      }else {
+        break
+      }
+    }
+  }
+  horizon.ui.apps_tablesorter.sort(6);
   horizon.ui.users_tablesorter.decorate(goog.dom.getElement.call(null, "users"));
   c = cljs.core.seq.call(null, cljs.core.Vector.fromArray([0, 1]));
   if(cljs.core.truth_(c)) {

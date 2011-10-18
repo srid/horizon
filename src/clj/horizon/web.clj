@@ -104,6 +104,8 @@
                          (h/set-attr :href (first-url-of-app app)))
    [:td.user-email]     (h/content (:email user))
    [:td.app-framework]  (h/content (:framework app))
+   [:td.app-memory]     (h/content (str (:memory app)))
+   [:td.app-instances]  (h/content (str (:instances app)))
    [:.last-updated]     (h/html-content (html
                                          (sortable-datetime-html
                                           (parse-sqlite-datetime
