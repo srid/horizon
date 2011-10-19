@@ -21,8 +21,8 @@
 
 (defn- update-running-components
   "Update the running components in the cloud"
-  [agt]
-  (let [components (cloud/component-logs cloud/envconfig)]
+  [agt mode]
+  (let [components (cloud/component-logs mode)]
     ;; TODO - remove obsolete components from agt
     (reduce (fn [newagt comp]
               (if (newagt comp)
@@ -37,11 +37,11 @@
             (keys components))))
 
 (defn- initialize-running-components
-  []
-  (send running-components update-running-components))
+  [mode]
+  (send running-components #(update-running-components % mode)))
 
 (defn initialize
   "Initialize log processing from EC2"
-  []
+  [mode]
   (println "sink: initializing log processing")
-  (initialize-running-components))
+  (initialize-running-components mode))

@@ -12,12 +12,15 @@
 (def sandbox
   {:name ::sandbox})
 
-(def envconfig
-  (let [selected (get (System/getenv) "HORIZON_CLOUD" "outside_micro")]
-    (condp = selected
-      "sandbox"       sandbox
-      "inside_micro"  inside_micro
-      "outside_micro" outside_micro)))
+(defn args->mode
+  "Return the appropriate cloud mode from the given arguments"
+  [[modename & args]]
+  (condp = (or modename "outside_micro")
+    "sandbox"       sandbox
+    "inside_micro"  inside_micro
+    "outside_micro" (if args
+                      (assoc outside_micro :host (first args))
+                      outside_micro)))
 
 (defmulti component-logs :name)
 

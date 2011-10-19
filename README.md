@@ -12,7 +12,7 @@ Get a micro cloud VM running at `stackato.local` and then:
 $ ssh-copy-id stackato@stackato.local  # one-time
 $ scripts/bootstrap # one-time
 $ scripts/watch # leave this running on a different terminal if you are changing sass/cljs
-$ lein run
+$ scripts/run
 ```
 
 Open http://localhost:8000/ and deploy some apps to your micro cloud.
@@ -21,22 +21,22 @@ Open http://localhost:8000/ and deploy some apps to your micro cloud.
 
 ```bash
 $ scripts/bootstrap
-$ HORIZON_CLOUD=<mode> lein run
+$ scripts/run <mode>
 ```
 
 where `<mode>` can be one of:
 
 * `sandbox` -- runs Horizon against [the sandbox](http://sandbox.activestate.com/) (requries ec2 files -- see below).
 * `inside_micro` -- assuming Horizon is run from *within* a micro cloud VM
-* `outside_micro` -- runs Horizon against a micro cloud VM (`stackato.local`) running on your host
+* `outside_micro` -- runs Horizon against a micro cloud VM running on your host. VM host can be specified as an additional argument.
 
-The default is `outside_micro`.
+The default is `outside_micro` (stackato.local).
 
 For sandbox mode:
 
 1. Get ~/.ec2 and ~/Downloads/ec2-??? (asksrid)
 2. Run `scripts/copy-sandbox-db` get sandbox db
-    
+
 ## Development mode
 
 ``lein run`` is not most suited for development if you are going to
