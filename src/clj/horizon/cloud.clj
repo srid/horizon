@@ -58,6 +58,7 @@
        local-file))
 
 (defmethod cloudcontroller-db ::outside_micro [{host :host}]
+  (-> "tmp" (java.io.File.) .mkdirs)
   (let [local-db (format "tmp/%s-cc.db" host)]
     (do
       (println "Creating a local cache of sqlite db from" host "...")
