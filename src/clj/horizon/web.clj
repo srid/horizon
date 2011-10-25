@@ -117,11 +117,15 @@
                  (h/content (:service-name srv))
                  (h/set-attr :title (:alias srv))))))
 
+(def cloud-events-to-hide #{"hm_analyzed"})
+
 (h/deftemplate index "horizon/templates/main.html"
   [users]
   [:div#Cloud_events_content]
   (h/content (cloud-events
-              (reverse (sort-by :datetime (take 20 @event/current-events)))))
+              (reverse (sort-by :datetime (take 20
+                                                (remove #(cloud-events-to-hide (:event_type %))
+                                                        @event/current-events))))))
   [:div#Apps_content]
   (h/content (apps-table users))
   [:div#Users_content]
@@ -132,7 +136,9 @@
 
 (defn events-websocket-handler
   [ch request]
-  (siphon (map* #(str (html (record-html %)) "\n") event/queue) ch))
+  (siphon (map* #(str (html (record-html %)) "\n")
+                (remove* #(cloud-events-to-hide (:event_type %)) event/queue))
+          ch))
 
 (defroutes app-routes
   (GET "/" [] (main-view))

@@ -37,6 +37,9 @@
 (def cc-no-resources-available-re
   (cf-pattern #"No resources available to start instance"))
 
+(def hm-analyzed-apps-re
+  (cf-pattern #"Analyzed (\d+) running and (\d+) down apps .*$"))
+
 (def mongodb-provision-attempt-re
   (cf-service-pattern #".+ Attempting to provision instance \(label=([^,]+).+"))
 
@@ -116,6 +119,14 @@
       {:event_type "cc_no_rsrc"
        :datetime (parse-cf-datetime (.group m 1))})))
 
+(defn parse-hm-analyzed-apps [l]
+  (let [m (re-matcher hm-analyzed-apps-re l)]
+    (when (.find m)
+      {:event_type "hm_analyzed"
+       :datetime (parse-cf-datetime (.group m 1))
+       :running (Integer/parseInt (.group m 2))
+       :down (Integer/parseInt (.group m 3))})))
+
 (defn parse-mongo-provision-attempt [l]
   (let [m (re-matcher mongodb-provision-attempt-re l)]
     (when (.find m)
@@ -138,6 +149,7 @@
       (parse-dea-resource-limit-reached l)
       (parse-cc-start-app l)
       (parse-cc-no-resources-available l)
+      (parse-hm-analyzed-apps l)
       (parse-mongo-provision-attempt l)
       (parse-mongo-provisioned l)
       ))
