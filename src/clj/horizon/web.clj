@@ -27,6 +27,8 @@
      [:span "DEA has started: " (record-app-html record)]
      "dea_start"
      [:span "DEA is starting: " (record-app-html record) " by " (first (:users record)) " ...."]
+     "dea_stop"
+     [:span "DEA is stopping: " (record-app-html record)]
      "cc_start"
      [:span "CC is starting: " (record-app-html record) " by " (first (:users record)) " ...."]
      "mongo_provision"

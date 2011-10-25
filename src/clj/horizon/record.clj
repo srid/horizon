@@ -25,6 +25,9 @@
 (def dea-instance-ready-re
   (cf-pattern #"Instance \(name=([^\s]+).+instance=(\w+).+is ready for connections, notifying system of status$"))
 
+(def dea-received-stop-re
+  (cf-pattern #"Stopping instance \(name=([^\s]+).+instance=(\w+) index=(\d+)\)$"))
+
 (def dea-resource-limit-reached-re
   (cf-pattern #"Ignoring request, not enough resources."))
 
@@ -81,6 +84,15 @@
        :appname (.group m 2)
        :container (.group m 3)})))
 
+(defn parse-dea-stop [l]
+  (let [m (re-matcher dea-received-stop-re l)]
+    (when (.find m)
+      {:event_type "dea_stop"
+       :datetime (parse-cf-datetime (.group m 1))
+       :appname (.group m 2)
+       :container (.group m 3)
+       :instance (.group m 4)})))
+
 (defn parse-dea-resource-limit-reached [l]
   (let [m (re-matcher dea-resource-limit-reached-re l)]
     (when (.find m)
@@ -122,6 +134,7 @@
 (defn parse-line [l]
   (or (parse-dea-start l)
       (parse-dea-ready l)
+      (parse-dea-stop l)
       (parse-dea-resource-limit-reached l)
       (parse-cc-start-app l)
       (parse-cc-no-resources-available l)
