@@ -1,7 +1,6 @@
 (ns horizon.web
   (:use compojure.core
         ring.middleware.reload
-        ring.middleware.stacktrace
         [hiccup.core :only (html)]
         hiccup.page-helpers
         [clj-time.format :only (parse unparse formatter formatters)]
@@ -152,8 +151,7 @@
            (fn [_] (start-http-server
                     (wrap-ring-handler
                      (-> app-routes
-                         (wrap-reload '(horizon.web horizon.record))
-                         (wrap-stacktrace)))
+                         (wrap-reload '(horizon.web horizon.record))))
                     {:port port :websocket true})))))
 
 (defn -main []
