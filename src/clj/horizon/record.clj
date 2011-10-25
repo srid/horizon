@@ -143,16 +143,14 @@
          :cred cred-ruby-hash}))))
 
 (defn parse-line [l]
-  (or (parse-dea-start l)
-      (parse-dea-ready l)
-      (parse-dea-stop l)
-      (parse-dea-resource-limit-reached l)
-      (parse-cc-start-app l)
-      (parse-cc-no-resources-available l)
-      (parse-hm-analyzed-apps l)
-      (parse-mongo-provision-attempt l)
-      (parse-mongo-provisioned l)
-      ))
+  (some #(% l)
+        [parse-dea-start parse-dea-ready parse-dea-stop
+         parse-dea-resource-limit-reached
+         parse-cc-start-app
+         parse-cc-no-resources-available
+         parse-hm-analyzed-apps
+         parse-mongo-provision-attempt
+         parse-mongo-provisioned]))
 
 
 (defn format-log-datetime [record]
