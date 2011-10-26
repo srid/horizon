@@ -6,6 +6,7 @@
         [clj-time.format :only (parse unparse formatter formatters)]
         lamina.core
         aleph.http
+        aleph.formats
         [horizon.util :only (render-to-response)])
   (:require [compojure.route :as route]
             [net.cgrand.enlive-html :as h]
@@ -132,7 +133,8 @@
 
 (defn events-websocket-handler
   [ch request]
-  (siphon (map* #(str (html (record-html %)) "\n") event/cloud-events)
+  (siphon (map* #(encode-json->string {:type "cloud-event" :value (str (html (record-html %)) "\n")})
+                event/cloud-events)
           ch))
 
 (defroutes app-routes

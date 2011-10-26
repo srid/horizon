@@ -13,16 +13,22 @@
     (log/info "websocket" (str "WebSocket opened: " event))))
 
 (defn- websocket-message [msg]
-  (log/info "event" "Received message from server")
-  (let [events    (dom/getElement "events")
-        event-ele (dom/createDom "li" nil (dom/htmlToDocumentFragment msg))]
-    (ui/prependChild events event-ele)
+  (let [msg (JSON/parse msg)]
+    (log/info "event" (str "Received message from server: " (.type msg)))
+    (condp = (.type msg)
+      "cloud-event"
+      (let [events    (dom/getElement "events")
+          event-ele (dom/createDom "li" nil (dom/htmlToDocumentFragment (.value msg)))]
+      (ui/prependChild events event-ele)
 
-    ;; Highlight the tab on new activity
-    (ui/tabbar-flash "Cloud events")
+      ;; Highlight the tab on new activity
+      (ui/tabbar-flash "Cloud events")
 
-    ;; FIXME: this doesn't work
-    (.play (new goog.fx.dom/FadeOutAndHide event-ele 3000))))
+      ;; FIXME: this doesn't work
+      (.play (new goog.fx.dom/FadeOutAndHide event-ele 3000)))
+
+      "hm-event"
+      nil)))
 
 (defn- websocket-error [event]
   (log/info "websocket" (str "WebSocket error: " event)))
