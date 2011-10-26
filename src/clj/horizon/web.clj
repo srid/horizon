@@ -14,6 +14,13 @@
              [record :as record]
              [db :as db]]))
 
+(defonce cloud-events (permanent-channel))
+(defonce hm-events (permanent-channel))
+
+(def events-to-save 20)
+(defonce cloud-events-saved (atom []))  ;; last N cloud events from the above queue
+
+
 (defn record-app-html [record]
   (let [url (first (:uris (:json record)))
         url (if url (str "http://" url))]
@@ -72,7 +79,7 @@
   [app]
   (str "http://" (:url (first (:routes app)))))
 
-(h/defsnippet cloud-events "horizon/templates/cloud-events.html" [[:div]]
+(h/defsnippet cloud-events-tab "horizon/templates/cloud-events.html" [[:div]]
   [current-events]
   [:div :ul#events :li]
   (h/clone-for [evt current-events]
@@ -117,15 +124,11 @@
                  (h/content (:service-name srv))
                  (h/set-attr :title (:alias srv))))))
 
-(def cloud-events-to-hide #{"hm_analyzed"})
-
 (h/deftemplate index "horizon/templates/main.html"
   [users]
   [:div#Cloud_events_content]
-  (h/content (cloud-events
-              (reverse (sort-by :datetime (take 20
-                                                (remove #(cloud-events-to-hide (:event_type %))
-                                                        @event/current-events))))))
+  (h/content (cloud-events-tab
+              (reverse (sort-by :datetime @cloud-events-saved))))
   [:div#Apps_content]
   (h/content (apps-table users))
   [:div#Users_content]
@@ -136,8 +139,7 @@
 
 (defn events-websocket-handler
   [ch request]
-  (siphon (map* #(str (html (record-html %)) "\n")
-                (remove* #(cloud-events-to-hide (:event_type %)) event/queue))
+  (siphon (map* #(str (html (record-html %)) "\n") cloud-events)
           ch))
 
 (defroutes app-routes
@@ -147,12 +149,23 @@
   (route/resources "/")
   (route/not-found "Page not found"))
 
+(defn- initialize-channels []
+  (siphon (remove* (comp #{"hm_analyzed"} :event_type) event/queue)
+          cloud-events)
+  (siphon (filter* (comp #{"hm_analyzed"} :event_type) event/queue)
+          hm-events)
+  (receive-all cloud-events (fn [event]
+                              (swap! cloud-events-saved
+                                     #(take events-to-save (cons event %))))))
+
 (defonce server (atom nil))
 
 (defn shutdown []
   (@server))
 
 (defn initialize []
+  (println "web: initializing channels")
+  (initialize-channels)
   (let [port (Integer/parseInt (get (System/getenv) "PORT" "8000"))]
     (println (format "web: listening at http://localhost:%s/" port))
     (swap! server
