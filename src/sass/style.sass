@@ -34,6 +34,7 @@ header
     margin: 0
 
 div#content
+  overflow: auto
   @include standard-width
   background-color: $lightgrey
   #maintab_content_wrapper
@@ -43,10 +44,26 @@ div#content
       margin: 0 0 0 230px
       #maintab_content
         background-color: #FFFFFF
+        border: none
         border-left: 1px solid #D0D0D0
         color: #000000
         min-height: 6in
-        padding: 0 20px 30px
+        padding: 10px 20px 30px
+        .section_title
+          @include border-radius(0.7em)
+          background-color: $teal
+          color: #fff
+          overflow: auto
+          h2
+            margin: 0
+            padding: 10px 20px
+            float: left
+            font-size: 24px
+            font-weight: normal
+          p
+            float: right
+            padding-right: 20px
+            font-size: 16px
   #sidebar_wrapper
     overflow: hidden
     float: left
@@ -55,6 +72,22 @@ div#content
     .tab_wrapper
       #maintab
         width: 230px
+        .goog-tab
+          background-color: $lightgrey
+          text-decoration: none
+          color: $darkteal
+          font-size: 24px
+          padding: 10px
+          border-bottom: 1px solid $midgrey
+          &:hover
+            background-color: $midgrey
+        .goog-tab-selected
+          background-color: #fff
+          border: none
+          border-bottom: 1px solid $midgrey
+          font-weight: normal
+          &:hover
+            background-color: #fff
 
 div#log
   @include standard-width
@@ -65,11 +98,12 @@ footer
   color: #fff
   background-color: $darkteal
   @include border-radius(0 0 0.7em 0.7em)
-  a
-    color: #fff
-    margin: 5px
-    &:visited, &:active
-      color: #fff
+  padding: 0
+  height: 30px
+  a.stackato_logo
+    margin-left: 15px
+    position: relative
+    bottom: 50px
 
 a
   text-decoration: none
@@ -77,13 +111,15 @@ a
     text-decoration: none
     text-decoration: underline
 
-ul#events li
-  list-style-type: none
+ul#events
   padding: 0
-  margin-bottom: 10px
-  div.event_record
-    border: 1px solid #ccc
-    padding: 10px
+  li
+    list-style-type: none
+    padding: 0
+    margin-bottom: 10px
+    div.event_record
+      border: 1px solid #ccc
+      padding: 10px
 
 table.state
   font-size: 14px
@@ -103,14 +139,6 @@ table.state
 
 .hidden
   background-color: red
-
-.goog-tab-content
-  margin: 0
-  border: 1px solid #6b90da
-  border-top: 0
-  padding: 4px 8px
-  background: #fff
-  overflow: auto
 
 .goog-tab-newactivity
   color: green
