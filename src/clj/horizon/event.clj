@@ -1,28 +1,25 @@
 (ns horizon.event
-  (:use [lamina.core :only (enqueue permanent-channel lazy-channel-seq)])
+  (:use lamina.core)
   (:require [horizon.record :as record]
             [horizon.sink :as sink]))
 
-;; Events for last N minutes -- must deprecate
-(defonce ^{:private false} current-events (atom []))
-(defn- add
-  "Add a log record to events"
-  [record]
-  (swap! current-events (partial cons record)))
+(defonce all-events (permanent-channel))
+(defonce ^{:private false} cloud-events (permanent-channel))
+(defonce ^{:private false} hm-events (permanent-channel))
 
-(defonce ^{:private false} queue (permanent-channel))
+;; last N cloud events from the above queue
+(def events-to-save 20)
+(defonce ^{:private false} cloud-events-saved (atom []))
 
-;; TODO - write shutdown; store (future ...) val? how?
-(defn initialize
-  "Initialize processing of records from sink"
-  []
-  (future
-    (println "event: initializing record processing")
-    (doseq [record-str (lazy-channel-seq sink/queue)]
-      ;; (when (and (not (re-find #"to .+ du" record-str))
-      ;;            (re-find #"dea" record-str))
-      ;;   (println ":: " record-str))
-      (when-let [record (record/parse-line record-str)]
-        (record/print-record record) ;; for debug
-        (enqueue queue record)
-        (add record)))))
+(defn initialize []
+  (println "event: initializing record processing")
+  (receive-all sink/queue #(when-let [record (record/parse-line %)]
+                             (record/print-record record)
+                             (enqueue all-events record)))
+  (siphon (remove* (comp #{"hm_analyzed"} :event_type) all-events)
+          cloud-events)
+  (siphon (filter* (comp #{"hm_analyzed"} :event_type) all-events)
+          hm-events)
+  (receive-all cloud-events (fn [event]
+                              (swap! cloud-events-saved
+                                     #(take events-to-save (cons event %))))))

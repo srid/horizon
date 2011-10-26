@@ -26,6 +26,8 @@
      [:span "DEA has started: " (record-app-html record)]
      "dea_start"
      [:span "DEA is starting: " (record-app-html record) " by " (first (:users record)) " ...."]
+     "dea_stop"
+     [:span "DEA is stopping: " (record-app-html record)]
      "cc_start"
      [:span "CC is starting: " (record-app-html record) " by " (first (:users record)) " ...."]
      "mongo_provision"
@@ -69,7 +71,7 @@
   [app]
   (str "http://" (:url (first (:routes app)))))
 
-(h/defsnippet cloud-events "horizon/templates/cloud-events.html" [[:div]]
+(h/defsnippet cloud-events-tab "horizon/templates/cloud-events.html" [[:div]]
   [current-events]
   [:div :ul#events :li]
   (h/clone-for [evt current-events]
@@ -117,8 +119,8 @@
 (h/deftemplate index "horizon/templates/main.html"
   [users]
   [:div#Cloud_events_content]
-  (h/content (cloud-events
-              (reverse (sort-by :datetime (take 20 @event/current-events)))))
+  (h/content (cloud-events-tab
+              (reverse (sort-by :datetime @event/cloud-events-saved))))
   [:div#Apps_content]
   (h/content (apps-table users))
   [:div#Users_content]
@@ -129,7 +131,8 @@
 
 (defn events-websocket-handler
   [ch request]
-  (siphon (map* #(str (html (record-html %)) "\n") event/queue) ch))
+  (siphon (map* #(str (html (record-html %)) "\n") event/cloud-events)
+          ch))
 
 (defroutes app-routes
   (GET "/" [] (main-view))
@@ -152,6 +155,3 @@
                      (-> app-routes
                          (wrap-reload '(horizon.web horizon.record))))
                     {:port port :websocket true})))))
-
-(defn -main []
-  (initialize))
