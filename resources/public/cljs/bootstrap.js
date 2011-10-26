@@ -13846,11 +13846,18 @@ horizon.event.websocket_opened = function() {
   }
 };
 horizon.event.websocket_message = function(a) {
-  horizon.logger.info.call(null, "event", "Received message from server");
-  var b = goog.dom.getElement.call(null, "events"), a = goog.dom.createDom.call(null, "li", null, goog.dom.htmlToDocumentFragment.call(null, a));
-  horizon.ui.prependChild.call(null, b, a);
-  horizon.ui.tabbar_flash.call(null, "Cloud events");
-  return(new goog.fx.dom.FadeOutAndHide(a, 3E3)).play
+  a = JSON.parse.call(null, a);
+  horizon.logger.info.call(null, "event", cljs.core.str.call(null, "Received message from server: ", a.type));
+  var b = cljs.core._EQ_, c = a.type;
+  if(cljs.core.truth_(b.call(null, "cloud-event", c))) {
+    return b = goog.dom.getElement.call(null, "events"), a = goog.dom.createDom.call(null, "li", null, goog.dom.htmlToDocumentFragment.call(null, a.value)), horizon.ui.prependChild.call(null, b, a), horizon.ui.tabbar_flash.call(null, "Cloud events"), (new goog.fx.dom.FadeOutAndHide(a, 3E3)).play
+  }else {
+    if(cljs.core.truth_(b.call(null, "hm-event", c))) {
+      return goog.dom.getElement.call(null, "hm-apps").innerHTML = a.value
+    }else {
+      throw new java.lang.IllegalArgumentException(cljs.core.str.call(null, "No matching clause: ", c));
+    }
+  }
 };
 horizon.event.websocket_error = function(a) {
   return horizon.logger.info.call(null, "websocket", cljs.core.str.call(null, "WebSocket error: ", a))
