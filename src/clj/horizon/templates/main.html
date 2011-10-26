@@ -4,8 +4,6 @@
     <meta charset="utf-8">
     <title>Horizon &mdash; Stackato dashboard</title>
     
-    <link rel="stylesheet" href="/css/lessframework.css">
-    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Spinnaker">
     <link rel="stylesheet" href="http://closure-library.googlecode.com/svn/trunk/closure/goog/css/tab.css">
     <link rel="stylesheet" href="http://closure-library.googlecode.com/svn/trunk/closure/goog/css/tabbar.css">
     <link rel="stylesheet" href="/css/style.css">
@@ -15,50 +13,61 @@
 
   <body>
     <header>
-      <h1>Horizon</h1>
-      <p>Stackato dashboard</p>
+      <h1>Stackato Dashboard</h1>
     </header>
 
     <!-- Google TabBar -->
     <div id="content">
-      <!-- List of tabs -->
-      <div id="maintab" class="goog-tab-bar goog-tab-bar-top">
-        <!-- `id` must match the tab title; used in JS -->
-        <div id="Cloud_events" class="goog-tab">Cloud events</div>
-        <div id="Apps" class="goog-tab">Apps</div>
-        <div id="Users" class="goog-tab">Users</div>
-      </div>
-
-      <div id="goog-tab-bar-clear"></div>
-
+      
       <!-- List of tab content-->
-      <div id="maintab_content" class="goog-tab-content">
-        <!-- `id` should be of the form "<tab-title>_content" -->
-        <div id="Cloud_events_content"
-             style="display: none;">
-          CLOUD events
-        </div>
-
-        <div id="Apps_content"
-             style="display: none;">
-          Apps table
-          <!-- See apps-table.html -->
-        </div>
-
-        <div id="Users_content"
-             style="display: none;">
-          Users content
+      <div id="maintab_content_wrapper">
+        <div class="content_wrapper">
+          <div id="maintab_content" class="goog-tab-content">
+            <!-- `id` should be of the form "<tab-title>_content" -->
+            <div id="Cloud_events_content"
+                 style="display: none;">
+              CLOUD events
+            </div>
+    
+            <div id="Apps_content"
+                 style="display: none;">
+              Apps table
+              <!-- See apps-table.html -->
+            </div>
+    
+            <div id="Users_content"
+                 style="display: none;">
+              Users content
+            </div>
+          </div>
         </div>
       </div>
-    </div> <!-- end of Google TabBar -->
+        
+        <!-- List of tabs -->
+      <div id="sidebar_wrapper">
+        <div class="tab_wrapper">
+          <div id="maintab" class="goog-tab-bar goog-tab-bar-left">
+            <!-- `id` must match the tab title; used in JS -->
+            <div id="Cloud_events" class="goog-tab">Cloud events</div>
+            <div id="Apps" class="goog-tab">Apps</div>
+            <div id="Users" class="goog-tab">Users</div>
+          </div>
+        </div>
+      </div>
+        
+      <div id="goog-tab-bar-clear"></div>
+      
+    </div>
+      
+    
 
     <!-- Debug -->
-    <div id="log" style="display: none;">
+    <div id="log" style="display: none">
       <h4>DEBUG</h4>
     </div>
 
     <footer>
-      <a href="http://stackato.com/">ActiveState Stackato</a>
+      &nbsp;
     </footer>
 
     <script>

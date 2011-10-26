@@ -1,32 +1,75 @@
+$teal: #026982
+$darkteal: #00404F
+$lightgrey: #F2F2F2
+$midgrey: #D0D0D0
+
 body
-  margin: auto
-  background-color: #fefefe
-  padding-top: 1em !important
-  font-family: helvetica, arial, freesans, clean, sans-serif !important
-  font-size: 14px
+  background-color: $teal
+  color: #000000
+  font-family: arial,helvetica,clean,sans-serif
+  font-size: 90%
+  margin: 1em 1em 0
+  padding: 0
+
+@mixin standard-width
+  max-width: 12in
+  margin: 0 auto
+
+@mixin border-radius($radius)
+  border-radius: $radius
+  -moz-border-radius: $radius
+  -webkit-border-radius: $radius
 
 header
-  font-family: 'Spinnaker', serif
-  margin-bottom: 20px
-  background: url(/img/horizon.jpg)
-  color: #eeeeee
-  text-align: right
-  padding: 1em
-  p
-    color: #aaaaaa
+  background-color: $darkteal
+  color: #FFFFFF
+  line-height: 30px
+  @include border-radius(0.7em 0.7em 0 0)
+  padding: 0
+  @include standard-width
+  h1
+    font-size: 90%
+    font-weight: normal
+    padding-left: 10px
+    margin: 0
+
+div#content
+  @include standard-width
+  background-color: $lightgrey
+  #maintab_content_wrapper
+    float: left
+    width: 100%
+    .content_wrapper
+      margin: 0 0 0 230px
+      #maintab_content
+        background-color: #FFFFFF
+        border-left: 1px solid #D0D0D0
+        color: #000000
+        min-height: 6in
+        padding: 0 20px 30px
+  #sidebar_wrapper
+    overflow: hidden
+    float: left
+    margin-left: -100%
+    width: 230px
+    .tab_wrapper
+      #maintab
+        width: 230px
+
+div#log
+  @include standard-width
 
 footer
-  font-family: 'Spinnaker', serif
+  @include standard-width
   text-align: left
-  border-top: 3px solid gray
-  margin-top: 30px
-  color: #666666
-  background-color: #1F1F1F
-  padding: 5px
+  color: #fff
+  background-color: $darkteal
+  @include border-radius(0 0 0.7em 0.7em)
   a
-    color: #666666
+    color: #fff
+    margin: 5px
     &:visited, &:active
-      color: #666666
+      color: #fff
 
 a
   text-decoration: none
