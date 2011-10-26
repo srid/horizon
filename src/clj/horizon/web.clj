@@ -87,9 +87,9 @@
                 (html (record-html evt)))))
 
 
-(h/defsnippet users-table "horizon/templates/users-table.html" [[:table]]
+(h/defsnippet users-table "horizon/templates/users-table.html" [[:div]]
   [users]
-  [:table :tbody :tr.row-template]
+  [:div :table#users :tbody :tr.row-template]
   (h/clone-for
    [user users]
    [:tr]                 (if (zero? (count (:apps user)))
@@ -102,9 +102,9 @@
                                             (:created_at user)))))
    [:td.user-apps]       (h/content (str (count (:apps user))))))
 
-(h/defsnippet apps-table "horizon/templates/apps-table.html" [[:table]]
+(h/defsnippet apps-table "horizon/templates/apps-table.html" [[:div]]
   [users]
-  [:table :tbody :tr.row-template]
+  [:div :table#app :tbody :tr.row-template]
   (h/clone-for
    [[app user] (deflate-users users)]
    [:td.titlefont :a]   (h/do->
