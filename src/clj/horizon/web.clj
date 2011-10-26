@@ -20,8 +20,7 @@
     [:b [:a {:href url :target "_blank"} (:appname record)]]))
 
 (defn record-html [record]
-  [:div {:title (str record) :class (:event_type record)}
-   [:b (record/format-log-datetime record)] " -- "
+  [:div {:class (apply str (interpose " " ["event_record" (:event_type record)]))}
    (condp = (:event_type record)
      "dea_ready"
      [:span "DEA has started: " (record-app-html record)]
