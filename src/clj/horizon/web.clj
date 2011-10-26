@@ -95,7 +95,7 @@
    [:tr]                 (if (zero? (count (:apps user)))
                            (h/set-attr :class "inactive")
                            identity)
-   [:td.user-email]      (h/content (:email user))
+   [:td.user-email]      (h/content (:email user) (if (zero? (count (:apps user))) " (inactive)"))
    [:.user-registered]   (h/html-content (html
                                           (sortable-datetime-html
                                            (parse-sqlite-datetime

@@ -70,6 +70,20 @@ div#content
             float: right
             padding-right: 20px
             font-size: 16px
+        table
+          margin-top: 10px
+          width: 100%
+          thead tr th
+            background-color: $teal !important
+            color: #fff
+            font-size: 16px
+            font-weight: normal
+            &.goog-tablesorter-sorted-reverse
+              background: $teal url(/img/up.png) no-repeat  5px center
+              padding-left: 16px
+            &.goog-tablesorter-sorted
+              background: $teal url(/img/down.png) no-repeat  5px center
+              padding-left: 16px
   #sidebar_wrapper
     overflow: hidden
     float: left
