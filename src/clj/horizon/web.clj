@@ -26,7 +26,7 @@
     [:b [:a {:href url :target "_blank"} (:appname record)]]))
 
 (defn- record-html [record]
-  [:div {:title (str record) :class (clojure.string/join ["event_record" (:event_type record)] " ")}
+  [:div {:title (str record) :class (clojure.string/join " " ["event_record" (:event_type record)])}
    [:b (record/format-log-datetime record)] " -- "
    (condp = (:event_type record)
      "dea_ready"
