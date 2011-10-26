@@ -28,7 +28,7 @@
       (.play (new goog.fx.dom/FadeOutAndHide event-ele 3000)))
 
       "hm-event"
-      nil)))
+      (set! (.innerHTML (dom/getElement "hm-apps")) (.value msg)))))
 
 (defn- websocket-error [event]
   (log/info "websocket" (str "WebSocket error: " event)))

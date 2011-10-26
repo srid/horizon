@@ -13853,7 +13853,7 @@ horizon.event.websocket_message = function(a) {
     return b = goog.dom.getElement.call(null, "events"), a = goog.dom.createDom.call(null, "li", null, goog.dom.htmlToDocumentFragment.call(null, a.value)), horizon.ui.prependChild.call(null, b, a), horizon.ui.tabbar_flash.call(null, "Cloud events"), (new goog.fx.dom.FadeOutAndHide(a, 3E3)).play
   }else {
     if(cljs.core.truth_(b.call(null, "hm-event", c))) {
-      return null
+      return goog.dom.getElement.call(null, "hm-apps").innerHTML = a.value
     }else {
       throw new java.lang.IllegalArgumentException(cljs.core.str.call(null, "No matching clause: ", c));
     }

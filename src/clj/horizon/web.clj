@@ -15,12 +15,17 @@
              [record :as record]
              [db :as db]]))
 
-(defn record-app-html [record]
+(defn- hm-apps-html [record]
+  [:div
+   [:span [:b "Running: "] (:running record) "; "]
+   [:span [:b "Down: "] (:down record)]])
+
+(defn- record-app-html [record]
   (let [url (first (:uris (:json record)))
         url (if url (str "http://" url))]
     [:b [:a {:href url :target "_blank"} (:appname record)]]))
 
-(defn record-html [record]
+(defn- record-html [record]
   [:span {:title (str record)}
    [:b (record/format-log-datetime record)] " -- "
    (condp = (:event_type record)
@@ -133,6 +138,9 @@
 
 (defn events-websocket-handler
   [ch request]
+  (siphon (map* #(encode-json->string {:type "hm-event" :value (str (html (hm-apps-html %)) "\n")})
+                event/hm-events)
+          ch)
   (siphon (map* #(encode-json->string {:type "cloud-event" :value (str (html (record-html %)) "\n")})
                 event/cloud-events)
           ch))
