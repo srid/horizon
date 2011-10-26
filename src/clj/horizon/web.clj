@@ -17,8 +17,9 @@
 
 (defn- hm-apps-html [record]
   [:div
-   [:span [:b "Running: "] (:running record) "; "]
-   [:span [:b "Down: "] (:down record)]])
+   [:strong "Application Status: "]
+   [:span (:running record) " running, "]
+   [:span (:down record) " down"]])
 
 (defn- record-app-html [record]
   (let [url (first (:uris (:json record)))
