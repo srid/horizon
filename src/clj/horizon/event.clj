@@ -1,16 +1,25 @@
 (ns horizon.event
-  (:use [lamina.core :only (enqueue permanent-channel receive-all)])
+  (:use lamina.core)
   (:require [horizon.record :as record]
             [horizon.sink :as sink]))
 
-(defonce ^{:private false} queue (permanent-channel))
+(defonce all-events (permanent-channel))
+(defonce ^{:private false} cloud-events (permanent-channel))
+(defonce ^{:private false} hm-events (permanent-channel))
 
-;; TODO - write shutdown; store (future ...) val? how?
-(defn initialize
-  "Initialize processing of records from sink"
-  []
-  (future
-    (println "event: initializing record processing")
-    (receive-all sink/queue #(when-let [record (record/parse-line %)]
-                               (record/print-record record)
-                               (enqueue queue record)))))
+;; last N cloud events from the above queue
+(def events-to-save 20)
+(defonce ^{:private false} cloud-events-saved (atom []))
+
+(defn initialize []
+  (println "event: initializing record processing")
+  (receive-all sink/queue #(when-let [record (record/parse-line %)]
+                             (record/print-record record)
+                             (enqueue all-events record)))
+  (siphon (remove* (comp #{"hm_analyzed"} :event_type) all-events)
+          cloud-events)
+  (siphon (filter* (comp #{"hm_analyzed"} :event_type) all-events)
+          hm-events)
+  (receive-all cloud-events (fn [event]
+                              (swap! cloud-events-saved
+                                     #(take events-to-save (cons event %))))))

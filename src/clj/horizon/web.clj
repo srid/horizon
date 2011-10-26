@@ -14,13 +14,6 @@
              [record :as record]
              [db :as db]]))
 
-(defonce cloud-events (permanent-channel))
-(defonce hm-events (permanent-channel))
-
-(def events-to-save 20)
-(defonce cloud-events-saved (atom []))  ;; last N cloud events from the above queue
-
-
 (defn record-app-html [record]
   (let [url (first (:uris (:json record)))
         url (if url (str "http://" url))]
@@ -128,7 +121,7 @@
   [users]
   [:div#Cloud_events_content]
   (h/content (cloud-events-tab
-              (reverse (sort-by :datetime @cloud-events-saved))))
+              (reverse (sort-by :datetime @event/cloud-events-saved))))
   [:div#Apps_content]
   (h/content (apps-table users))
   [:div#Users_content]
@@ -139,7 +132,7 @@
 
 (defn events-websocket-handler
   [ch request]
-  (siphon (map* #(str (html (record-html %)) "\n") cloud-events)
+  (siphon (map* #(str (html (record-html %)) "\n") event/cloud-events)
           ch))
 
 (defroutes app-routes
@@ -149,23 +142,12 @@
   (route/resources "/")
   (route/not-found "Page not found"))
 
-(defn- initialize-channels []
-  (siphon (remove* (comp #{"hm_analyzed"} :event_type) event/queue)
-          cloud-events)
-  (siphon (filter* (comp #{"hm_analyzed"} :event_type) event/queue)
-          hm-events)
-  (receive-all cloud-events (fn [event]
-                              (swap! cloud-events-saved
-                                     #(take events-to-save (cons event %))))))
-
 (defonce server (atom nil))
 
 (defn shutdown []
   (@server))
 
 (defn initialize []
-  (println "web: initializing channels")
-  (initialize-channels)
   (let [port (Integer/parseInt (get (System/getenv) "PORT" "8000"))]
     (println (format "web: listening at http://localhost:%s/" port))
     (swap! server
@@ -174,6 +156,3 @@
                      (-> app-routes
                          (wrap-reload '(horizon.web horizon.record))))
                     {:port port :websocket true})))))
-
-(defn -main []
-  (initialize))
