@@ -2,6 +2,8 @@ $teal: #026982
 $darkteal: #00404F
 $lightgrey: #F2F2F2
 $midgrey: #D0D0D0
+$deepred: #BA0011
+$deeporange: #F56600
 
 body
   background-color: $teal
@@ -10,6 +12,9 @@ body
   font-size: 90%
   margin: 1em 1em 0
   padding: 0
+  a
+    color: $teal
+    
 
 @mixin standard-width
   max-width: 12in
@@ -71,19 +76,22 @@ div#content
             padding-right: 20px
             font-size: 16px
         table
+          border-collapse: collapse
           margin-top: 10px
           width: 100%
           thead tr th
-            background-color: $teal !important
+            background-color: $darkteal
             color: #fff
             font-size: 16px
             font-weight: normal
             &.goog-tablesorter-sorted-reverse
-              background: $teal url(/img/up.png) no-repeat  5px center
+              background: $teal url(/img/up.png) no-repeat 5px center
               padding-left: 16px
             &.goog-tablesorter-sorted
-              background: $teal url(/img/down.png) no-repeat  5px center
+              background: $teal url(/img/down.png) no-repeat 5px center
               padding-left: 16px
+          tbody tr:nth-child(odd)
+            background-color: $lightgrey
   #sidebar_wrapper
     overflow: hidden
     float: left
@@ -140,6 +148,19 @@ ul#events
     div.event_record
       border: 1px solid #ccc
       padding: 10px
+      &.dea_resource_limit_reached
+        color: $deepred
+        background-color: lighten($deepred, 60%)
+      &.cc_no_rsrc
+        color: $deeporange
+        background-color: lighten($deeporange, 60%)
+      .timestamp
+        margin: auto 10px 20px
+      .details
+        overflow: auto
+        border: 1px solid $midgrey
+        background-color: $lightgrey
+        padding: 0 20px
 
 table.state
   font-size: 14px
@@ -147,11 +168,11 @@ table.state
     padding: 0.4em
   th
     border: 1px solid
-    background-color: #dedede
+    background-color: $darkteal
     padding: 0.3em 0.5em
     &:hover
       cursor: pointer
-      opacity: 0.7
+      background-color: lighten($teal, 30%)
   td.num
     text-align: right
   tr.inactive
@@ -163,9 +184,3 @@ table.state
 .goog-tab-newactivity
   color: green
   font-style: italic
-
-th
-  &.goog-tablesorter-sorted
-    background-color: #eef !important
-  &.goog-tablesorter-sorted-reverse
-    background-color: #fee !important

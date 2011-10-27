@@ -1,32 +1,129 @@
 body {
-  margin: auto;
-  background-color: #fefefe;
-  padding-top: 1em !important;
-  font-family: helvetica, arial, freesans, clean, sans-serif !important;
-  font-size: 14px; }
+  background-color: #026982;
+  color: black;
+  font-family: arial, helvetica, clean, sans-serif;
+  font-size: 90%;
+  margin: 1em 1em 0;
+  padding: 0; }
+  body a {
+    color: #026982; }
 
 header {
-  font-family: "Spinnaker", serif;
-  margin-bottom: 20px;
-  background: url(/img/horizon.jpg);
-  color: #eeeeee;
-  text-align: right;
-  padding: 1em; }
-  header p {
-    color: #aaaaaa; }
+  background-color: #00404f;
+  color: white;
+  line-height: 30px;
+  border-radius: 0.7em 0.7em 0 0;
+  -moz-border-radius: 0.7em 0.7em 0 0;
+  -webkit-border-radius: 0.7em 0.7em 0 0;
+  padding: 0;
+  max-width: 12in;
+  margin: 0 auto;
+  overflow: auto; }
+  header h1 {
+    font-size: 90%;
+    font-weight: normal;
+    padding-left: 10px;
+    margin: 0;
+    float: left; }
+  header #hm-apps {
+    font-size: 90%;
+    float: right;
+    padding-right: 10px; }
+
+div#content {
+  overflow: auto;
+  max-width: 12in;
+  margin: 0 auto;
+  background-color: #f2f2f2; }
+  div#content #maintab_content_wrapper {
+    float: left;
+    width: 100%; }
+    div#content #maintab_content_wrapper .content_wrapper {
+      margin: 0 0 0 230px; }
+      div#content #maintab_content_wrapper .content_wrapper #maintab_content {
+        background-color: white;
+        border: none;
+        border-left: 1px solid #d0d0d0;
+        color: black;
+        min-height: 6in;
+        padding: 10px 20px 30px; }
+        div#content #maintab_content_wrapper .content_wrapper #maintab_content .section_title {
+          border-radius: 0.7em;
+          -moz-border-radius: 0.7em;
+          -webkit-border-radius: 0.7em;
+          background-color: #026982;
+          color: white;
+          overflow: auto; }
+          div#content #maintab_content_wrapper .content_wrapper #maintab_content .section_title h2 {
+            margin: 0;
+            padding: 10px 20px;
+            float: left;
+            font-size: 24px;
+            font-weight: normal; }
+          div#content #maintab_content_wrapper .content_wrapper #maintab_content .section_title p {
+            float: right;
+            padding-right: 20px;
+            font-size: 16px; }
+        div#content #maintab_content_wrapper .content_wrapper #maintab_content table {
+          border-collapse: collapse;
+          margin-top: 10px;
+          width: 100%; }
+          div#content #maintab_content_wrapper .content_wrapper #maintab_content table thead tr th {
+            background-color: #00404f;
+            color: white;
+            font-size: 16px;
+            font-weight: normal; }
+            div#content #maintab_content_wrapper .content_wrapper #maintab_content table thead tr th.goog-tablesorter-sorted-reverse {
+              background: #026982 url(/img/up.png) no-repeat 5px center;
+              padding-left: 16px; }
+            div#content #maintab_content_wrapper .content_wrapper #maintab_content table thead tr th.goog-tablesorter-sorted {
+              background: #026982 url(/img/down.png) no-repeat 5px center;
+              padding-left: 16px; }
+          div#content #maintab_content_wrapper .content_wrapper #maintab_content table tbody tr:nth-child(odd) {
+            background-color: #f2f2f2; }
+  div#content #sidebar_wrapper {
+    overflow: hidden;
+    float: left;
+    margin-left: -100%;
+    width: 230px; }
+    div#content #sidebar_wrapper .tab_wrapper #maintab {
+      width: 230px; }
+      div#content #sidebar_wrapper .tab_wrapper #maintab .goog-tab {
+        background-color: #f2f2f2;
+        text-decoration: none;
+        color: #00404f;
+        font-size: 24px;
+        padding: 10px;
+        border-bottom: 1px solid #d0d0d0; }
+        div#content #sidebar_wrapper .tab_wrapper #maintab .goog-tab:hover {
+          background-color: #d0d0d0; }
+      div#content #sidebar_wrapper .tab_wrapper #maintab .goog-tab-selected {
+        background: white url(/img/arrow-right_16x16.gif) no-repeat 200px 16px;
+        border: none;
+        border-bottom: 1px solid #d0d0d0;
+        font-weight: normal; }
+        div#content #sidebar_wrapper .tab_wrapper #maintab .goog-tab-selected:hover {
+          background-color: white; }
+
+div#log {
+  max-width: 12in;
+  margin: 0 auto; }
 
 footer {
-  font-family: "Spinnaker", serif;
+  max-width: 12in;
+  margin: 0 auto;
   text-align: left;
-  border-top: 3px solid gray;
-  margin-top: 30px;
-  color: #666666;
-  background-color: #1f1f1f;
-  padding: 5px; }
-  footer a {
-    color: #666666; }
-    footer a:visited, footer a:active {
-      color: #666666; }
+  color: white;
+  background-color: #00404f;
+  border-radius: 0 0 0.7em 0.7em;
+  -moz-border-radius: 0 0 0.7em 0.7em;
+  -webkit-border-radius: 0 0 0.7em 0.7em;
+  padding: 0;
+  height: 30px; }
+  footer a.stackato_logo {
+    margin-left: 15px;
+    position: relative;
+    bottom: 50px; }
 
 a {
   text-decoration: none; }
@@ -34,9 +131,28 @@ a {
     text-decoration: none;
     text-decoration: underline; }
 
-ul#events li {
-  list-style-type: none;
-  padding: 0.4em; }
+ul#events {
+  padding: 0; }
+  ul#events li {
+    list-style-type: none;
+    padding: 0;
+    margin-bottom: 10px; }
+    ul#events li div.event_record {
+      border: 1px solid #cccccc;
+      padding: 10px; }
+      ul#events li div.event_record.dea_resource_limit_reached {
+        color: #ba0011;
+        background-color: #ffedef; }
+      ul#events li div.event_record.cc_no_rsrc {
+        color: #f56600;
+        background-color: white; }
+      ul#events li div.event_record .timestamp {
+        margin: auto 10px 20px; }
+      ul#events li div.event_record .details {
+        overflow: auto;
+        border: 1px solid #d0d0d0;
+        background-color: #f2f2f2;
+        padding: 0 20px; }
 
 table.state {
   font-size: 14px; }
@@ -44,11 +160,11 @@ table.state {
     padding: 0.4em; }
   table.state th {
     border: 1px solid;
-    background-color: #dedede;
+    background-color: #00404f;
     padding: 0.3em 0.5em; }
     table.state th:hover {
       cursor: pointer;
-      opacity: 0.7; }
+      background-color: #21d1fc; }
   table.state td.num {
     text-align: right; }
   table.state tr.inactive {
@@ -57,19 +173,6 @@ table.state {
 .hidden {
   background-color: red; }
 
-.goog-tab-content {
-  margin: 0;
-  border: 1px solid #6b90da;
-  border-top: 0;
-  padding: 4px 8px;
-  background: white;
-  overflow: auto; }
-
 .goog-tab-newactivity {
   color: green;
   font-style: italic; }
-
-th.goog-tablesorter-sorted {
-  background-color: #eeeeff !important; }
-th.goog-tablesorter-sorted-reverse {
-  background-color: #ffeeee !important; }
