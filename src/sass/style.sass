@@ -4,6 +4,7 @@ $lightgrey: #F2F2F2
 $midgrey: #D0D0D0
 $deepred: #BA0011
 $deeporange: #F56600
+$yellow: #FFFF80
 
 body
   background-color: $teal
@@ -14,7 +15,6 @@ body
   padding: 0
   a
     color: $teal
-    
 
 @mixin standard-width
   max-width: 12in
@@ -30,6 +30,21 @@ body
   -webkit-transition: $trans
   -o-transition: $trans
   transition: $trans
+  
+@mixin animation($params)
+  -webkit-animation: $params
+
+@-webkit-keyframes flash
+  0%
+    background-color: $lightgrey
+  25%
+    background-color: $yellow
+  50%
+    background-color: $lightgrey
+  75%
+    background-color: $yellow
+  100%
+    background-color: $lightgrey
 
 header
   background-color: $darkteal
@@ -169,7 +184,7 @@ ul#events
         background-color: $lightgrey
         padding: 0 20px
     &.new-event
-      background-color: #FFFF80
+      background-color: $yellow
       
 table.state
   font-size: 14px
@@ -191,5 +206,4 @@ table.state
   background-color: red
 
 .goog-tab-newactivity
-  color: green
-  font-style: italic
+  @include animation(flash 8s infinite)

@@ -8,6 +8,22 @@ body {
   body a {
     color: #026982; }
 
+@-webkit-keyframes flash {
+  0% {
+    background-color: #f2f2f2; }
+
+  25% {
+    background-color: #ffff80; }
+
+  50% {
+    background-color: #f2f2f2; }
+
+  75% {
+    background-color: #ffff80; }
+
+  100% {
+    background-color: #f2f2f2; } }
+
 header {
   background-color: #00404f;
   color: white;
@@ -180,5 +196,4 @@ table.state {
   background-color: red; }
 
 .goog-tab-newactivity {
-  color: green;
-  font-style: italic; }
+  -webkit-animation: flash 8s infinite; }
