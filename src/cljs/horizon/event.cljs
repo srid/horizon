@@ -19,13 +19,17 @@
       "cloud-event"
       (let [events    (dom/getElement "events")
           event-ele (dom/createDom "li" nil (dom/htmlToDocumentFragment (.value msg)))]
+      (classes/add event-ele "new-event")
       (ui/prependChild events event-ele)
+      (window/p event-ele)
 
       ;; Highlight the tab on new activity
       (ui/tabbar-flash "Cloud events")
 
       ;; FIXME: this doesn't work
       (.play (new goog.fx.dom/FadeOutAndHide event-ele 3000)))
+      
+      ;; (window/setTimeout #(classes/remove event-ele "new-event") 1000) 
 
       "hm-event"
       (set! (.innerHTML (dom/getElement "hm-apps")) (.value msg)))))

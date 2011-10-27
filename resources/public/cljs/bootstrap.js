@@ -1371,7 +1371,7 @@ goog.userAgent.isDocumentModeCache_ = {};
 goog.userAgent.isDocumentMode = function(a) {
   return goog.userAgent.isDocumentModeCache_[a] || (goog.userAgent.isDocumentModeCache_[a] = goog.userAgent.IE && document.documentMode && document.documentMode >= a)
 };
-goog.events.BrowserFeature = {HAS_W3C_BUTTON:!goog.userAgent.IE || goog.userAgent.isDocumentMode(9), SET_KEY_CODE_TO_PREVENT_DEFAULT:goog.userAgent.IE && !goog.userAgent.isVersion("8")};
+goog.events.BrowserFeature = {HAS_W3C_BUTTON:!goog.userAgent.IE || goog.userAgent.isDocumentMode(9), HAS_W3C_EVENT_SUPPORT:!goog.userAgent.IE || goog.userAgent.isDocumentMode(9), SET_KEY_CODE_TO_PREVENT_DEFAULT:goog.userAgent.IE && !goog.userAgent.isVersion("8")};
 goog.events.EventType = {CLICK:"click", DBLCLICK:"dblclick", MOUSEDOWN:"mousedown", MOUSEUP:"mouseup", MOUSEOVER:"mouseover", MOUSEOUT:"mouseout", MOUSEMOVE:"mousemove", SELECTSTART:"selectstart", KEYPRESS:"keypress", KEYDOWN:"keydown", KEYUP:"keyup", BLUR:"blur", FOCUS:"focus", DEACTIVATE:"deactivate", FOCUSIN:goog.userAgent.IE ? "focusin" : "DOMFocusIn", FOCUSOUT:goog.userAgent.IE ? "focusout" : "DOMFocusOut", CHANGE:"change", SELECT:"select", SUBMIT:"submit", INPUT:"input", PROPERTYCHANGE:"propertychange", 
 DRAGSTART:"dragstart", DRAGENTER:"dragenter", DRAGOVER:"dragover", DRAGLEAVE:"dragleave", DROP:"drop", TOUCHSTART:"touchstart", TOUCHMOVE:"touchmove", TOUCHEND:"touchend", TOUCHCANCEL:"touchcancel", CONTEXTMENU:"contextmenu", ERROR:"error", HELP:"help", LOAD:"load", LOSECAPTURE:"losecapture", READYSTATECHANGE:"readystatechange", RESIZE:"resize", SCROLL:"scroll", UNLOAD:"unload", HASHCHANGE:"hashchange", PAGEHIDE:"pagehide", PAGESHOW:"pageshow", POPSTATE:"popstate", COPY:"copy", PASTE:"paste", CUT:"cut", 
 BEFORECOPY:"beforecopy", BEFORECUT:"beforecut", BEFOREPASTE:"beforepaste", MESSAGE:"message", CONNECT:"connect"};
@@ -1584,7 +1584,9 @@ goog.events.ASSUME_GOOD_GC = false;
     return[]
   }
   function c() {
-    var a = function(b) {
+    var a = goog.events.BrowserFeature.HAS_W3C_EVENT_SUPPORT ? function(b) {
+      return g.call(a.src, a.key, b)
+    } : function(b) {
       b = g.call(a.src, a.key, b);
       if(!b) {
         return b
@@ -2109,7 +2111,7 @@ goog.events.handleBrowserEvent_ = function(a, b) {
     return true
   }
   var e = e[d], f, g;
-  if(goog.events.synthesizeEventPropagation_()) {
+  if(!goog.events.BrowserFeature.HAS_W3C_EVENT_SUPPORT) {
     f = b || goog.getObjectByName("window.event");
     var h = true in e, i = false in e;
     if(h) {
@@ -2179,12 +2181,6 @@ goog.events.isMarkedIeEvent_ = function(a) {
 goog.events.uniqueIdCounter_ = 0;
 goog.events.getUniqueId = function(a) {
   return a + "_" + goog.events.uniqueIdCounter_++
-};
-goog.events.synthesizeEventPropagation_ = function() {
-  if(goog.events.requiresSyntheticEventPropagation_ === void 0) {
-    goog.events.requiresSyntheticEventPropagation_ = goog.userAgent.IE && !goog.global.addEventListener
-  }
-  return goog.events.requiresSyntheticEventPropagation_
 };
 goog.debug.entryPointRegistry.register(function(a) {
   goog.events.handleBrowserEvent_ = a(goog.events.handleBrowserEvent_);
@@ -2340,6 +2336,7 @@ goog.fx.anim = {};
 goog.fx.anim.Animated = function() {
 };
 goog.fx.anim.TIMEOUT = 20;
+goog.fx.anim.MOZ_BEFORE_PAINT_EVENT_ = "MozBeforePaint";
 goog.fx.anim.activeAnimations_ = {};
 goog.fx.anim.animationWindow_ = null;
 goog.fx.anim.requestAnimationFrameFn_ = null;
@@ -2361,12 +2358,14 @@ goog.fx.anim.setAnimationWindow = function(a) {
   b && goog.fx.anim.cancelAnimationTimer_();
   a ? (goog.fx.anim.requestAnimationFrameFn_ = a.requestAnimationFrame || a.webkitRequestAnimationFrame || a.mozRequestAnimationFrame || a.oRequestAnimationFrame || a.msRequestAnimationFrame || null, goog.fx.anim.cancelRequestAnimationFrameFn_ = a.cancelRequestAnimationFrame || a.webkitCancelRequestAnimationFrame || a.mozCancelRequestAnimationFrame || a.oCancelRequestAnimationFrame || a.msCancelRequestAnimationFrame || null) : (goog.fx.anim.requestAnimationFrameFn_ = null, goog.fx.anim.cancelRequestAnimationFrameFn_ = 
   null);
-  goog.fx.anim.requestAnimationFrameFn_ && goog.fx.anim.cancelRequestAnimationFrameFn_ ? (goog.fx.anim.requestAnimationTimer_ = goog.fx.anim.requestAnimationFrame_, goog.fx.anim.cancelAnimationTimer_ = goog.fx.anim.cancelAnimationFrame_) : (goog.fx.anim.requestAnimationTimer_ = goog.fx.anim.requestTimer_, goog.fx.anim.cancelAnimationTimer_ = goog.fx.anim.cancelTimer_);
+  goog.fx.anim.requestAnimationFrameFn_ && a.mozRequestAnimationFrame && !goog.fx.anim.cancelRequestAnimationFrameFn_ ? (goog.fx.anim.requestAnimationTimer_ = goog.fx.anim.requestMozAnimationFrame_, goog.fx.anim.cancelAnimationTimer_ = goog.fx.anim.cancelMozAnimationFrame_) : goog.fx.anim.requestAnimationFrameFn_ && goog.fx.anim.cancelRequestAnimationFrameFn_ ? (goog.fx.anim.requestAnimationTimer_ = goog.fx.anim.requestAnimationFrame_, goog.fx.anim.cancelAnimationTimer_ = goog.fx.anim.cancelAnimationFrame_) : 
+  (goog.fx.anim.requestAnimationTimer_ = goog.fx.anim.requestTimer_, goog.fx.anim.cancelAnimationTimer_ = goog.fx.anim.cancelTimer_);
   b && goog.fx.anim.requestAnimationTimer_()
 };
 goog.fx.anim.requestTimer_ = function() {
   if(!goog.fx.anim.animationTimer_) {
     goog.fx.anim.animationTimer_ = goog.Timer.callOnce(function() {
+      goog.fx.anim.animationTimer_ = null;
       goog.fx.anim.cycleAnimations_(goog.now())
     }, goog.fx.anim.TIMEOUT)
   }
@@ -2378,7 +2377,10 @@ goog.fx.anim.cancelTimer_ = function() {
 };
 goog.fx.anim.requestAnimationFrame_ = function() {
   if(!goog.fx.anim.animationTimer_) {
-    goog.fx.anim.animationTimer_ = goog.fx.anim.requestAnimationFrameFn_.call(goog.fx.anim.animationWindow_, goog.fx.anim.cycleAnimations_)
+    goog.fx.anim.animationTimer_ = goog.fx.anim.requestAnimationFrameFn_.call(goog.fx.anim.animationWindow_, function(a) {
+      goog.fx.anim.animationTimer_ = null;
+      goog.fx.anim.cycleAnimations_(a)
+    })
   }
 };
 goog.fx.anim.cancelAnimationFrame_ = function() {
@@ -2386,10 +2388,22 @@ goog.fx.anim.cancelAnimationFrame_ = function() {
     goog.fx.anim.cancelRequestAnimationFrameFn_.call(goog.fx.anim.animationWindow_, goog.fx.anim.animationTimer_), goog.fx.anim.animationTimer_ = null
   }
 };
+goog.fx.anim.requestMozAnimationFrame_ = function() {
+  if(!goog.fx.anim.animationTimer_) {
+    goog.fx.anim.animationTimer_ = goog.events.listen(goog.fx.anim.animationWindow_, goog.fx.anim.MOZ_BEFORE_PAINT_EVENT_, function(a) {
+      goog.fx.anim.cycleAnimations_(a.timeStamp || goog.now())
+    }, false)
+  }
+  goog.fx.anim.requestAnimationFrameFn_.call(goog.fx.anim.animationWindow_, null)
+};
+goog.fx.anim.cancelMozAnimationFrame_ = function() {
+  if(goog.fx.anim.animationTimer_) {
+    goog.events.unlistenByKey(goog.fx.anim.animationTimer_), goog.fx.anim.animationTimer_ = null
+  }
+};
 goog.fx.anim.requestAnimationTimer_ = goog.fx.anim.requestTimer_;
 goog.fx.anim.cancelAnimationTimer_ = goog.fx.anim.cancelTimer_;
 goog.fx.anim.cycleAnimations_ = function(a) {
-  goog.fx.anim.animationTimer_ = null;
   goog.object.forEach(goog.fx.anim.activeAnimations_, function(b) {
     b.onAnimationFrame(a)
   });
@@ -3672,6 +3686,13 @@ goog.dom.getAncestor = function(a, b, c, d) {
     }
     a = a.parentNode;
     e++
+  }
+  return null
+};
+goog.dom.getActiveElement = function(a) {
+  try {
+    return a && a.activeElement
+  }catch(b) {
   }
   return null
 };
@@ -13850,7 +13871,7 @@ horizon.event.websocket_message = function(a) {
   horizon.logger.info.call(null, "event", cljs.core.str.call(null, "Received message from server: ", a.type));
   var b = cljs.core._EQ_, c = a.type;
   if(cljs.core.truth_(b.call(null, "cloud-event", c))) {
-    return b = goog.dom.getElement.call(null, "events"), a = goog.dom.createDom.call(null, "li", null, goog.dom.htmlToDocumentFragment.call(null, a.value)), horizon.ui.prependChild.call(null, b, a), horizon.ui.tabbar_flash.call(null, "Cloud events"), (new goog.fx.dom.FadeOutAndHide(a, 3E3)).play
+    return b = goog.dom.getElement.call(null, "events"), a = goog.dom.createDom.call(null, "li", null, goog.dom.htmlToDocumentFragment.call(null, a.value)), goog.dom.classes.add.call(null, a, "new-event"), horizon.ui.prependChild.call(null, b, a), window.p.call(null, a), horizon.ui.tabbar_flash.call(null, "Cloud events"), (new goog.fx.dom.FadeOutAndHide(a, 3E3)).play
   }else {
     if(cljs.core.truth_(b.call(null, "hm-event", c))) {
       return goog.dom.getElement.call(null, "hm-apps").innerHTML = a.value

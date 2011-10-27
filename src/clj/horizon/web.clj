@@ -28,31 +28,27 @@
 
 (defn- record-html [record]
   [:div {:title (str record) :class (clojure.string/join " " ["event_record" (:event_type record)])}
-   [:b (record/format-log-datetime record)] " -- "
+   [:strong {:class "timestamp"} (record/format-log-datetime record) " "]
    (condp = (:event_type record)
      "dea_ready"
-     [:span "DEA has started: " (record-app-html record)]
+     [:span "DEA has started " (record-app-html record)]
      "dea_start"
-     [:span "DEA is starting: " (record-app-html record) " by " (first (:users record)) " ...."]
+     [:span "DEA is starting " (record-app-html record) " by " (first (:users record)) " ...."]
      "dea_stop"
-     [:span "DEA is stopping: " (record-app-html record)]
+     [:span "DEA is stopping " (record-app-html record)]
      "cc_start"
-     [:span "CC is starting: " (record-app-html record) " by " (first (:users record)) " ...."]
+     [:span "CC is starting " (record-app-html record) " by " (first (:users record)) " ...."]
      "mongo_provision"
      [:span "Provisioning new service: " [:b (:service-label record)]]
      "mongo_provisioned"
      [:span "Provisioned a new service"]
      "dea_resource_limit_reached"
-     [:span
-      {:style "background-color: red; color: white"}
-      "A DEA has reached its resource limit; no more apps can be deployed"]
+     [:span "A DEA has reached its resource limit; no more apps can be deployed"]
      "cc_no_rsrc"
-     [:span
-      {:style "background-color: orange;"}
-      "CC cannot start an instance due to unavailable DEA's"]
-     [:span
-      [:i "unknown event: "]
-      [:pre (str record)]])])
+     [:span "CC cannot start an instance due to unavailable DEA's"]
+     [:span [:i "unknown event: "]]
+    )
+  ])
 
 
 (defn parse-sqlite-datetime
