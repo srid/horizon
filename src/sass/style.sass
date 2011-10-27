@@ -25,6 +25,12 @@ body
   -moz-border-radius: $radius
   -webkit-border-radius: $radius
 
+@mixin transition($trans)
+  -moz-transition: $trans
+  -webkit-transition: $trans
+  -o-transition: $trans
+  transition: $trans
+
 header
   background-color: $darkteal
   color: #FFFFFF
@@ -145,6 +151,7 @@ ul#events
     list-style-type: none
     padding: 0
     margin-bottom: 10px
+    @include transition(background 3s)
     div.event_record
       border: 1px solid #ccc
       padding: 10px
@@ -161,7 +168,9 @@ ul#events
         border: 1px solid $midgrey
         background-color: $lightgrey
         padding: 0 20px
-
+    &.new-event
+      background-color: #abcdef
+      
 table.state
   font-size: 14px
   td

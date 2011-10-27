@@ -136,7 +136,11 @@ ul#events {
   ul#events li {
     list-style-type: none;
     padding: 0;
-    margin-bottom: 10px; }
+    margin-bottom: 10px;
+    -moz-transition: background 3s;
+    -webkit-transition: background 3s;
+    -o-transition: background 3s;
+    transition: background 3s; }
     ul#events li div.event_record {
       border: 1px solid #cccccc;
       padding: 10px; }
@@ -153,6 +157,8 @@ ul#events {
         border: 1px solid #d0d0d0;
         background-color: #f2f2f2;
         padding: 0 20px; }
+    ul#events li.new-event {
+      background-color: #abcdef; }
 
 table.state {
   font-size: 14px; }
