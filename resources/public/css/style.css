@@ -137,10 +137,10 @@ ul#events {
     list-style-type: none;
     padding: 0;
     margin-bottom: 10px;
-    -moz-transition: background 3s;
-    -webkit-transition: background 3s;
-    -o-transition: background 3s;
-    transition: background 3s; }
+    -moz-transition: background 15s;
+    -webkit-transition: background 15s;
+    -o-transition: background 15s;
+    transition: background 15s; }
     ul#events li div.event_record {
       border: 1px solid #cccccc;
       padding: 10px; }
@@ -158,7 +158,7 @@ ul#events {
         background-color: #f2f2f2;
         padding: 0 20px; }
     ul#events li.new-event {
-      background-color: #abcdef; }
+      background-color: #ffff80; }
 
 table.state {
   font-size: 14px; }
