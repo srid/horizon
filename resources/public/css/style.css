@@ -78,7 +78,7 @@ div#content {
             font-weight: normal; }
           div#content #maintab_content_wrapper .content_wrapper #maintab_content .section_title p {
             float: right;
-            padding-right: 20px;
+            padding: 0 20px 0 20px;
             font-size: 16px; }
         div#content #maintab_content_wrapper .content_wrapper #maintab_content table {
           border-collapse: collapse;
@@ -197,3 +197,6 @@ table.state {
 
 .goog-tab-newactivity {
   -webkit-animation: flash 8s infinite; }
+
+html.no-websockets .req_websockets {
+  display: none; }
