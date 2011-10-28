@@ -174,14 +174,17 @@ ul#events
     @include transition(background 15s)
     div.event_record
       @include box-shadow(1px 1px 2px 2px rgba(0, 0, 0, .05))
+      @include transition(background 15s)
       border: 1px solid #ccc
       padding: 10px
       &.dea_resource_limit_reached
-        color: $deepred
+        border-color: $deepred
+        border-width: 2px
         background-color: lighten($deepred, 60%)
       &.cc_no_rsrc
-        color: $deeporange
-        background-color: lighten($deeporange, 60%)
+        border-color: $deeporange
+        border-width: 2px
+        background-color: lighten($deeporange, 45%)
       .timestamp
         margin: auto 10px 20px
       .details
@@ -191,7 +194,11 @@ ul#events
         padding: 0 20px
     &.new-event
       background-color: $yellow
-      
+      div.dea_resource_limit_reached
+        background-color: $yellow
+      div.cc_no_rsrc
+        background-color: $yellow
+
 table.state
   font-size: 14px
   td

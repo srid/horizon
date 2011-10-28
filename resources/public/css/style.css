@@ -161,14 +161,20 @@ ul#events {
       -webkit-box-shadow: 1px 1px 2px 2px rgba(0, 0, 0, 0.05);
       -moz-box-shadow: 1px 1px 2px 2px rgba(0, 0, 0, 0.05);
       box-shadow: 1px 1px 2px 2px rgba(0, 0, 0, 0.05);
+      -moz-transition: background 15s;
+      -webkit-transition: background 15s;
+      -o-transition: background 15s;
+      transition: background 15s;
       border: 1px solid #cccccc;
       padding: 10px; }
       ul#events li div.event_record.dea_resource_limit_reached {
-        color: #ba0011;
+        border-color: #ba0011;
+        border-width: 2px;
         background-color: #ffedef; }
       ul#events li div.event_record.cc_no_rsrc {
-        color: #f56600;
-        background-color: white; }
+        border-color: #f56600;
+        border-width: 2px;
+        background-color: #ffeadb; }
       ul#events li div.event_record .timestamp {
         margin: auto 10px 20px; }
       ul#events li div.event_record .details {
@@ -178,6 +184,10 @@ ul#events {
         padding: 0 20px; }
     ul#events li.new-event {
       background-color: #ffff80; }
+      ul#events li.new-event div.dea_resource_limit_reached {
+        background-color: #ffff80; }
+      ul#events li.new-event div.cc_no_rsrc {
+        background-color: #ffff80; }
 
 table.state {
   font-size: 14px; }
