@@ -10,6 +10,7 @@
 
     <script src="/cljs/bootstrap.js"></script>
     <script src="/js/modernizr.js"></script>
+
   </head>
 
   <body>
@@ -73,6 +74,11 @@
     </footer>
 
     <script>
+      /* Hide real-time elements if Firefox.
+        Modernizr thinks it's supports websockets, but it doesn't support our implementation */
+      if ('MozBinding' in document.documentElement.style) {
+        document.getElementsByTagName('html')[0].className += ' no-websockets';
+      }
       window.p = function(x) { console.log(x); return x; }
       horizon.core.init();
     </script>
