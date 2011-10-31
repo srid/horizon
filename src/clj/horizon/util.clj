@@ -7,7 +7,7 @@
 (defn run
   "Run cmd and return stdout only"
   [cmd & args]
-  ((apply sh (flatten [cmd args :return-map true])) :out))
+  ((apply sh (flatten [cmd (or args []) :return-map true])) :out))
 
 (defn run-line-seq
   "Run cmd and return a seq of stdout lines"
