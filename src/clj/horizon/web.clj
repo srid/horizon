@@ -157,7 +157,7 @@
   (@server))
 
 (defn initialize []
-  (let [port (Integer/parseInt (get (System/getenv) "PORT" "8000"))]
+  (let [port (Integer/parseInt (get (System/getenv) "PORT" "7654"))]
     (println (format "web: listening at http://localhost:%s/" port))
     (swap! server
            (fn [_] (start-http-server
