@@ -1,0 +1,5 @@
+#!/bin/bash
+# Tails dea.log of the given host
+export SSHCMD="ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no "
+
+$SSHCMD -i ~/.ec2/sandbox.pem ubuntu@sandbox.activestate.com tail -n 1000 -f /tmp/vcap-run/$1.log

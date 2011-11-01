@@ -1,4 +1,4 @@
-(defproject horizon "1.0.0-beta2"
+(defproject horizon "1.0.0-beta3-DEV"
   :description "Stackato dashboard"
   :dependencies [[org.clojure/clojure "1.2.1"]
                  [org.clojure/data.json "0.1.1"]

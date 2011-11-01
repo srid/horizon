@@ -2,7 +2,7 @@
 
 # dev
 
-* 
+* sandbox: include CC, hm logs as well.
 
 # 1.0.0-beta2
 

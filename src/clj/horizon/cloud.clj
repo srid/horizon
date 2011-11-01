@@ -39,11 +39,18 @@
      {:component "router"}    (remote-tail "tail -f /tmp/vcap-run/router.log")}))
 
 (defmethod component-logs ::sandbox [_]
-  (apply merge
+  (let [host "sandbox.activestate.com"]
+    (apply merge
          (for [dea-host (clojure.string/split-lines (run "script/print-running-deas"))]
            {{:component "dea"
              :component-host dea-host} #(run-line-seq
-                                         (str "script/tail-dea-log " dea-host))})))
+                                         (str "script/tail-dea-log " dea-host))
+             {:component "cc"
+              :component-host host} #(run-line-seq
+                                      "script/tail-other-log cloud_controller")
+              {:component "hm"
+               :component-host host} #(run-line-seq
+                                       "script/tail-other-log health_manager")}))))
 
 (defmulti cloudcontroller-db :name)
 
