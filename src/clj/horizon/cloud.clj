@@ -76,19 +76,35 @@
        (format "%s@%s:%s" user host remote-file)
        local-file))
 
+(defn do-now-and-schedule-repeatedly
+  "Call f once, and then again every interval seconds in a thread"
+  [f interval]
+  (f)
+  (future
+    (loop []
+      (Thread/sleep (* 1000 interval))
+      (f)
+      (recur))))
+
 (defmethod cloudcontroller-db ::outside_micro [{host :host}]
   (-> "tmp" (java.io.File.) .mkdirs)
   (let [local-db (format "tmp/%s-cc.db" host)]
-    (do
-      (println "Creating a local cache of sqlite db from" host "...")
-      (println "(the local database therefore won't update unless you restart horizon)")
-      (println "NOTE: if this hangs, then you may have forgot to copy your ssh pub key to the VM")
-      (println (format "      run `ssh-copy-id stackato@%s` to do this." host))
-      (scp "stackato" host (cloudcontroller-db inside_micro) local-db)
-      (println "... done."))
+    (println "Creating a local cache of sqlite db from" host "...")
+    (println "(the local database will be updated every 5 minutes)")
+    (println "NOTE: if this hangs, then you may have forgot to copy your ssh pub key to the VM")
+    (println (format "      run `ssh-copy-id stackato@%s` to do this." host))
+    (do-now-and-schedule-repeatedly
+     #(do
+        (println (format "Copying %s's CC sqlite db" host))
+        (scp "stackato" host (cloudcontroller-db inside_micro) local-db))
+     (* 60 5))
     local-db))
 
+; XXX: This function must be called only once.
 (defmethod cloudcontroller-db ::sandbox [_]
-  (println "Copying sandbox's CC sqlite db")
-  (run "script/copy-sandbox-db")
+  (do-now-and-schedule-repeatedly
+   #(do
+      (println "Copying sandbox's CC sqlite db")
+      (run "script/copy-sandbox-db"))
+   (* 60 5))
   "tmp/sandbox-cc.db")

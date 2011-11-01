@@ -3,6 +3,7 @@
 # dev
 
 * sandbox: include CC, hm logs as well.
+* periodically copy the database locally for sandbox and outside_micro
 
 # 1.0.0-beta2
 
