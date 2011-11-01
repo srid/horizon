@@ -40,10 +40,10 @@
 
 (defmethod component-logs ::sandbox [_]
   (apply merge
-         (for [dea-host (clojure.string/split-lines (run "scripts/print-running-deas"))]
+         (for [dea-host (clojure.string/split-lines (run "script/print-running-deas"))]
            {{:component "dea"
              :component-host dea-host} #(run-line-seq
-                                         (str "scripts/tail-dea-log " dea-host))})))
+                                         (str "script/tail-dea-log " dea-host))})))
 
 (defmulti cloudcontroller-db :name)
 
@@ -70,5 +70,5 @@
 
 (defmethod cloudcontroller-db ::sandbox [_]
   (println "Copying sandbox's CC sqlite db")
-  (run "scripts/copy-sandbox-db")
+  (run "script/copy-sandbox-db")
   "tmp/sandbox-cc.db")

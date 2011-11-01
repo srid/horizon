@@ -10,9 +10,9 @@ Get a micro cloud VM running at `stackato.local` and then:
 
 ```bash
 $ ssh-copy-id stackato@stackato.local  # one-time
-$ scripts/bootstrap # one-time
-$ scripts/watch # leave this running on a different terminal if you are changing sass/cljs
-$ scripts/run
+$ script/bootstrap # one-time
+$ script/watch # leave this running on a different terminal if you are changing sass/cljs
+$ script/run
 ```
 
 Open http://localhost:8000/ and deploy some apps to your micro cloud.
@@ -20,8 +20,8 @@ Open http://localhost:8000/ and deploy some apps to your micro cloud.
 ## Running horizon
 
 ```bash
-$ scripts/bootstrap
-$ scripts/run <mode>
+$ script/bootstrap
+$ script/run <mode>
 ```
 
 where `<mode>` can be one of:
@@ -32,10 +32,7 @@ where `<mode>` can be one of:
 
 The default is `outside_micro` (stackato.local).
 
-For sandbox mode:
-
-1. Get ~/.ec2 and ~/Downloads/ec2-??? (asksrid)
-2. Run `scripts/copy-sandbox-db` get sandbox db
+For sandbox mode, first get ~/.ec2 and ~/Downloads/ec2-??? (ask srid).
 
 ## Development mode
 
@@ -43,8 +40,8 @@ For sandbox mode:
 edit/recompile the modules. 
 
 ```bash
-$ scripts/boostrap
-$ scripts/watch  # leave this running on a second terminal
+$ script/boostrap
+$ script/watch  # leave this running on a second terminal
 ```
 
 The watch script watches and compiles sass and cljs files to css and
