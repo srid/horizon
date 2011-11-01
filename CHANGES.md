@@ -1,6 +1,6 @@
 # Horizon changes
 
-# dev
+# 1.0.0-beta3
 
 * sandbox: include CC, hm logs as well.
 * periodically copy the database locally for sandbox and outside_micro
