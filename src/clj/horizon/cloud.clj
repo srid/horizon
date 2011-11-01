@@ -11,15 +11,28 @@
 (def sandbox
   {:name ::sandbox})
 
-(defn args->mode
+(defonce mode (atom outside_micro))
+
+(defn set-mode!
   "Return the appropriate cloud mode from the given arguments"
   [[modename & args]]
-  (condp = (or modename "outside_micro")
-    "sandbox"       sandbox
-    "inside_micro"  inside_micro
-    "outside_micro" (if args
-                      (assoc outside_micro :host (first args))
-                      outside_micro)))
+  (swap! mode (fn [_] (condp = (or modename "outside_micro")
+                        "sandbox"       sandbox
+                        "inside_micro"  inside_micro
+                        "outside_micro" (if args
+                                          (assoc outside_micro :host (first args))
+                                          outside_micro)))))
+
+(defmulti describe-mode :name)
+
+(defmethod describe-mode ::inside_micro [_]
+  "micro cloud")
+
+(defmethod describe-mode ::outside_micro [m]
+  (format "micro cloud - %s" (:host m)))
+
+(defmethod describe-mode ::sandbox [_]
+  (format "sandbox"))
 
 (defmulti component-logs :name)
 

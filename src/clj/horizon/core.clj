@@ -6,15 +6,16 @@
             [horizon.db :as db])
   (:gen-class))
 
-(defn initialize [mode]
+(defn initialize []
   (apply println (take 25 (repeat "*")))
-  (println "* Horizon is initializing for: " mode)
+  (println "* Horizon is initializing for: " @cloud/mode)
   (apply println (take 25 (repeat "*")))
-  (db/initialize mode)
-  (sink/initialize mode)
+  (db/initialize)
+  (sink/initialize)
   (event/initialize)
   (web/initialize))
 
 (declare main)
 (defn -main [& args]
-  (initialize (cloud/args->mode args)))
+  (cloud/set-mode! args)
+  (initialize))

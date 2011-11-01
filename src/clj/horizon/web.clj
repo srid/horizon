@@ -13,7 +13,8 @@
             [horizon
              [event :as event]
              [record :as record]
-             [db :as db]]))
+             [db :as db]
+             [cloud :as cloud]]))
 
 (defn- hm-apps-html [record]
   [:div
@@ -130,7 +131,9 @@
   [:div#Users_content]
   (h/content (users-table users))
   [:#horizon-release]
-  (h/content (System/getProperty "horizon.version")))
+  (h/content (System/getProperty "horizon.version"))
+  [:#cloud-mode]
+  (h/content (cloud/describe-mode @cloud/mode)))
 
 (defn main-view []
   (render-to-response (index (db/get-data))))

@@ -42,6 +42,6 @@
                   :services (map #(assoc-service-info % sc srv)
                                  (filter-by-presence app (vals sb) :app_id))))))))
 
-(defn initialize [mode]
+(defn initialize []
   (println "db: creating database connection")
-  (q/open-global (assoc db :subname ((:subname db) mode))))
+  (q/open-global (assoc db :subname ((:subname db) @cloud/mode))))

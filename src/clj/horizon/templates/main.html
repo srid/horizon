@@ -15,7 +15,7 @@
 
   <body>
     <header>
-      <h1>Stackato Admin Dashboard - <small id="horizon-release"></small></h1>
+      <h1>Stackato Admin Dashboard</h1>
       <div id="hm-apps" class="req_websockets">Loading current application status...</div>
     </header>
         
@@ -61,8 +61,6 @@
       <div id="goog-tab-bar-clear"></div>
       
     </div>
-      
-    
 
     <!-- Debug -->
     <div id="log" style="display: none">
@@ -73,6 +71,11 @@
       <a class="stackato_logo"
          href="http://www.activestate.com/cloud">
         <img src="/img/stackato.png" alt="Stackato"></a>
+
+      <span style="position: relative; margin-right: 15px; float: right">
+             <span id="cloud-mode"></span>
+             | Dashboard version: <small id="horizon-release"></small>
+      </span>
     </footer>
 
     <script>
