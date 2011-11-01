@@ -62,7 +62,6 @@
     (do
       (println "Creating a local cache of sqlite db from" host "...")
       (println "(the local database therefore won't update unless you restart horizon)")
-      ;; TODO - use expect to automate this? VM's default password is known.
       (println "NOTE: if this hangs, then you may have forgot to copy your ssh pub key to the VM")
       (println (format "      run `ssh-copy-id stackato@%s` to do this." host))
       (scp "stackato" host (cloudcontroller-db inside_micro) local-db)
@@ -70,5 +69,6 @@
     local-db))
 
 (defmethod cloudcontroller-db ::sandbox [_]
-  ;; locally copied by scripts/copy-sandbox-db
-  "cloudcontroller.sqlite3")
+  (println "Copying sandbox's CC sqlite db")
+  (run "scripts/copy-sandbox-db")
+  "tmp/sandbox-cc.db")
