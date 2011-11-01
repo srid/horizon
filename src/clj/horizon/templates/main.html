@@ -48,6 +48,11 @@
         
         <!-- List of tabs -->
       <div id="sidebar_wrapper">
+        
+        <a class="stackato_logo" target="_new"
+         href="http://www.activestate.com/cloud">
+        <img src="/img/stackato.png" alt="Stackato"></a>
+        
         <div class="tab_wrapper">
           <div id="maintab" class="goog-tab-bar goog-tab-bar-left">
             <!-- `id` must match the tab title; used in JS -->
@@ -68,14 +73,10 @@
     </div>
 
     <footer>
-      <a class="stackato_logo"
-         href="http://www.activestate.com/cloud">
-        <img src="/img/stackato.png" alt="Stackato"></a>
-
-      <span style="position: relative; margin-right: 15px; float: right">
-             <span id="cloud-mode"></span>
-             | Dashboard version: <small id="horizon-release"></small>
-      </span>
+      <div class="content">
+        <span id="cloud-mode"></span>
+        | Dashboard Version: <small id="horizon-release"></small>
+      </div>
     </footer>
 
     <script>

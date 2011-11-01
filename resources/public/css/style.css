@@ -102,24 +102,28 @@ div#content {
     float: left;
     margin-left: -100%;
     width: 230px; }
-    div#content #sidebar_wrapper .tab_wrapper #maintab {
-      width: 230px; }
-      div#content #sidebar_wrapper .tab_wrapper #maintab .goog-tab {
-        background-color: #f2f2f2;
-        text-decoration: none;
-        color: #00404f;
-        font-size: 24px;
-        padding: 10px;
-        border-bottom: 1px solid #d0d0d0; }
-        div#content #sidebar_wrapper .tab_wrapper #maintab .goog-tab:hover {
-          background-color: #d0d0d0; }
-      div#content #sidebar_wrapper .tab_wrapper #maintab .goog-tab-selected {
-        background: white url(/img/arrow-right_16x16.gif) no-repeat 200px 16px;
-        border: none;
-        border-bottom: 1px solid #d0d0d0;
-        font-weight: normal; }
-        div#content #sidebar_wrapper .tab_wrapper #maintab .goog-tab-selected:hover {
-          background-color: white; }
+    div#content #sidebar_wrapper a.stackato_logo {
+      margin-left: 15px; }
+    div#content #sidebar_wrapper .tab_wrapper {
+      border-top: 1px solid #d0d0d0; }
+      div#content #sidebar_wrapper .tab_wrapper #maintab {
+        width: 230px; }
+        div#content #sidebar_wrapper .tab_wrapper #maintab .goog-tab {
+          background-color: #f2f2f2;
+          text-decoration: none;
+          color: #00404f;
+          font-size: 24px;
+          padding: 10px;
+          border-bottom: 1px solid #d0d0d0; }
+          div#content #sidebar_wrapper .tab_wrapper #maintab .goog-tab:hover {
+            background-color: #d0d0d0; }
+        div#content #sidebar_wrapper .tab_wrapper #maintab .goog-tab-selected {
+          background: white url(/img/arrow-right_16x16.gif) no-repeat 200px 16px;
+          border: none;
+          border-bottom: 1px solid #d0d0d0;
+          font-weight: normal; }
+          div#content #sidebar_wrapper .tab_wrapper #maintab .goog-tab-selected:hover {
+            background-color: white; }
 
 div#log {
   max-width: 12in;
@@ -136,10 +140,10 @@ footer {
   -webkit-border-radius: 0 0 0.7em 0.7em;
   padding: 0;
   height: 30px; }
-  footer a.stackato_logo {
-    margin-left: 15px;
-    position: relative;
-    bottom: 50px; }
+  footer .content {
+    text-align: right;
+    padding: 15px;
+    padding-top: 5px; }
 
 a {
   text-decoration: none; }

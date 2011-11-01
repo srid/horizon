@@ -123,7 +123,10 @@ div#content
     float: left
     margin-left: -100%
     width: 230px
+    a.stackato_logo
+      margin-left: 15px
     .tab_wrapper
+      border-top: 1px solid $midgrey
       #maintab
         width: 230px
         .goog-tab
@@ -154,11 +157,11 @@ footer
   @include border-radius(0 0 0.7em 0.7em)
   padding: 0
   height: 30px
-  a.stackato_logo
-    margin-left: 15px
-    position: relative
-    bottom: 50px
-
+  .content
+    text-align: right
+    padding: 15px
+    padding-top: 5px
+  
 a
   text-decoration: none
   &:hover
