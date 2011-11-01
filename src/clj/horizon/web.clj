@@ -128,7 +128,9 @@
   [:div#Apps_content]
   (h/content (apps-table users))
   [:div#Users_content]
-  (h/content (users-table users)))
+  (h/content (users-table users))
+  [:#horizon-release]
+  (h/content (System/getProperty "horizon.version")))
 
 (defn main-view []
   (render-to-response (index (db/get-data))))
