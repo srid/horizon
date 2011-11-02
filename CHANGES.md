@@ -1,6 +1,6 @@
 # Horizon changes
 
-# dev
+# 1.0.0-beta4
 
 * cloud events: monitor "monit" events
 * cloud events: prune unnecessary log records to show more events

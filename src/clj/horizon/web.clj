@@ -48,7 +48,7 @@
      "cc_no_rsrc"
      [:span "CC cannot start an instance due to unavailable DEA's"]
      "monit_message"
-     [:span "Monit: " [:b (:process record)] " process was recovered successfully"]
+     [:span "Monit successfully recovered the " [:b (:process record)] " process"]
      [:span [:i "unknown event: "]]
     )
   ])
