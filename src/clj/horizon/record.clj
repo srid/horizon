@@ -164,7 +164,7 @@
 
 (defn parse-line [l]
   (some #(% l)
-        [parse-dea-start parse-dea-ready parse-dea-stop
+        [parse-dea-ready parse-dea-stop
          parse-dea-resource-limit-reached
          parse-cc-start-app
          parse-cc-no-resources-available

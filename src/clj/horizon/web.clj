@@ -25,20 +25,20 @@
 (defn- record-app-html [record]
   (let [url (first (:uris (:json record)))
         url (if url (str "http://" url))]
-    [:b [:a {:href url :target "_blank"} (:appname record)]]))
+    [:b (if url
+          [:a {:href url :target "_blank"} (:appname record)]
+          (:appname record))]))
 
 (defn- record-html [record]
   [:div {:class (clojure.string/join " " ["event_record" (:event_type record)])}
    [:strong {:class "timestamp"} (record/format-log-datetime record) " "]
    (condp = (:event_type record)
      "dea_ready"
-     [:span "DEA has started " (record-app-html record)]
-     "dea_start"
-     [:span "DEA is starting " (record-app-html record) " by " (first (:users record)) " ...."]
+     [:span "Application " (record-app-html record) " has started successfully"]
      "dea_stop"
-     [:span "DEA is stopping " (record-app-html record)]
+     [:span "Stopping application " (record-app-html record)]
      "cc_start"
-     [:span "CC is starting " (record-app-html record) " by " (first (:users record)) " ...."]
+     [:span "Deploying application " (record-app-html record) " by " (first (:users record)) " ...."]
      "mongo_provision"
      [:span "Provisioning new service: " [:b (:service-label record)]]
      "mongo_provisioned"
