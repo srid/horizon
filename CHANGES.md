@@ -1,5 +1,9 @@
 # Horizon changes
 
+# dev
+
+* cloud events: monitor "monit" events
+
 # 1.0.0-beta3
 
 * sandbox: include CC, hm logs as well.
