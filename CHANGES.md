@@ -3,6 +3,7 @@
 # dev
 
 * cloud events: monitor "monit" events
+* cloud events: prune unnecessary log records to show more events
 
 # 1.0.0-beta3
 

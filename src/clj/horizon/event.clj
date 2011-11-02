@@ -20,6 +20,8 @@
           cloud-events)
   (siphon (filter* (comp #{"hm_analyzed"} :event_type) all-events)
           hm-events)
-  (receive-all cloud-events (fn [event]
-                              (swap! cloud-events-saved
-                                     #(take events-to-save (cons event %))))))
+  (receive-all cloud-events
+               (fn [event]
+                 (swap! cloud-events-saved
+                        #(take events-to-save
+                               (reverse (sort-by :datetime (cons event %))))))))
