@@ -49,8 +49,7 @@
      {:component "cc"}        (remote-tail "tail -n 200 -f /tmp/vcap-run/cloud_controller.log")
      {:component "mongodb"}   (remote-tail "tail -n 200 -f /tmp/vcap-run/mongodb_gateway.log")
      {:component "hm"}        (remote-tail "tail -f /tmp/vcap-run/health_manager.log")
-     {:component "router"}    (remote-tail "tail -f /tmp/vcap-run/router.log")
-     {:component "monit"}     (remote-tail "tail -n 200 -f /var/log/monit.log")}))
+     {:component "router"}    (remote-tail "tail -f /tmp/vcap-run/router.log")}))
 
 (defmethod component-logs ::sandbox [_]
   (let [host "sandbox.activestate.com"]

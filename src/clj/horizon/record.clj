@@ -1,7 +1,7 @@
 (ns horizon.record
   (:use [clojure.data.json :only (read-json)]
-        [clj-time.core :only (date-time now)]
-        [clj-time.format :only (parse unparse formatter)]
+        [clj-time.core :only (date-time)]
+        [clj-time.format :only (unparse formatter)]
         [clansi]))
 
 (def cf-log-prefix-re
@@ -46,12 +46,8 @@
 (def mongodb-provisioned-re
   (cf-service-pattern #"Successfully provision response\:(.+)"))
 
-(def monit-re
-  ; TODO - remove PDT hardcoding
-  #"\[PDT (.+)\].+\: \'(.+)' process PID changed to (\d+)")
-
-(defn parse-datetime
-  "Parse time according to format"
+(defn- parse-datetime
+  "Parse datetime format of CF logging"
   [time format]
   (if time
     (apply date-time
@@ -146,21 +142,6 @@
          :datetime (parse-cf-service-datetime (.group m 1))
          :cred cred-ruby-hash}))))
 
-(defn parse-monit-log-datetime [s]
-  ;; add the missing year element
-  (let [thisyear (.getYear (now))
-        s        (format "%s %s" thisyear s)
-        fmt      "yyyy MMM dd HH:mm:ss"]
-    (parse (formatter fmt) s)))
-
-(defn parse-monit-message [l]
-  (let [m (re-matcher monit-re l)]
-    (when (.find m)
-      {:event_type "monit_message"
-       :datetime (parse-monit-log-datetime (.group m 1))
-       :process (.group m 2)
-       :newpid    (Integer. (.group m 3))})))
-
 (defn parse-line [l]
   (some #(% l)
         [parse-dea-start parse-dea-ready parse-dea-stop
@@ -169,12 +150,11 @@
          parse-cc-no-resources-available
          parse-hm-analyzed-apps
          parse-mongo-provision-attempt
-         parse-mongo-provisioned
-         parse-monit-message]))
+         parse-mongo-provisioned]))
 
 
 (defn format-log-datetime [record]
-  (unparse (formatter "yyyy-MM-dd hh:mm:ss") (:datetime record)))
+  (unparse (formatter "MM-dd/hh:mm:ss") (:datetime record)))
 
 (defn print-record
   "Print the log-record to terminal"
