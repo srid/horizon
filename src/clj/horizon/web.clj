@@ -47,6 +47,8 @@
      [:span "A DEA has reached its resource limit; no more apps can be deployed"]
      "cc_no_rsrc"
      [:span "CC cannot start an instance due to unavailable DEA's"]
+     "monit_message"
+     [:span "Monit: " [:b (:process record)] " pid changed to " [:tt (:newpid record)]]
      [:span [:i "unknown event: "]]
     )
   ])
