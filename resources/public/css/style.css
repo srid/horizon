@@ -171,11 +171,11 @@ ul#events {
       transition: background 15s;
       border: 1px solid #cccccc;
       padding: 10px; }
-      ul#events li div.event_record.dea_resource_limit_reached, ul#events li div.event_record.monit_message {
+      ul#events li div.event_record.dea_resource_limit_reached {
         border-color: #ba0011;
         border-width: 2px;
         background-color: #ffedef; }
-      ul#events li div.event_record.cc_no_rsrc {
+      ul#events li div.event_record.cc_no_rsrc, ul#events li div.event_record.monit_message {
         border-color: #f56600;
         border-width: 2px;
         background-color: #ffeadb; }

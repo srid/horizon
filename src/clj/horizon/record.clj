@@ -48,7 +48,7 @@
 
 (def monit-re
   ; TODO - remove PDT hardcoding
-  #"\[PDT (.+)\].+\: \'(.+)' process PID changed to (\d+)")
+  #"\[PDT (.+)\].+\: \'(.+)' process is running with pid (\d+)")
 
 (defn parse-datetime
   "Parse time according to format"
@@ -150,6 +150,7 @@
   ;; add the missing year element
   (let [thisyear (.getYear (now))
         s        (format "%s %s" thisyear s)
+        s        (clojure.string/replace s #"\s+" " ")
         fmt      "yyyy MMM dd HH:mm:ss"]
     (parse (formatter fmt) s)))
 
