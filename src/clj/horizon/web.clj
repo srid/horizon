@@ -47,11 +47,8 @@
      [:span "A DEA has reached its resource limit; no more apps can be deployed"]
      "cc_no_rsrc"
      [:span "CC cannot start an instance due to unavailable DEA's"]
-<<<<<<< HEAD
-=======
      "monit_message"
      [:span "Monit successfully recovered the " [:b (:process record)] " process"]
->>>>>>> release/1.0.0-beta4
      [:span [:i "unknown event: "]]
     )
   ])

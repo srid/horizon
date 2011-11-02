@@ -46,17 +46,12 @@
 (def mongodb-provisioned-re
   (cf-service-pattern #"Successfully provision response\:(.+)"))
 
-<<<<<<< HEAD
-(defn- parse-datetime
-  "Parse datetime format of CF logging"
-=======
 (def monit-re
   ; TODO - remove PDT hardcoding
   #"\[PDT (.+)\].+\: \'(.+)' process is running with pid (\d+)")
 
 (defn parse-datetime
   "Parse time according to format"
->>>>>>> release/1.0.0-beta4
   [time format]
   (if time
     (apply date-time
