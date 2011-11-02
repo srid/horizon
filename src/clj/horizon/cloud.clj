@@ -40,7 +40,8 @@
   {{:component "dea"}       #(run-line-seq "tail -n 200 -f /tmp/vcap-run/dea.log")
    {:component "cc"}        #(run-line-seq "tail -n 200 -f /tmp/vcap-run/cloud_controller.log")
    {:component "hm"}        #(run-line-seq "tail -f /tmp/vcap-run/health_manager.log")
-   {:component "router"}    #(run-line-seq "tail -f /tmp/vcap-run/router.log")})
+   {:component "router"}    #(run-line-seq "tail -f /tmp/vcap-run/router.log")
+   {:component "monit"}     #(run-line-seq "tail -n 200 -f /var/log/monit.log")})
 
 (defmethod component-logs ::outside_micro [{host :host}]
   (letfn [(remote-tail [tailcmd]
