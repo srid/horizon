@@ -34,19 +34,40 @@
 (defmethod describe-mode ::sandbox [_]
   (format "sandbox"))
 
+(defn- tail-cmd
+  "Construct a tail cmd"
+  [file n & ignore-patterns]
+  (clojure.string/join
+   " | "
+   (filter identity
+           (flatten [(str "cat " file)
+                     (map #(format "grep -v \"%s\"" %) ignore-patterns)
+                     (str "tail -f " (if n (str "-n " n)))]))))
+
+(def dea-tail (tail-cmd "/tmp/vcap-run/dea.log" 200
+                        "to execute du"
+                        "to process ps and du"
+                        "received router start message"))
+
+(def cc-tail (tail-cmd "/tmp/vcap-run/cloud_controller.log" 200
+                       "Create service request"
+                       "POST:/services"
+                       "GET:/"))
+
 (defmulti component-logs :name)
 
 (defmethod component-logs ::inside_micro [_]
-  {{:component "dea"}       #(run-line-seq "tail -n 200 -f /tmp/vcap-run/dea.log")
-   {:component "cc"}        #(run-line-seq "tail -n 200 -f /tmp/vcap-run/cloud_controller.log")
+  {{:component "dea"}       #(run-line-seq dea-tail)
+   {:component "cc"}        #(run-line-seq cc-tail)
    {:component "hm"}        #(run-line-seq "tail -f /tmp/vcap-run/health_manager.log")
-   {:component "router"}    #(run-line-seq "tail -f /tmp/vcap-run/router.log")})
+   {:component "router"}    #(run-line-seq "tail -f /tmp/vcap-run/router.log")
+   {:component "monit"}     #(run-line-seq "tail -n 200 -f /var/log/monit.log")})
 
 (defmethod component-logs ::outside_micro [{host :host}]
   (letfn [(remote-tail [tailcmd]
             #(run-line-seq (format "ssh stackato@%s %s" host tailcmd)))]
-    {{:component "dea"}       (remote-tail "tail -n 200 -f /tmp/vcap-run/dea.log")
-     {:component "cc"}        (remote-tail "tail -n 200 -f /tmp/vcap-run/cloud_controller.log")
+    {{:component "dea"}       (remote-tail dea-tail)
+     {:component "cc"}        (remote-tail cc-tail)
      {:component "mongodb"}   (remote-tail "tail -n 200 -f /tmp/vcap-run/mongodb_gateway.log")
      {:component "hm"}        (remote-tail "tail -f /tmp/vcap-run/health_manager.log")
      {:component "router"}    (remote-tail "tail -f /tmp/vcap-run/router.log")}))

@@ -46,8 +46,17 @@
 (def mongodb-provisioned-re
   (cf-service-pattern #"Successfully provision response\:(.+)"))
 
+<<<<<<< HEAD
 (defn- parse-datetime
   "Parse datetime format of CF logging"
+=======
+(def monit-re
+  ; TODO - remove PDT hardcoding
+  #"\[PDT (.+)\].+\: \'(.+)' process is running with pid (\d+)")
+
+(defn parse-datetime
+  "Parse time according to format"
+>>>>>>> release/1.0.0-beta4
   [time format]
   (if time
     (apply date-time
@@ -142,9 +151,28 @@
          :datetime (parse-cf-service-datetime (.group m 1))
          :cred cred-ruby-hash}))))
 
+<<<<<<< HEAD
+=======
+(defn parse-monit-log-datetime [s]
+  ;; add the missing year element
+  (let [thisyear (.getYear (now))
+        s        (format "%s %s" thisyear s)
+        s        (clojure.string/replace s #"\s+" " ")
+        fmt      "yyyy MMM dd HH:mm:ss"]
+    (parse (formatter fmt) s)))
+
+(defn parse-monit-message [l]
+  (let [m (re-matcher monit-re l)]
+    (when (.find m)
+      {:event_type "monit_message"
+       :datetime (parse-monit-log-datetime (.group m 1))
+       :process (.group m 2)
+       :newpid    (Integer. (.group m 3))})))
+
+>>>>>>> release/1.0.0-beta4
 (defn parse-line [l]
   (some #(% l)
-        [parse-dea-start parse-dea-ready parse-dea-stop
+        [parse-dea-ready parse-dea-stop
          parse-dea-resource-limit-reached
          parse-cc-start-app
          parse-cc-no-resources-available

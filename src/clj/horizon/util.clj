@@ -12,7 +12,10 @@
 (defn run-line-seq
   "Run cmd and return a seq of stdout lines"
   [cmd]
-  (->> (.exec (Runtime/getRuntime) cmd)
+  (println "run-line-seq:" cmd)
+  (->> ["bash" "-c" cmd]
+       (ProcessBuilder.)
+       .start
        .getInputStream
        clojure.java.io/reader
        line-seq))

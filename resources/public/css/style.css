@@ -175,7 +175,7 @@ ul#events {
         border-color: #ba0011;
         border-width: 2px;
         background-color: #ffedef; }
-      ul#events li div.event_record.cc_no_rsrc {
+      ul#events li div.event_record.cc_no_rsrc, ul#events li div.event_record.monit_message {
         border-color: #f56600;
         border-width: 2px;
         background-color: #ffeadb; }
