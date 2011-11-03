@@ -14,7 +14,8 @@
 (defn initialize []
   (println "event: initializing record processing")
   (receive-all sink/queue #(when-let [record (record/parse-line %)]
-                             (record/print-record record)
+                             (when-not (= "hm_analyzed" (:event_type record))
+                               (record/print-record record))
                              (enqueue all-events record)))
   (siphon (remove* (comp #{"hm_analyzed"} :event_type) all-events)
           cloud-events)
