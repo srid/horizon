@@ -9,9 +9,9 @@
 
 (defn- enqueue-from-lazy-seq
   "Create a thread that enqueues the channel with items from lazy seq."
-  [ch lazyseq]
+  [ch lazyseq-func]
   (future
-    (doseq [e lazyseq]
+    (doseq [e (lazyseq-func)]
       (enqueue ch e))))
 
 
@@ -32,7 +32,7 @@
                   (assoc newagt comp
                        (enqueue-from-lazy-seq
                         queue
-                        ((components comp)))))))
+                        (components comp))))))
             agt
             (keys components))))
 
