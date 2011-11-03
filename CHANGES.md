@@ -1,5 +1,9 @@
 # Horizon changes
 
+# dev
+
+* fix #4 - cloud events are not updating at all
+
 # 1.0.0-beta4
 
 * cloud events: monitor "monit" events

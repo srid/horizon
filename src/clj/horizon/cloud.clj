@@ -39,10 +39,8 @@
   [file n & ignore-patterns]
   (clojure.string/join
    " | "
-   (filter identity
-           (flatten [(str "cat " file)
-                     (map #(format "grep -v \"%s\"" %) ignore-patterns)
-                     (str "tail -f " (if n (str "-n " n)))]))))
+   (flatten [(format "tail -n %s -f %s" (or n 200) file)
+             (map #(format "grep --line-buffered -v \"%s\"" %) ignore-patterns)])))
 
 (def dea-tail (tail-cmd "/tmp/vcap-run/dea.log" 200
                         "to execute du"
@@ -57,35 +55,34 @@
 (defmulti component-logs :name)
 
 (defmethod component-logs ::inside_micro [_]
-  {{:component "dea"}       #(run-line-seq dea-tail)
-   {:component "cc"}        #(run-line-seq cc-tail)
-   {:component "hm"}        #(run-line-seq "tail -f /tmp/vcap-run/health_manager.log")
-   {:component "router"}    #(run-line-seq "tail -f /tmp/vcap-run/router.log")
-   {:component "monit"}     #(run-line-seq "tail -n 200 -f /var/log/monit.log")})
+  (letfn [(local [& cmd]
+            #(run-line-seq "sh" "-c" cmd))]
+    {{:component "dea"}       (local dea-tail)
+     {:component "cc"}        (local cc-tail)
+     {:component "hm"}        (local "tail -f /tmp/vcap-run/health_manager.log")
+     {:component "router"}    (local "tail -f /tmp/vcap-run/router.log")
+     {:component "monit"}     (local "tail -n 200 -f /var/log/monit.log")}))
 
 (defmethod component-logs ::outside_micro [{host :host}]
-  (letfn [(remote-tail [tailcmd]
-            #(run-line-seq (format "ssh stackato@%s %s" host tailcmd)))]
-    {{:component "dea"}       (remote-tail dea-tail)
-     {:component "cc"}        (remote-tail cc-tail)
-     {:component "mongodb"}   (remote-tail "tail -n 200 -f /tmp/vcap-run/mongodb_gateway.log")
-     {:component "hm"}        (remote-tail "tail -f /tmp/vcap-run/health_manager.log")
-     {:component "router"}    (remote-tail "tail -f /tmp/vcap-run/router.log")
-     {:component "monit"}     (remote-tail "tail -n 200 -f /var/log/monit.log")}))
+  (letfn [(remote [& cmd]
+            #(run-line-seq "ssh" (str "stackato@" host) cmd))]
+    {{:component "dea"}       (remote dea-tail)
+     {:component "cc"}        (remote cc-tail)
+     {:component "mongodb"}   (remote "tail -n 200 -f /tmp/vcap-run/mongodb_gateway.log")
+     {:component "hm"}        (remote "tail -f /tmp/vcap-run/health_manager.log")
+     {:component "router"}    (remote "tail -f /tmp/vcap-run/router.log")
+     {:component "monit"}     (remote "tail -n 200 -f /var/log/monit.log")}))
 
 (defmethod component-logs ::sandbox [_]
   (let [host "sandbox.activestate.com"]
     (apply merge
          (for [dea-host (clojure.string/split-lines (run "script/print-running-deas"))]
            {{:component "dea"
-             :component-host dea-host} #(run-line-seq
-                                         (str "script/tail-dea-log " dea-host))
+             :component-host dea-host} #(run-line-seq "script/tail-dea-log" dea-host)
              {:component "cc"
-              :component-host host} #(run-line-seq
-                                      "script/tail-other-log cloud_controller")
+              :component-host host} #(run-line-seq "script/tail-other-log" "cloud_controller")
               {:component "hm"
-               :component-host host} #(run-line-seq
-                                       "script/tail-other-log health_manager")}))))
+               :component-host host} #(run-line-seq "script/tail-other-log" "health_manager")}))))
 
 (defmulti cloudcontroller-db :name)
 

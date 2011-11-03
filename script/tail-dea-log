@@ -2,4 +2,4 @@
 # Tails dea.log of the given host
 export SSHCMD="ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no "
 
-$SSHCMD -i ~/.ec2/sandbox.pem ubuntu@$1 'grep -v "to execute du"  /tmp/vcap-run/dea.log  | grep -v "received router start message" | grep -v "to process ps and du" | tail -f -n 200 '
+$SSHCMD -i ~/.ec2/sandbox.pem ubuntu@$1 'tail -f -n 2000 /tmp/vcap-run/dea.log  | grep --line-buffered -v "to execute "  | grep --line-buffered -v "received router start message" | grep --line-buffered -v "to process ps and du" | grep --line-buffered -v "Currently running"'
