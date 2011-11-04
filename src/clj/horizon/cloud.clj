@@ -39,8 +39,9 @@
   [file n & ignore-patterns]
   (clojure.string/join
    " | "
-   (flatten [(format "tail -n %s -f %s" (or n 200) file)
-             (map #(format "grep --line-buffered -v \"%s\"" %) ignore-patterns)])))
+   (cons (format "tail -n %s -f %s" (or n 200) file)
+         (map #(format "grep --line-buffered -v \"%s\"" %)
+              ignore-patterns))))
 
 (def dea-tail (tail-cmd "/tmp/vcap-run/dea.log" 200
                         "to execute du"
