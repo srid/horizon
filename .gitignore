@@ -11,3 +11,4 @@ resources/public/cljs/clojure
 resources/public/cljs/horizon
 .sass-cache
 tmp
+horizon-*

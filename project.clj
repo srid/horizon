@@ -13,6 +13,9 @@
                  [compojure "0.6.4"]
                  [ring "0.3.11"]]
 
+  ;; reduce RSS for an acceptable run in uCloud VMs
+  :jvm-opts ["-Xmx16m" "-XX:MaxPermSize=64m" "-XX:+CMSClassUnloadingEnabled"]
+
   ;; websockets won't work on ring-server
   :dev-dependencies [[lein-ring "0.4.5"]]
   :ring {:handler horizon.web/app-routes
