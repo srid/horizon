@@ -1,6 +1,6 @@
 # Horizon changes
 
-# 1.0.0-beta5 (dev)
+# 1.0.0-beta5
 
 * fix #4 - cloud events not updating (regression in beta4)
 * lein-bin deployment: fixes missing horizon version in footer
