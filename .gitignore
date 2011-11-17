@@ -1,5 +1,6 @@
 pom.xml
 *jar
+*.pyc
 /lib/
 /classes/
 .lein-failures
@@ -10,3 +11,4 @@ resources/public/cljs/clojure
 resources/public/cljs/horizon
 .sass-cache
 tmp
+horizon-*

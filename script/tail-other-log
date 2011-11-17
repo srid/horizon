@@ -2,4 +2,4 @@
 # Tails dea.log of the given host
 export SSHCMD="ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no "
 
-$SSHCMD -i ~/.ec2/sandbox.pem ubuntu@sandbox.activestate.com "cat /tmp/vcap-run/$1.log | grep -v 'Create service request' | grep -v 'POST:/services' | grep -v 'GET:/' | tail -n 200 -f"
+$SSHCMD -i ~/.ec2/sandbox.pem ubuntu@sandbox.activestate.com "tail -n 200 -f /tmp/vcap-run/$1.log | grep --line-buffered -v 'Create service request' | grep --line-buffered -v 'POST:/services' | grep --line-buffered -v 'GET:/'"

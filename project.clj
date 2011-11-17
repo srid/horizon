@@ -1,4 +1,4 @@
-(defproject horizon "1.0.0-beta4"
+(defproject horizon "1.0.0-beta5"
   :description "Stackato dashboard"
   :dependencies [[org.clojure/clojure "1.2.1"]
                  [org.clojure/data.json "0.1.1"]
@@ -12,6 +12,9 @@
                  [enlive "1.0.0"]
                  [compojure "0.6.4"]
                  [ring "0.3.11"]]
+
+  ;; reduce RSS for an acceptable run in uCloud VMs
+  :jvm-opts ["-Xmx16m" "-XX:MaxPermSize=64m" "-XX:+CMSClassUnloadingEnabled"]
 
   ;; websockets won't work on ring-server
   :dev-dependencies [[lein-ring "0.4.5"]]

@@ -11,9 +11,8 @@
 
 (defn run-line-seq
   "Run cmd and return a seq of stdout lines"
-  [cmd]
-  (println "run-line-seq:" cmd)
-  (->> ["bash" "-c" cmd]
+  [& cmd-and-args]
+  (->> (flatten cmd-and-args)
        (ProcessBuilder.)
        .start
        .getInputStream

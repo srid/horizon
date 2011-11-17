@@ -1,5 +1,11 @@
 # Horizon changes
 
+# 1.0.0-beta5
+
+* fix #4 - cloud events not updating (regression in beta4)
+* lein-bin deployment: fixes missing horizon version in footer
+* reduce RSS to ~120M via JVM options (project.clj)
+
 # 1.0.0-beta4
 
 * cloud events: monitor "monit" events
