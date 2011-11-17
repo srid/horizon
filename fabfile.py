@@ -5,6 +5,10 @@ from fabric.api import run, local, env, put
 from fabric.colors import *
 env.hosts = ['stackato@stackato.activestate.com']
 
+def release():
+    local('rm -f horizon-*')
+    local('lein bin')
+    
 def _uberjar():
     local('rm -f *.jar')
     local('lein uberjar')
