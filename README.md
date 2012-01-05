@@ -67,7 +67,6 @@ java -jar horizon-1.0.0-SNAPSHOT-standalone.jar
 
 ## License
 
-MIT
+MIT License
 
-Copyright (C) 2011 ActiveState
-
+Copyright (C) 2011 ActiveState Software Inc
