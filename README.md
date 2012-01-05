@@ -1,6 +1,10 @@
 # horizon
 
-Horizon is the Stackato dashboard for reporting a) the state of the cloud and b) real-time operations statistics. The former presents data from the cloud controller's database, while the later does real-time processing of the log files just like [Heroku's pulse](http://lanyrd.com/2011/clojure-conj/shhfd/).
+Horizon is the Stackato dashboard for reporting a) the state of the cloud and b) real-time operations statistics. The former presents data from the cloud controller's database, while the later does real-time processing of the log files just like [Heroku's pulse](http://lanyrd.com/2011/clojure-conj/shhfd/). 
+
+## History
+
+Horizon was the first revision of a dashboard application, developed within ActiveState, for Stackato. Stackato uses a different implementation of dashboard now, and so Horizon is open sourced for anyone to use on top of their Stackato or Cloud Foundry (on which, Stackato is based upon) install.
 
 ## Quick start
 
@@ -60,11 +64,6 @@ lein uberjar
 java -jar horizon-1.0.0-SNAPSHOT-standalone.jar
 [...]
 ```
-
-## Research
-
-* Lamina and Aleph
-* [Storm](https://github.com/nathanmarz/storm) - Distributed and fault-tolerant realtime computation
 
 ## License
 
