@@ -2,8 +2,6 @@
 
 Horizon is the Stackato dashboard for reporting a) the state of the cloud and b) real-time operations statistics. The former presents data from the cloud controller's database, while the later does real-time processing of the log files just like [Heroku's pulse](http://lanyrd.com/2011/clojure-conj/shhfd/).
 
-![horizon architecture](http://dl.dropbox.com/u/87045/permalinks/horizon-arch.png)
-
 ## Quick start
 
 Get a micro cloud VM running at `stackato.local` and then:
@@ -69,6 +67,8 @@ java -jar horizon-1.0.0-SNAPSHOT-standalone.jar
 * [Storm](https://github.com/nathanmarz/storm) - Distributed and fault-tolerant realtime computation
 
 ## License
+
+MIT
 
 Copyright (C) 2011 ActiveState
 
